@@ -13,15 +13,17 @@ namespace ArduPlayeris
 {
     public partial class MainForm : MetroForm
     {
+        SCom serial;
         public MainForm()
         {
             InitializeComponent();
             InitThemeSettings();
-            SCom serial = new SCom(BaudRate,Port);
-
-
+            serial = new SCom(BaudRate,Port,StartButton,StopButton,SendButton,OutPutTextBox,InputTextBox);    
         }
 
-       
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            serial.Stop();
+        }
     }
 }
