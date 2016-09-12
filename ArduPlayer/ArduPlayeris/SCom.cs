@@ -7,17 +7,21 @@ using MetroFramework.Controls;
 using System.IO.Ports;
 using MetroFramework.Components;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace ArduPlayeris
 {
+    public delegate void UpdateListener(string text);
     class SCom
     {
-
         private MetroButton StartButton;
         private MetroButton StopButton;
         private SerialPort port;
         private MetroTextBox textBox;
         private MetroTextBox InputTextBox;
+        private MetroComboBox BaudRate;
+        private MetroComboBox Port;
+        public event UpdateListener UpdateRecieved;
 
         public SCom(MetroComboBox BaudRate, MetroComboBox Port, MetroButton StartButton, MetroButton StopButton,MetroButton SendButton, MetroTextBox textBox, MetroTextBox input)
         {
@@ -25,6 +29,8 @@ namespace ArduPlayeris
             this.StopButton = StopButton;
             this.textBox = textBox;
             this.InputTextBox = input;
+            this.BaudRate = BaudRate;
+            this.Port = Port;
             string[] serialPorts = SerialPort.GetPortNames();
             Port.Items.AddRange(serialPorts);
             BaudRate.Items.Add(2400);
@@ -36,18 +42,53 @@ namespace ArduPlayeris
             BaudRate.Items.Add(38400);
             BaudRate.Items.Add(57600);
             BaudRate.Items.Add(115200);
-            Port.SelectedIndex = 1;
+            Port.SelectedIndex = 0;
             BaudRate.SelectedIndex = 2;
 
             port = new SerialPort();
-            port.PortName = Port.SelectedItem.ToString();
             port.BaudRate = Convert.ToInt32(BaudRate.SelectedItem.ToString());
 
-            port.DataReceived += Port_DataReceived;
             StartButton.Click += StartButton_Click;
             StopButton.Click += StopButton_Click;
             SendButton.Click += SendButtonClicked;
             InputTextBox.KeyDown += InputTextBox_KeyDown;
+            Port.SelectedIndexChanged += Port_SelectedIndexChanged;
+            BaudRate.SelectedIndexChanged += BaudRate_SelectedIndexChanged;
+
+            if (Properties.Settings.Default.Try == true) {
+                foreach (string ports in SerialPort.GetPortNames())
+                {
+                    if (port.IsOpen) port.Close();
+                    port.PortName = ports;
+                    port.Open();
+                    port.Write( "hey!\n");
+                    Thread.Sleep(150);                    
+                    if (port.ReadExisting().Contains("Hello!")) {
+                        port.Close();
+                        Port.Text = ports;
+                        Start();
+                        port.DataReceived += Port_DataReceived;
+                        return;
+                    }
+                        port.Close();
+                }
+                textBox.AppendText("\r\n");                
+                textBox.AppendText("Couldn't start communication with any available ports");
+            }
+            port.PortName = Port.SelectedItem.ToString();
+
+            port.DataReceived += Port_DataReceived;
+        }
+
+        private void BaudRate_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            port.BaudRate = Convert.ToInt32(BaudRate.SelectedItem.ToString());
+        }
+
+        private void Port_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(!port.IsOpen)
+            port.PortName = Port.SelectedItem.ToString();
         }
 
         private void InputTextBox_KeyDown(object sender, KeyEventArgs e)
@@ -67,6 +108,10 @@ namespace ArduPlayeris
             {
                 SetTextCallback d = new SetTextCallback(SetText);
                 textBox.BeginInvoke(d, new object[] { text });
+                if (text == "!\r\n")
+                {
+                    getInfo();
+                }
             }
             else
             {
@@ -77,6 +122,7 @@ namespace ArduPlayeris
 
         private void Port_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
+            if (!canRead) return;
             try
             {
                 SetText(port.ReadExisting());
@@ -91,6 +137,9 @@ namespace ArduPlayeris
         {
             if (port.IsOpen)
             {
+
+                Port.Enabled = true;
+                BaudRate.Enabled = true;
                 StartButton.Enabled = true;
                 StopButton.Enabled = false;
                 port.Close();
@@ -99,14 +148,33 @@ namespace ArduPlayeris
             }
         }
 
+
         public void Start() {
             if (!port.IsOpen)
             {
+                Port.Enabled = false;
+                BaudRate.Enabled = false;
                 StartButton.Enabled = false;
                 StopButton.Enabled = true;
                 port.Open();
                 textBox.Clear();
                 textBox.AppendText("Connected to Arduino!\n");
+                   
+            }
+        }
+        bool canRead = true;
+        public void getInfo()
+        {
+            if (port.IsOpen)
+            {
+
+                canRead = false;
+                Send("giveInfo");
+                Thread.Sleep(200);
+                string split1 = port.ReadExisting().Split('{')[1];
+                string split2 = split1.Split('}')[0];
+                UpdateRecieved?.Invoke(split2);
+                canRead = true;
             }
         }
 
@@ -118,6 +186,7 @@ namespace ArduPlayeris
         private void StartButton_Click(object sender, EventArgs e)
         {
             Start();
+            getInfo();
         }
 
         public void Send(string Text) {

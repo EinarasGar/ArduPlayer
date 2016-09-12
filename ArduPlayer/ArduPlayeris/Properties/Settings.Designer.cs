@@ -46,5 +46,17 @@ namespace ArduPlayeris.Properties {
                 this["Style"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Try {
+            get {
+                return ((bool)(this["Try"]));
+            }
+            set {
+                this["Try"] = value;
+            }
+        }
     }
 }

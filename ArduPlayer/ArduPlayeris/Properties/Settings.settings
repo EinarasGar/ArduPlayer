@@ -8,5 +8,8 @@
     <Setting Name="Style" Type="MetroFramework.MetroColorStyle" Scope="User">
       <Value Profile="(Default)">Default</Value>
     </Setting>
+    <Setting Name="Try" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

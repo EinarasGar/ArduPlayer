@@ -18,12 +18,14 @@ namespace ArduPlayeris
 
                 themeCombobox.SelectedValueChanged += themeCombobox_SelectedValueChanged;
                 styleCombobox.SelectedValueChanged += styleCombobox_SelectedValueChanged;
+                
 
                 themeCombobox.SelectedItem = Properties.Settings.Default.Theme.ToString();
                 styleCombobox.SelectedItem = Properties.Settings.Default.Style.ToString();
+                metroToggle2.Checked = Properties.Settings.Default.Try;
 
               //  tglStartByDefault.Checked = Config.Default.StartProxyByDefault;
-               // lstServers.SelectedItem = Config.Default.DefaultServerName;
+              // lstServers.SelectedItem = Config.Default.DefaultServerName;
 
         }
 
@@ -31,6 +33,7 @@ namespace ArduPlayeris
         {            
             Properties.Settings.Default.Theme = (MetroThemeStyle)Enum.Parse(typeof(MetroThemeStyle), (string)themeCombobox.SelectedItem, true);            
             Properties.Settings.Default.Style = (MetroColorStyle)Enum.Parse(typeof(MetroColorStyle), (string)styleCombobox.SelectedItem, true);
+            Properties.Settings.Default.Try = metroToggle2.Checked;
             Properties.Settings.Default.Save();
             MetroMessageBox.Show(this, "\nSettings have been saved successfully","Settings");
             
