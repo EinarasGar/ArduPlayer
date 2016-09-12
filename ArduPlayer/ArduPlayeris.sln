@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArduPlayeris", "ArduPlayeri
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ArduinoCode", "ArduinoCode", "{EA3213CB-EC5C-4FFD-A944-8DA66318BDF7}"
 	ProjectSection(SolutionItems) = preProject
-		ArduinoCode\ArduCode.ino = ArduinoCode\ArduCode.ino
+		ArduinoCode\ArduinoCode.ino = ArduinoCode\ArduinoCode.ino
 	EndProjectSection
 EndProject
 Global

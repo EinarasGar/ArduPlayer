@@ -52,6 +52,8 @@
             this.StartButton = new MetroFramework.Controls.MetroButton();
             this.OutPutTextBox = new MetroFramework.Controls.MetroTextBox();
             this.metroTabControl1 = new MetroFramework.Controls.MetroTabControl();
+            this.TempLbl = new MetroFramework.Controls.MetroLabel();
+            this.HumidityLbl = new MetroFramework.Controls.MetroLabel();
             this.Settings.SuspendLayout();
             this.metroTabPage2.SuspendLayout();
             this.metroTabControl1.SuspendLayout();
@@ -194,6 +196,8 @@
             // 
             // metroTabPage2
             // 
+            this.metroTabPage2.Controls.Add(this.HumidityLbl);
+            this.metroTabPage2.Controls.Add(this.TempLbl);
             this.metroTabPage2.Controls.Add(this.metroLabel1);
             this.metroTabPage2.Controls.Add(this.ColorOranToggle);
             this.metroTabPage2.Controls.Add(this.metroButton4);
@@ -354,6 +358,24 @@
             this.metroTabControl1.TabIndex = 0;
             this.metroTabControl1.UseSelectable = true;
             // 
+            // TempLbl
+            // 
+            this.TempLbl.AutoSize = true;
+            this.TempLbl.Location = new System.Drawing.Point(323, 85);
+            this.TempLbl.Name = "TempLbl";
+            this.TempLbl.Size = new System.Drawing.Size(115, 19);
+            this.TempLbl.TabIndex = 9;
+            this.TempLbl.Text = "Temperature: 0 °C";
+            // 
+            // HumidityLbl
+            // 
+            this.HumidityLbl.AutoSize = true;
+            this.HumidityLbl.Location = new System.Drawing.Point(325, 104);
+            this.HumidityLbl.Name = "HumidityLbl";
+            this.HumidityLbl.Size = new System.Drawing.Size(94, 19);
+            this.HumidityLbl.TabIndex = 10;
+            this.HumidityLbl.Text = "Humidity:  0 %";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -400,6 +422,8 @@
         private MetroFramework.Controls.MetroButton StartButton;
         private MetroFramework.Controls.MetroTextBox OutPutTextBox;
         private MetroFramework.Controls.MetroTabControl metroTabControl1;
+        private MetroFramework.Controls.MetroLabel HumidityLbl;
+        private MetroFramework.Controls.MetroLabel TempLbl;
     }
 }
 

@@ -27,9 +27,12 @@ namespace ArduPlayeris
 
         private void Serial_UpdateRecieved(string text)
         {
+         //   MessageBox.Show(text);
+            string[] updates = text.Split('/');
+
             if (ColorOranToggle.InvokeRequired)
             {
-                if (text == "1")
+                if (updates[0] == "1")
                 {
                     ColorOranToggle.Invoke(new MethodInvoker(delegate { ColorOranToggle.Checked = true; }));
                 }
@@ -37,13 +40,23 @@ namespace ArduPlayeris
                     ColorOranToggle.Invoke(new MethodInvoker(delegate { ColorOranToggle.Checked = false; }));
             }
             else {
-                if (text == "1")
+                if (updates[0] == "1")
                 {
                     ColorOranToggle.Checked = true;
                 }
                 else
                     ColorOranToggle.Checked = false;
             }
+
+            if (TempLbl.InvokeRequired) 
+                TempLbl.Invoke(new MethodInvoker(delegate { TempLbl.Text = "Temperature: "+updates[1]+" °C"; }));
+             else
+                TempLbl.Text = "Temperature: " + updates[1] + " °C";
+
+            if (HumidityLbl.InvokeRequired)
+                HumidityLbl.Invoke(new MethodInvoker(delegate { HumidityLbl.Text = "Humidity: " + updates[2] + " %"; }));
+            else
+                HumidityLbl.Text = "Humidity: " + updates[2] + " %";
         }
 
         private void MainFormClosing(object sender, FormClosingEventArgs e)
