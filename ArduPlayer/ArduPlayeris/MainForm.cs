@@ -22,7 +22,7 @@ namespace ArduPlayeris
         {
             InitializeComponent();
             InitThemeSettings();
-            metroTabControl1.SelectedTab = metroTabPage2;
+            metroTabControl1.SelectedTab = SComTab;
             serial = new SCom(BaudRate,Port,StartButton,StopButton,SendButton,OutPutTextBox,InputTextBox);
             serial.UpdateRecieved += Serial_UpdateRecieved;
             serial.getInfo(); // move this somewhere else
@@ -168,6 +168,23 @@ namespace ArduPlayeris
             p.WaitForExit();
             p.Close();
         }
-    }
 
+        private void RedTrackBar_MouseUp(object sender, MouseEventArgs e)
+        {
+            string value = ((float)RedTrackBar.Value / 20).ToString().Replace(',', '.');
+            serial.Send("red" + value);
+        }
+
+        private void GreenTrackBar_MouseUp(object sender, MouseEventArgs e)
+        {
+            string value = ((float)GreenTrackBar.Value / 20).ToString().Replace(',', '.');
+            serial.Send("grn" + value);
+        }
+
+        private void BlueTrackBar_MouseUp(object sender, MouseEventArgs e)
+        {
+            string value = ((float)BlueTrackBar.Value / 20).ToString().Replace(',', '.');
+            serial.Send("blu" + value);
+        }
+    }
 }

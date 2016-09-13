@@ -152,10 +152,16 @@ void ParseSerialFunction(String text){
 		Serial.println("Hello!");
 	}
 	if(text == "giveInfo"){
-		Serial.println("{" + String(ColorOrganOn) + "/" + temperature + "/" + humidity + "}");
+		Serial.println("{" + String(ColorOrganOn) + "/" + temperature + "/"  +  humidity + "}");
 	}
-	if (text == "a") {
-	  /* code */
+	if (text.substring(0,3) == "red") {
+	  redBright = text.substring(3,text.length()).toFloat();
+	}
+	if (text.substring(0,3) == "grn") {//Turi buti blue, bet po kolkas green nes sumaisiau connectionus.
+	  blueBright = text.substring(3,text.length()).toFloat();
+	}
+	if (text.substring(0,3) == "blu") {
+	  reenBright = text.substring(3,text.length()).toFloat();
 	}
 
 }

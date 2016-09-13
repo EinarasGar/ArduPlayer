@@ -40,7 +40,7 @@
             this.styleCombobox = new MetroFramework.Controls.MetroComboBox();
             this.Port = new MetroFramework.Controls.MetroComboBox();
             this.BaudRate = new MetroFramework.Controls.MetroComboBox();
-            this.metroTabPage2 = new MetroFramework.Controls.MetroTabPage();
+            this.SComTab = new MetroFramework.Controls.MetroTabPage();
             this.UploadCodeButton = new MetroFramework.Controls.MetroButton();
             this.metroButton4 = new MetroFramework.Controls.MetroButton();
             this.SendButton = new MetroFramework.Controls.MetroButton();
@@ -50,8 +50,6 @@
             this.ArduinoIDeLbl = new MetroFramework.Controls.MetroLabel();
             this.ArduinoIdePathTextbox = new MetroFramework.Controls.MetroTextBox();
             this.SketchFilePathTextbox = new MetroFramework.Controls.MetroTextBox();
-            this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
-            this.ColorOranToggle = new MetroFramework.Controls.MetroToggle();
             this.ClearLogsButton = new MetroFramework.Controls.MetroButton();
             this.SaveLogsButton = new MetroFramework.Controls.MetroButton();
             this.InputTextBox = new MetroFramework.Controls.MetroTextBox();
@@ -61,9 +59,19 @@
             this.HumidityLbl = new MetroFramework.Controls.MetroLabel();
             this.TempLbl = new MetroFramework.Controls.MetroLabel();
             this.metroTabControl1 = new MetroFramework.Controls.MetroTabControl();
+            this.ColorOrganTab = new MetroFramework.Controls.MetroTabPage();
+            this.RedLbl = new MetroFramework.Controls.MetroLabel();
+            this.GreenLbl = new MetroFramework.Controls.MetroLabel();
+            this.BlueLbl = new MetroFramework.Controls.MetroLabel();
+            this.RedTrackBar = new MetroFramework.Controls.MetroTrackBar();
+            this.BlueTrackBar = new MetroFramework.Controls.MetroTrackBar();
+            this.GreenTrackBar = new MetroFramework.Controls.MetroTrackBar();
+            this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
+            this.ColorOranToggle = new MetroFramework.Controls.MetroToggle();
             this.Settings.SuspendLayout();
-            this.metroTabPage2.SuspendLayout();
+            this.SComTab.SuspendLayout();
             this.metroTabControl1.SuspendLayout();
+            this.ColorOrganTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // Settings
@@ -201,36 +209,34 @@
             this.BaudRate.TabIndex = 2;
             this.BaudRate.UseSelectable = true;
             // 
-            // metroTabPage2
+            // SComTab
             // 
-            this.metroTabPage2.Controls.Add(this.UploadCodeButton);
-            this.metroTabPage2.Controls.Add(this.metroButton4);
-            this.metroTabPage2.Controls.Add(this.SendButton);
-            this.metroTabPage2.Controls.Add(this.SketchFilePathButton);
-            this.metroTabPage2.Controls.Add(this.ArduinoIdePathButton);
-            this.metroTabPage2.Controls.Add(this.metroLabel4);
-            this.metroTabPage2.Controls.Add(this.ArduinoIDeLbl);
-            this.metroTabPage2.Controls.Add(this.ArduinoIdePathTextbox);
-            this.metroTabPage2.Controls.Add(this.SketchFilePathTextbox);
-            this.metroTabPage2.Controls.Add(this.metroLabel1);
-            this.metroTabPage2.Controls.Add(this.ColorOranToggle);
-            this.metroTabPage2.Controls.Add(this.ClearLogsButton);
-            this.metroTabPage2.Controls.Add(this.SaveLogsButton);
-            this.metroTabPage2.Controls.Add(this.InputTextBox);
-            this.metroTabPage2.Controls.Add(this.StopButton);
-            this.metroTabPage2.Controls.Add(this.StartButton);
-            this.metroTabPage2.Controls.Add(this.OutPutTextBox);
-            this.metroTabPage2.HorizontalScrollbarBarColor = true;
-            this.metroTabPage2.HorizontalScrollbarHighlightOnWheel = false;
-            this.metroTabPage2.HorizontalScrollbarSize = 10;
-            this.metroTabPage2.Location = new System.Drawing.Point(4, 38);
-            this.metroTabPage2.Name = "metroTabPage2";
-            this.metroTabPage2.Size = new System.Drawing.Size(627, 274);
-            this.metroTabPage2.TabIndex = 1;
-            this.metroTabPage2.Text = "Serial Communication";
-            this.metroTabPage2.VerticalScrollbarBarColor = true;
-            this.metroTabPage2.VerticalScrollbarHighlightOnWheel = false;
-            this.metroTabPage2.VerticalScrollbarSize = 10;
+            this.SComTab.Controls.Add(this.UploadCodeButton);
+            this.SComTab.Controls.Add(this.metroButton4);
+            this.SComTab.Controls.Add(this.SendButton);
+            this.SComTab.Controls.Add(this.SketchFilePathButton);
+            this.SComTab.Controls.Add(this.ArduinoIdePathButton);
+            this.SComTab.Controls.Add(this.metroLabel4);
+            this.SComTab.Controls.Add(this.ArduinoIDeLbl);
+            this.SComTab.Controls.Add(this.ArduinoIdePathTextbox);
+            this.SComTab.Controls.Add(this.SketchFilePathTextbox);
+            this.SComTab.Controls.Add(this.ClearLogsButton);
+            this.SComTab.Controls.Add(this.SaveLogsButton);
+            this.SComTab.Controls.Add(this.InputTextBox);
+            this.SComTab.Controls.Add(this.StopButton);
+            this.SComTab.Controls.Add(this.StartButton);
+            this.SComTab.Controls.Add(this.OutPutTextBox);
+            this.SComTab.HorizontalScrollbarBarColor = true;
+            this.SComTab.HorizontalScrollbarHighlightOnWheel = false;
+            this.SComTab.HorizontalScrollbarSize = 10;
+            this.SComTab.Location = new System.Drawing.Point(4, 38);
+            this.SComTab.Name = "SComTab";
+            this.SComTab.Size = new System.Drawing.Size(627, 274);
+            this.SComTab.TabIndex = 1;
+            this.SComTab.Text = "Serial Communication";
+            this.SComTab.VerticalScrollbarBarColor = true;
+            this.SComTab.VerticalScrollbarHighlightOnWheel = false;
+            this.SComTab.VerticalScrollbarSize = 10;
             // 
             // UploadCodeButton
             // 
@@ -302,12 +308,12 @@
             this.ArduinoIDeLbl.TabIndex = 11;
             this.ArduinoIDeLbl.Text = "Arduino IDE Path:";
             // 
-            // ArduinoIdePathTExtbox
+            // ArduinoIdePathTextbox
             // 
             this.ArduinoIdePathTextbox.Lines = new string[0];
             this.ArduinoIdePathTextbox.Location = new System.Drawing.Point(454, 190);
             this.ArduinoIdePathTextbox.MaxLength = 32767;
-            this.ArduinoIdePathTextbox.Name = "ArduinoIdePathTExtbox";
+            this.ArduinoIdePathTextbox.Name = "ArduinoIdePathTextbox";
             this.ArduinoIdePathTextbox.PasswordChar = '\0';
             this.ArduinoIdePathTextbox.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.ArduinoIdePathTextbox.SelectedText = "";
@@ -315,42 +321,18 @@
             this.ArduinoIdePathTextbox.TabIndex = 10;
             this.ArduinoIdePathTextbox.UseSelectable = true;
             // 
-            // SketchFilePath
+            // SketchFilePathTextbox
             // 
             this.SketchFilePathTextbox.Lines = new string[0];
             this.SketchFilePathTextbox.Location = new System.Drawing.Point(454, 219);
             this.SketchFilePathTextbox.MaxLength = 32767;
-            this.SketchFilePathTextbox.Name = "SketchFilePath";
+            this.SketchFilePathTextbox.Name = "SketchFilePathTextbox";
             this.SketchFilePathTextbox.PasswordChar = '\0';
             this.SketchFilePathTextbox.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.SketchFilePathTextbox.SelectedText = "";
             this.SketchFilePathTextbox.Size = new System.Drawing.Size(156, 23);
             this.SketchFilePathTextbox.TabIndex = 9;
             this.SketchFilePathTextbox.UseSelectable = true;
-            // 
-            // metroLabel1
-            // 
-            this.metroLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.metroLabel1.AutoSize = true;
-            this.metroLabel1.Location = new System.Drawing.Point(322, 39);
-            this.metroLabel1.Name = "metroLabel1";
-            this.metroLabel1.Size = new System.Drawing.Size(84, 19);
-            this.metroLabel1.TabIndex = 8;
-            this.metroLabel1.Text = "Color Organ";
-            // 
-            // ColorOranToggle
-            // 
-            this.ColorOranToggle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ColorOranToggle.AutoSize = true;
-            this.ColorOranToggle.Checked = true;
-            this.ColorOranToggle.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ColorOranToggle.Location = new System.Drawing.Point(412, 41);
-            this.ColorOranToggle.Name = "ColorOranToggle";
-            this.ColorOranToggle.Size = new System.Drawing.Size(80, 17);
-            this.ColorOranToggle.TabIndex = 7;
-            this.ColorOranToggle.Text = "On";
-            this.ColorOranToggle.UseSelectable = true;
-            this.ColorOranToggle.CheckedChanged += new System.EventHandler(this.ColorOranToggleChanged);
             // 
             // ClearLogsButton
             // 
@@ -452,15 +434,131 @@
             // 
             // metroTabControl1
             // 
-            this.metroTabControl1.Controls.Add(this.metroTabPage2);
+            this.metroTabControl1.Controls.Add(this.SComTab);
+            this.metroTabControl1.Controls.Add(this.ColorOrganTab);
             this.metroTabControl1.Controls.Add(this.Settings);
             this.metroTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.metroTabControl1.Location = new System.Drawing.Point(20, 60);
             this.metroTabControl1.Name = "metroTabControl1";
-            this.metroTabControl1.SelectedIndex = 0;
+            this.metroTabControl1.SelectedIndex = 1;
             this.metroTabControl1.Size = new System.Drawing.Size(635, 316);
             this.metroTabControl1.TabIndex = 0;
             this.metroTabControl1.UseSelectable = true;
+            // 
+            // ColorOrganTab
+            // 
+            this.ColorOrganTab.Controls.Add(this.RedLbl);
+            this.ColorOrganTab.Controls.Add(this.GreenLbl);
+            this.ColorOrganTab.Controls.Add(this.BlueLbl);
+            this.ColorOrganTab.Controls.Add(this.RedTrackBar);
+            this.ColorOrganTab.Controls.Add(this.BlueTrackBar);
+            this.ColorOrganTab.Controls.Add(this.GreenTrackBar);
+            this.ColorOrganTab.Controls.Add(this.metroLabel1);
+            this.ColorOrganTab.Controls.Add(this.ColorOranToggle);
+            this.ColorOrganTab.HorizontalScrollbarBarColor = true;
+            this.ColorOrganTab.HorizontalScrollbarHighlightOnWheel = false;
+            this.ColorOrganTab.HorizontalScrollbarSize = 10;
+            this.ColorOrganTab.Location = new System.Drawing.Point(4, 38);
+            this.ColorOrganTab.Name = "ColorOrganTab";
+            this.ColorOrganTab.Size = new System.Drawing.Size(627, 274);
+            this.ColorOrganTab.TabIndex = 2;
+            this.ColorOrganTab.Text = "Color Organ";
+            this.ColorOrganTab.VerticalScrollbarBarColor = true;
+            this.ColorOrganTab.VerticalScrollbarHighlightOnWheel = false;
+            this.ColorOrganTab.VerticalScrollbarSize = 10;
+            // 
+            // RedLbl
+            // 
+            this.RedLbl.AutoSize = true;
+            this.RedLbl.Location = new System.Drawing.Point(10, 14);
+            this.RedLbl.Name = "RedLbl";
+            this.RedLbl.Size = new System.Drawing.Size(35, 19);
+            this.RedLbl.TabIndex = 12;
+            this.RedLbl.Text = "Red:";
+            // 
+            // GreenLbl
+            // 
+            this.GreenLbl.AutoSize = true;
+            this.GreenLbl.Location = new System.Drawing.Point(10, 43);
+            this.GreenLbl.Name = "GreenLbl";
+            this.GreenLbl.Size = new System.Drawing.Size(47, 19);
+            this.GreenLbl.TabIndex = 12;
+            this.GreenLbl.Text = "Green:";
+            // 
+            // BlueLbl
+            // 
+            this.BlueLbl.AutoSize = true;
+            this.BlueLbl.Location = new System.Drawing.Point(10, 72);
+            this.BlueLbl.Name = "BlueLbl";
+            this.BlueLbl.Size = new System.Drawing.Size(37, 19);
+            this.BlueLbl.TabIndex = 12;
+            this.BlueLbl.Text = "Blue:";
+            // 
+            // RedTrackBar
+            // 
+            this.RedTrackBar.BackColor = System.Drawing.Color.Transparent;
+            this.RedTrackBar.LargeChange = 1;
+            this.RedTrackBar.Location = new System.Drawing.Point(61, 14);
+            this.RedTrackBar.Maximum = 40;
+            this.RedTrackBar.MouseWheelBarPartitions = 9000;
+            this.RedTrackBar.Name = "RedTrackBar";
+            this.RedTrackBar.Size = new System.Drawing.Size(146, 23);
+            this.RedTrackBar.TabIndex = 11;
+            this.RedTrackBar.Text = "metroTrackBar1";
+            this.RedTrackBar.Value = 20;
+            this.RedTrackBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.RedTrackBar_MouseUp);
+            // 
+            // BlueTrackBar
+            // 
+            this.BlueTrackBar.BackColor = System.Drawing.Color.Transparent;
+            this.BlueTrackBar.LargeChange = 1;
+            this.BlueTrackBar.Location = new System.Drawing.Point(61, 72);
+            this.BlueTrackBar.Maximum = 40;
+            this.BlueTrackBar.MouseWheelBarPartitions = 9000;
+            this.BlueTrackBar.Name = "BlueTrackBar";
+            this.BlueTrackBar.Size = new System.Drawing.Size(146, 23);
+            this.BlueTrackBar.TabIndex = 11;
+            this.BlueTrackBar.Text = "metroTrackBar1";
+            this.BlueTrackBar.Value = 20;
+            this.BlueTrackBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.BlueTrackBar_MouseUp);
+            // 
+            // GreenTrackBar
+            // 
+            this.GreenTrackBar.BackColor = System.Drawing.Color.Transparent;
+            this.GreenTrackBar.LargeChange = 1;
+            this.GreenTrackBar.Location = new System.Drawing.Point(61, 43);
+            this.GreenTrackBar.Maximum = 40;
+            this.GreenTrackBar.MouseWheelBarPartitions = 9000;
+            this.GreenTrackBar.Name = "GreenTrackBar";
+            this.GreenTrackBar.Size = new System.Drawing.Size(146, 23);
+            this.GreenTrackBar.TabIndex = 11;
+            this.GreenTrackBar.Text = "metroTrackBar1";
+            this.GreenTrackBar.Value = 20;
+            this.GreenTrackBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GreenTrackBar_MouseUp);
+            // 
+            // metroLabel1
+            // 
+            this.metroLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.metroLabel1.AutoSize = true;
+            this.metroLabel1.Location = new System.Drawing.Point(435, 14);
+            this.metroLabel1.Name = "metroLabel1";
+            this.metroLabel1.Size = new System.Drawing.Size(84, 19);
+            this.metroLabel1.TabIndex = 10;
+            this.metroLabel1.Text = "Color Organ";
+            // 
+            // ColorOranToggle
+            // 
+            this.ColorOranToggle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ColorOranToggle.AutoSize = true;
+            this.ColorOranToggle.Checked = true;
+            this.ColorOranToggle.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ColorOranToggle.Location = new System.Drawing.Point(525, 16);
+            this.ColorOranToggle.Name = "ColorOranToggle";
+            this.ColorOranToggle.Size = new System.Drawing.Size(80, 17);
+            this.ColorOranToggle.TabIndex = 9;
+            this.ColorOranToggle.Text = "On";
+            this.ColorOranToggle.UseSelectable = true;
+            this.ColorOranToggle.CheckedChanged += new System.EventHandler(this.ColorOranToggleChanged);
             // 
             // MainForm
             // 
@@ -477,9 +575,11 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFormClosing);
             this.Settings.ResumeLayout(false);
             this.Settings.PerformLayout();
-            this.metroTabPage2.ResumeLayout(false);
-            this.metroTabPage2.PerformLayout();
+            this.SComTab.ResumeLayout(false);
+            this.SComTab.PerformLayout();
             this.metroTabControl1.ResumeLayout(false);
+            this.ColorOrganTab.ResumeLayout(false);
+            this.ColorOrganTab.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -499,9 +599,7 @@
         private MetroFramework.Controls.MetroComboBox styleCombobox;
         private MetroFramework.Controls.MetroComboBox Port;
         private MetroFramework.Controls.MetroComboBox BaudRate;
-        private MetroFramework.Controls.MetroTabPage metroTabPage2;
-        private MetroFramework.Controls.MetroLabel metroLabel1;
-        private MetroFramework.Controls.MetroToggle ColorOranToggle;
+        private MetroFramework.Controls.MetroTabPage SComTab;
         private MetroFramework.Controls.MetroButton metroButton4;
         private MetroFramework.Controls.MetroButton ClearLogsButton;
         private MetroFramework.Controls.MetroButton SaveLogsButton;
@@ -520,6 +618,15 @@
         private MetroFramework.Controls.MetroTextBox ArduinoIdePathTextbox;
         private MetroFramework.Controls.MetroTextBox SketchFilePathTextbox;
         private MetroFramework.Controls.MetroButton UploadCodeButton;
+        private MetroFramework.Controls.MetroTabPage ColorOrganTab;
+        private MetroFramework.Controls.MetroLabel metroLabel1;
+        private MetroFramework.Controls.MetroToggle ColorOranToggle;
+        private MetroFramework.Controls.MetroLabel RedLbl;
+        private MetroFramework.Controls.MetroLabel GreenLbl;
+        private MetroFramework.Controls.MetroLabel BlueLbl;
+        private MetroFramework.Controls.MetroTrackBar RedTrackBar;
+        private MetroFramework.Controls.MetroTrackBar BlueTrackBar;
+        private MetroFramework.Controls.MetroTrackBar GreenTrackBar;
     }
 }
 
