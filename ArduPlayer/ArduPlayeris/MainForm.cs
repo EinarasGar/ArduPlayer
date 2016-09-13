@@ -1,4 +1,5 @@
-﻿using MetroFramework.Controls;
+﻿using MetroFramework;
+using MetroFramework.Controls;
 using MetroFramework.Forms;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,7 +27,31 @@ namespace ArduPlayeris
             metroTabControl1.SelectedTab = SComTab;
             serial = new SCom(BaudRate,Port,StartButton,StopButton,SendButton,OutPutTextBox,InputTextBox);
             serial.UpdateRecieved += Serial_UpdateRecieved;
-            serial.getInfo(); // move this somewhere else
+            serial.getInfo(); // move this somewhere else            
+        }
+
+        private void compareFiles()
+        {
+            if (Properties.Settings.Default.SketchPath != "") {
+                FileStream stream = new FileStream(
+               Properties.Settings.Default.SketchPath,
+               FileMode.Open,
+               FileAccess.Read,
+               FileShare.ReadWrite);
+                MD5CryptoServiceProvider md5Provider = new MD5CryptoServiceProvider();
+                Byte[] hash = md5Provider.ComputeHash(stream);
+                string _hash = Convert.ToBase64String(hash);
+                if (_hash != Properties.Settings.Default.SketchMd5) {
+                    DialogResult dialogResult = MetroMessageBox.Show(this,"\nArduino code has been changed. Do you want to upload it?", "Arduino code.", MessageBoxButtons.YesNo,MessageBoxIcon.Question);                    
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        UploadCodeButton_Click(null, null);
+                    }
+                }
+                Properties.Settings.Default.SketchMd5 = _hash;
+                Properties.Settings.Default.Save();
+                
+            }
         }
 
         private void Serial_UpdateRecieved(string text)
@@ -185,6 +211,11 @@ namespace ArduPlayeris
         {
             string value = ((float)BlueTrackBar.Value / 20).ToString().Replace(',', '.');
             serial.Send("blu" + value);
+        }
+        
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            compareFiles();
         }
     }
 }

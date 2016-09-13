@@ -82,5 +82,17 @@ namespace ArduPlayeris.Properties {
                 this["SketchPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SketchMd5 {
+            get {
+                return ((string)(this["SketchMd5"]));
+            }
+            set {
+                this["SketchMd5"] = value;
+            }
+        }
     }
 }

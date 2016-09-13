@@ -573,6 +573,7 @@
             this.Name = "MainForm";
             this.Text = "ArduPlayer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFormClosing);
+            this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.Settings.ResumeLayout(false);
             this.Settings.PerformLayout();
             this.SComTab.ResumeLayout(false);

@@ -164,20 +164,31 @@ namespace ArduPlayeris
             }
         }
         bool canRead = true;
-        public void getInfo()
+        public async void getInfo()
         {
-            if (port.IsOpen)
+            while (true)
             {
-
-                canRead = false;
-                Thread.Sleep(200);
-                Send("giveInfo");
-                Thread.Sleep(200);
-                string split1 = port.ReadExisting().Split('{')[1];
-                string split2 = split1.Split('}')[0];
-                UpdateRecieved?.Invoke(split2);
-                canRead = true;
+                try
+                {
+                    if (port.IsOpen)
+                    {
+                        canRead = false;
+                        Thread.Sleep(200);
+                        Send("giveInfo");
+                        Thread.Sleep(200);
+                        string split1 = port.ReadExisting().Split('{')[1];
+                        string split2 = split1.Split('}')[0];
+                        UpdateRecieved?.Invoke(split2);
+                        canRead = true;
+                        break;
+                    }
+                }
+                catch
+                {
+                    await Task.Delay(1000);
+                }
             }
+
         }
 
         private void StopButton_Click(object sender, EventArgs e)
