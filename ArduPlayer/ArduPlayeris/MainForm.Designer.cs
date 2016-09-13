@@ -41,19 +41,26 @@
             this.Port = new MetroFramework.Controls.MetroComboBox();
             this.BaudRate = new MetroFramework.Controls.MetroComboBox();
             this.metroTabPage2 = new MetroFramework.Controls.MetroTabPage();
+            this.UploadCodeButton = new MetroFramework.Controls.MetroButton();
+            this.metroButton4 = new MetroFramework.Controls.MetroButton();
+            this.SendButton = new MetroFramework.Controls.MetroButton();
+            this.SketchFilePathButton = new MetroFramework.Controls.MetroButton();
+            this.ArduinoIdePathButton = new MetroFramework.Controls.MetroButton();
+            this.metroLabel4 = new MetroFramework.Controls.MetroLabel();
+            this.ArduinoIDeLbl = new MetroFramework.Controls.MetroLabel();
+            this.ArduinoIdePathTextbox = new MetroFramework.Controls.MetroTextBox();
+            this.SketchFilePathTextbox = new MetroFramework.Controls.MetroTextBox();
             this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
             this.ColorOranToggle = new MetroFramework.Controls.MetroToggle();
-            this.metroButton4 = new MetroFramework.Controls.MetroButton();
             this.ClearLogsButton = new MetroFramework.Controls.MetroButton();
             this.SaveLogsButton = new MetroFramework.Controls.MetroButton();
-            this.SendButton = new MetroFramework.Controls.MetroButton();
             this.InputTextBox = new MetroFramework.Controls.MetroTextBox();
             this.StopButton = new MetroFramework.Controls.MetroButton();
             this.StartButton = new MetroFramework.Controls.MetroButton();
             this.OutPutTextBox = new MetroFramework.Controls.MetroTextBox();
-            this.metroTabControl1 = new MetroFramework.Controls.MetroTabControl();
-            this.TempLbl = new MetroFramework.Controls.MetroLabel();
             this.HumidityLbl = new MetroFramework.Controls.MetroLabel();
+            this.TempLbl = new MetroFramework.Controls.MetroLabel();
+            this.metroTabControl1 = new MetroFramework.Controls.MetroTabControl();
             this.Settings.SuspendLayout();
             this.metroTabPage2.SuspendLayout();
             this.metroTabControl1.SuspendLayout();
@@ -196,14 +203,19 @@
             // 
             // metroTabPage2
             // 
-            this.metroTabPage2.Controls.Add(this.HumidityLbl);
-            this.metroTabPage2.Controls.Add(this.TempLbl);
+            this.metroTabPage2.Controls.Add(this.UploadCodeButton);
+            this.metroTabPage2.Controls.Add(this.metroButton4);
+            this.metroTabPage2.Controls.Add(this.SendButton);
+            this.metroTabPage2.Controls.Add(this.SketchFilePathButton);
+            this.metroTabPage2.Controls.Add(this.ArduinoIdePathButton);
+            this.metroTabPage2.Controls.Add(this.metroLabel4);
+            this.metroTabPage2.Controls.Add(this.ArduinoIDeLbl);
+            this.metroTabPage2.Controls.Add(this.ArduinoIdePathTextbox);
+            this.metroTabPage2.Controls.Add(this.SketchFilePathTextbox);
             this.metroTabPage2.Controls.Add(this.metroLabel1);
             this.metroTabPage2.Controls.Add(this.ColorOranToggle);
-            this.metroTabPage2.Controls.Add(this.metroButton4);
             this.metroTabPage2.Controls.Add(this.ClearLogsButton);
             this.metroTabPage2.Controls.Add(this.SaveLogsButton);
-            this.metroTabPage2.Controls.Add(this.SendButton);
             this.metroTabPage2.Controls.Add(this.InputTextBox);
             this.metroTabPage2.Controls.Add(this.StopButton);
             this.metroTabPage2.Controls.Add(this.StartButton);
@@ -219,6 +231,102 @@
             this.metroTabPage2.VerticalScrollbarBarColor = true;
             this.metroTabPage2.VerticalScrollbarHighlightOnWheel = false;
             this.metroTabPage2.VerticalScrollbarSize = 10;
+            // 
+            // UploadCodeButton
+            // 
+            this.UploadCodeButton.Location = new System.Drawing.Point(337, 248);
+            this.UploadCodeButton.Name = "UploadCodeButton";
+            this.UploadCodeButton.Size = new System.Drawing.Size(290, 23);
+            this.UploadCodeButton.TabIndex = 14;
+            this.UploadCodeButton.Text = "Upload Sketch To Arduino";
+            this.UploadCodeButton.UseSelectable = true;
+            this.UploadCodeButton.Click += new System.EventHandler(this.UploadCodeButton_Click);
+            // 
+            // metroButton4
+            // 
+            this.metroButton4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.metroButton4.Location = new System.Drawing.Point(211, 3);
+            this.metroButton4.Name = "metroButton4";
+            this.metroButton4.Size = new System.Drawing.Size(106, 23);
+            this.metroButton4.TabIndex = 6;
+            this.metroButton4.Text = "Uzmirsau >:(";
+            this.metroButton4.UseSelectable = true;
+            // 
+            // SendButton
+            // 
+            this.SendButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SendButton.Location = new System.Drawing.Point(228, 251);
+            this.SendButton.Name = "SendButton";
+            this.SendButton.Size = new System.Drawing.Size(88, 23);
+            this.SendButton.TabIndex = 5;
+            this.SendButton.Text = "Send";
+            this.SendButton.UseSelectable = true;
+            // 
+            // SketchFilePathButton
+            // 
+            this.SketchFilePathButton.Location = new System.Drawing.Point(606, 219);
+            this.SketchFilePathButton.Name = "SketchFilePathButton";
+            this.SketchFilePathButton.Size = new System.Drawing.Size(21, 23);
+            this.SketchFilePathButton.TabIndex = 13;
+            this.SketchFilePathButton.Text = "...";
+            this.SketchFilePathButton.UseSelectable = true;
+            this.SketchFilePathButton.Click += new System.EventHandler(this.SketchFilePathButton_Click);
+            // 
+            // ArduinoIdePathButton
+            // 
+            this.ArduinoIdePathButton.Location = new System.Drawing.Point(606, 190);
+            this.ArduinoIdePathButton.Name = "ArduinoIdePathButton";
+            this.ArduinoIdePathButton.Size = new System.Drawing.Size(21, 23);
+            this.ArduinoIdePathButton.TabIndex = 13;
+            this.ArduinoIdePathButton.Text = "...";
+            this.ArduinoIdePathButton.UseSelectable = true;
+            this.ArduinoIdePathButton.Click += new System.EventHandler(this.ArduinoIdePathButton_Click);
+            // 
+            // metroLabel4
+            // 
+            this.metroLabel4.AutoSize = true;
+            this.metroLabel4.Location = new System.Drawing.Point(337, 219);
+            this.metroLabel4.Name = "metroLabel4";
+            this.metroLabel4.Size = new System.Drawing.Size(102, 19);
+            this.metroLabel4.TabIndex = 12;
+            this.metroLabel4.Text = "Sketch File Path:";
+            // 
+            // ArduinoIDeLbl
+            // 
+            this.ArduinoIDeLbl.AutoSize = true;
+            this.ArduinoIDeLbl.Location = new System.Drawing.Point(337, 190);
+            this.ArduinoIDeLbl.Name = "ArduinoIDeLbl";
+            this.ArduinoIDeLbl.Size = new System.Drawing.Size(111, 19);
+            this.ArduinoIDeLbl.TabIndex = 11;
+            this.ArduinoIDeLbl.Text = "Arduino IDE Path:";
+            // 
+            // ArduinoIdePathTExtbox
+            // 
+            this.ArduinoIdePathTextbox.Lines = new string[0];
+            this.ArduinoIdePathTextbox.Location = new System.Drawing.Point(454, 190);
+            this.ArduinoIdePathTextbox.MaxLength = 32767;
+            this.ArduinoIdePathTextbox.Name = "ArduinoIdePathTExtbox";
+            this.ArduinoIdePathTextbox.PasswordChar = '\0';
+            this.ArduinoIdePathTextbox.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.ArduinoIdePathTextbox.SelectedText = "";
+            this.ArduinoIdePathTextbox.Size = new System.Drawing.Size(156, 23);
+            this.ArduinoIdePathTextbox.TabIndex = 10;
+            this.ArduinoIdePathTextbox.UseSelectable = true;
+            // 
+            // SketchFilePath
+            // 
+            this.SketchFilePathTextbox.Lines = new string[0];
+            this.SketchFilePathTextbox.Location = new System.Drawing.Point(454, 219);
+            this.SketchFilePathTextbox.MaxLength = 32767;
+            this.SketchFilePathTextbox.Name = "SketchFilePath";
+            this.SketchFilePathTextbox.PasswordChar = '\0';
+            this.SketchFilePathTextbox.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.SketchFilePathTextbox.SelectedText = "";
+            this.SketchFilePathTextbox.Size = new System.Drawing.Size(156, 23);
+            this.SketchFilePathTextbox.TabIndex = 9;
+            this.SketchFilePathTextbox.UseSelectable = true;
             // 
             // metroLabel1
             // 
@@ -244,17 +352,6 @@
             this.ColorOranToggle.UseSelectable = true;
             this.ColorOranToggle.CheckedChanged += new System.EventHandler(this.ColorOranToggleChanged);
             // 
-            // metroButton4
-            // 
-            this.metroButton4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.metroButton4.Location = new System.Drawing.Point(211, 3);
-            this.metroButton4.Name = "metroButton4";
-            this.metroButton4.Size = new System.Drawing.Size(106, 23);
-            this.metroButton4.TabIndex = 6;
-            this.metroButton4.Text = "Uzmirsau >:(";
-            this.metroButton4.UseSelectable = true;
-            // 
             // ClearLogsButton
             // 
             this.ClearLogsButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -279,29 +376,18 @@
             this.SaveLogsButton.UseSelectable = true;
             this.SaveLogsButton.Click += new System.EventHandler(this.SaveLogsButtonCliecked);
             // 
-            // SendButton
-            // 
-            this.SendButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SendButton.Location = new System.Drawing.Point(552, 251);
-            this.SendButton.Name = "SendButton";
-            this.SendButton.Size = new System.Drawing.Size(75, 23);
-            this.SendButton.TabIndex = 5;
-            this.SendButton.Text = "Send";
-            this.SendButton.UseSelectable = true;
-            // 
             // InputTextBox
             // 
             this.InputTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.InputTextBox.Lines = new string[0];
-            this.InputTextBox.Location = new System.Drawing.Point(322, 251);
+            this.InputTextBox.Location = new System.Drawing.Point(0, 251);
             this.InputTextBox.MaxLength = 32767;
             this.InputTextBox.Name = "InputTextBox";
             this.InputTextBox.PasswordChar = '\0';
             this.InputTextBox.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.InputTextBox.SelectedText = "";
-            this.InputTextBox.Size = new System.Drawing.Size(241, 23);
+            this.InputTextBox.Size = new System.Drawing.Size(254, 23);
             this.InputTextBox.TabIndex = 4;
             this.InputTextBox.UseSelectable = true;
             // 
@@ -341,40 +427,40 @@
             this.OutPutTextBox.ReadOnly = true;
             this.OutPutTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.OutPutTextBox.SelectedText = "";
-            this.OutPutTextBox.Size = new System.Drawing.Size(316, 256);
+            this.OutPutTextBox.Size = new System.Drawing.Size(316, 230);
             this.OutPutTextBox.TabIndex = 2;
             this.OutPutTextBox.Text = "Waiting for connection...";
             this.OutPutTextBox.UseSelectable = true;
             // 
-            // metroTabControl1
+            // HumidityLbl
             // 
-            this.metroTabControl1.Controls.Add(this.Settings);
-            this.metroTabControl1.Controls.Add(this.metroTabPage2);
-            this.metroTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.metroTabControl1.Location = new System.Drawing.Point(20, 60);
-            this.metroTabControl1.Name = "metroTabControl1";
-            this.metroTabControl1.SelectedIndex = 1;
-            this.metroTabControl1.Size = new System.Drawing.Size(635, 316);
-            this.metroTabControl1.TabIndex = 0;
-            this.metroTabControl1.UseSelectable = true;
+            this.HumidityLbl.AutoSize = true;
+            this.HumidityLbl.Location = new System.Drawing.Point(159, 35);
+            this.HumidityLbl.Name = "HumidityLbl";
+            this.HumidityLbl.Size = new System.Drawing.Size(94, 19);
+            this.HumidityLbl.TabIndex = 10;
+            this.HumidityLbl.Text = "Humidity:  0 %";
             // 
             // TempLbl
             // 
             this.TempLbl.AutoSize = true;
-            this.TempLbl.Location = new System.Drawing.Point(323, 85);
+            this.TempLbl.Location = new System.Drawing.Point(159, 16);
             this.TempLbl.Name = "TempLbl";
             this.TempLbl.Size = new System.Drawing.Size(115, 19);
             this.TempLbl.TabIndex = 9;
             this.TempLbl.Text = "Temperature: 0 °C";
             // 
-            // HumidityLbl
+            // metroTabControl1
             // 
-            this.HumidityLbl.AutoSize = true;
-            this.HumidityLbl.Location = new System.Drawing.Point(325, 104);
-            this.HumidityLbl.Name = "HumidityLbl";
-            this.HumidityLbl.Size = new System.Drawing.Size(94, 19);
-            this.HumidityLbl.TabIndex = 10;
-            this.HumidityLbl.Text = "Humidity:  0 %";
+            this.metroTabControl1.Controls.Add(this.metroTabPage2);
+            this.metroTabControl1.Controls.Add(this.Settings);
+            this.metroTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.metroTabControl1.Location = new System.Drawing.Point(20, 60);
+            this.metroTabControl1.Name = "metroTabControl1";
+            this.metroTabControl1.SelectedIndex = 0;
+            this.metroTabControl1.Size = new System.Drawing.Size(635, 316);
+            this.metroTabControl1.TabIndex = 0;
+            this.metroTabControl1.UseSelectable = true;
             // 
             // MainForm
             // 
@@ -382,6 +468,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(675, 396);
             this.Controls.Add(this.metroTabControl1);
+            this.Controls.Add(this.TempLbl);
+            this.Controls.Add(this.HumidityLbl);
             this.MaximumSize = new System.Drawing.Size(675, 396);
             this.MinimumSize = new System.Drawing.Size(675, 396);
             this.Name = "MainForm";
@@ -393,6 +481,7 @@
             this.metroTabPage2.PerformLayout();
             this.metroTabControl1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -424,6 +513,13 @@
         private MetroFramework.Controls.MetroTabControl metroTabControl1;
         private MetroFramework.Controls.MetroLabel HumidityLbl;
         private MetroFramework.Controls.MetroLabel TempLbl;
+        private MetroFramework.Controls.MetroButton SketchFilePathButton;
+        private MetroFramework.Controls.MetroButton ArduinoIdePathButton;
+        private MetroFramework.Controls.MetroLabel metroLabel4;
+        private MetroFramework.Controls.MetroLabel ArduinoIDeLbl;
+        private MetroFramework.Controls.MetroTextBox ArduinoIdePathTextbox;
+        private MetroFramework.Controls.MetroTextBox SketchFilePathTextbox;
+        private MetroFramework.Controls.MetroButton UploadCodeButton;
     }
 }
 

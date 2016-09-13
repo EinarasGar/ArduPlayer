@@ -106,12 +106,13 @@ namespace ArduPlayeris
         {
             if (this.textBox.InvokeRequired)
             {
-                SetTextCallback d = new SetTextCallback(SetText);
-                textBox.BeginInvoke(d, new object[] { text });
                 if (text == "!\r\n")
                 {
                     getInfo();
+                    return;
                 }
+                SetTextCallback d = new SetTextCallback(SetText);
+                textBox.BeginInvoke(d, new object[] { text });              
             }
             else
             {
@@ -144,7 +145,7 @@ namespace ArduPlayeris
                 StopButton.Enabled = false;
                 port.Close();
                 textBox.AppendText("\n");
-                textBox.AppendText("\nDisconnected.");
+                textBox.AppendText("Disconnected.\r\n");
             }
         }
 
@@ -169,6 +170,7 @@ namespace ArduPlayeris
             {
 
                 canRead = false;
+                Thread.Sleep(200);
                 Send("giveInfo");
                 Thread.Sleep(200);
                 string split1 = port.ReadExisting().Split('{')[1];

@@ -12,18 +12,20 @@ namespace ArduPlayeris
         private void InitThemeSettings()
         {
            
-                m_themeManager = new FixedStyleManager(this);
-                themeCombobox.Items.AddRange(Enum.GetNames(typeof(MetroThemeStyle)));
-                styleCombobox.Items.AddRange(Enum.GetNames(typeof(MetroColorStyle)));
+            m_themeManager = new FixedStyleManager(this);
+            themeCombobox.Items.AddRange(Enum.GetNames(typeof(MetroThemeStyle)));
+            styleCombobox.Items.AddRange(Enum.GetNames(typeof(MetroColorStyle)));
 
-                themeCombobox.SelectedValueChanged += themeCombobox_SelectedValueChanged;
-                styleCombobox.SelectedValueChanged += styleCombobox_SelectedValueChanged;
+            themeCombobox.SelectedValueChanged += themeCombobox_SelectedValueChanged;
+            styleCombobox.SelectedValueChanged += styleCombobox_SelectedValueChanged;
                 
 
-                themeCombobox.SelectedItem = Properties.Settings.Default.Theme.ToString();
-                styleCombobox.SelectedItem = Properties.Settings.Default.Style.ToString();
-                metroToggle2.Checked = Properties.Settings.Default.Try;
+            themeCombobox.SelectedItem = Properties.Settings.Default.Theme.ToString();
+            styleCombobox.SelectedItem = Properties.Settings.Default.Style.ToString();
+            metroToggle2.Checked = Properties.Settings.Default.Try;
 
+            ArduinoIdePathTextbox.Text = Properties.Settings.Default.ArduinoIdePath;
+            SketchFilePathTextbox.Text = Properties.Settings.Default.SketchPath;
               //  tglStartByDefault.Checked = Config.Default.StartProxyByDefault;
               // lstServers.SelectedItem = Config.Default.DefaultServerName;
 

@@ -58,5 +58,29 @@ namespace ArduPlayeris.Properties {
                 this["Try"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ArduinoIdePath {
+            get {
+                return ((string)(this["ArduinoIdePath"]));
+            }
+            set {
+                this["ArduinoIdePath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SketchPath {
+            get {
+                return ((string)(this["SketchPath"]));
+            }
+            set {
+                this["SketchPath"] = value;
+            }
+        }
     }
 }
