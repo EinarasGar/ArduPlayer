@@ -14,6 +14,8 @@ namespace ArduPlayeris
     public delegate void UpdateListener(string text);
     class SCom
     {
+        delegate void SetTextCallback(string text);
+
         private MetroButton StartButton;
         private MetroButton StopButton;
         private SerialPort port;
@@ -22,6 +24,7 @@ namespace ArduPlayeris
         private MetroComboBox BaudRate;
         private MetroComboBox Port;
         public event UpdateListener UpdateRecieved;
+        private bool canRead = true;
 
         public SCom(MetroComboBox BaudRate, MetroComboBox Port, MetroButton StartButton, MetroButton StopButton,MetroButton SendButton, MetroTextBox textBox, MetroTextBox input)
         {
@@ -99,9 +102,7 @@ namespace ArduPlayeris
                
             }
         }
-
- 
-        delegate void SetTextCallback(string text);
+                
         private void SetText(string text)
         {
             if (this.textBox.InvokeRequired)
@@ -119,7 +120,6 @@ namespace ArduPlayeris
                 textBox.AppendText(text);
             }
         }
-
 
         private void Port_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
@@ -149,7 +149,6 @@ namespace ArduPlayeris
             }
         }
 
-
         public void Start() {
             if (!port.IsOpen)
             {
@@ -163,30 +162,27 @@ namespace ArduPlayeris
                    
             }
         }
-        bool canRead = true;
-        public async void getInfo()
+        
+        public void getInfo()
         {
-            while (true)
+            try
             {
-                try
+                if (port.IsOpen)
                 {
-                    if (port.IsOpen)
-                    {
-                        canRead = false;
-                        Thread.Sleep(200);
-                        Send("giveInfo");
-                        Thread.Sleep(200);
-                        string split1 = port.ReadExisting().Split('{')[1];
-                        string split2 = split1.Split('}')[0];
-                        UpdateRecieved?.Invoke(split2);
-                        canRead = true;
-                        break;
-                    }
+                    canRead = false;
+                    Thread.Sleep(200);
+                    Send("giveInfo");
+                    Thread.Sleep(200);
+                    string split1 = port.ReadExisting().Split('{')[1];
+                    string split2 = split1.Split('}')[0];
+                    UpdateRecieved?.Invoke(split2);
+                    canRead = true;
+
                 }
-                catch
-                {
-                    await Task.Delay(1000);
-                }
+            }
+            catch
+            {
+                SetText("Couldnt Recieve information");
             }
 
         }
@@ -207,6 +203,7 @@ namespace ArduPlayeris
             if (Text == "") return;
             port.Write(Text + "\n");
         }
+
         private void SendButtonClicked(object sender, EventArgs e)
         {
             Send(InputTextBox.Text);

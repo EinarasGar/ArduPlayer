@@ -258,6 +258,7 @@
             this.metroButton4.TabIndex = 6;
             this.metroButton4.Text = "Uzmirsau >:(";
             this.metroButton4.UseSelectable = true;
+            this.metroButton4.Click += new System.EventHandler(this.metroButton4_Click);
             // 
             // SendButton
             // 
@@ -440,7 +441,7 @@
             this.metroTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.metroTabControl1.Location = new System.Drawing.Point(20, 60);
             this.metroTabControl1.Name = "metroTabControl1";
-            this.metroTabControl1.SelectedIndex = 1;
+            this.metroTabControl1.SelectedIndex = 0;
             this.metroTabControl1.Size = new System.Drawing.Size(635, 316);
             this.metroTabControl1.TabIndex = 0;
             this.metroTabControl1.UseSelectable = true;

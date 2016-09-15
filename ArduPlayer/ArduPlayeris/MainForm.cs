@@ -15,11 +15,28 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
 namespace ArduPlayeris
 {
     public partial class MainForm : MetroForm
     {
         SCom serial;
+        SpotifyHelper spotify;
+        System.Timers.Timer watchTimer;
+        private System.Windows.Forms.Timer timer1;
+        public void InitTimer()
+        {
+            timer1 = new System.Windows.Forms.Timer();
+            timer1.Tick += new EventHandler(timer1_Tick);
+            timer1.Interval = 1000; // in miliseconds
+            timer1.Start();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            metroButton4_Click(null, null);
+        }
+
         public MainForm()
         {
             InitializeComponent();
@@ -27,7 +44,9 @@ namespace ArduPlayeris
             metroTabControl1.SelectedTab = SComTab;
             serial = new SCom(BaudRate,Port,StartButton,StopButton,SendButton,OutPutTextBox,InputTextBox);
             serial.UpdateRecieved += Serial_UpdateRecieved;
-            serial.getInfo(); // move this somewhere else            
+            serial.getInfo(); // move this somewhere else   
+            InitTimer();
+
         }
 
         private void compareFiles()
@@ -188,10 +207,10 @@ namespace ArduPlayeris
                 }
             }        
             p.OutputDataReceived += (s, args) => { try { if (!args.Data.Contains("Windows") && !args.Data.Contains(".ino") && !args.Data.Contains("cd")&& !args.Data.Contains("Microsoft") && args.Data!="") OutPutTextBox.Invoke(new MethodInvoker(delegate { try { OutPutTextBox.AppendText("\r\n\r\n" + args.Data); } catch{ } })); } catch { } };
-            p.ErrorDataReceived+= (s, args) => { try { if (!args.Data.Contains("Windows") && !args.Data.Contains(".ino") && !args.Data.Contains("cd")&& !args.Data.Contains("Microsoft") && args.Data!="") OutPutTextBox.Invoke(new MethodInvoker(delegate { try { OutPutTextBox.AppendText("\r\n\r\n" + args.Data); } catch{ } })); } catch { } };            
+            p.ErrorDataReceived+= (s, args) => { try { if (args.Data.Contains("ArduinoCode:")) MetroMessageBox.Show(this, "\r\n" + args.Data,"Upload Error",MessageBoxButtons.OK,MessageBoxIcon.Error);  if (!args.Data.Contains("Windows") && !args.Data.Contains(".ino") && !args.Data.Contains("cd")&& !args.Data.Contains("Microsoft") && args.Data!="") OutPutTextBox.Invoke(new MethodInvoker(delegate { try { OutPutTextBox.AppendText("\r\n\r\n" + args.Data); } catch{ } })); } catch { } };            
             p.BeginOutputReadLine();
             p.BeginErrorReadLine();
-            p.WaitForExit();
+            p.WaitForExit();            
             p.Close();
         }
 
@@ -216,6 +235,19 @@ namespace ArduPlayeris
         private void MainForm_Shown(object sender, EventArgs e)
         {
             compareFiles();
+        }
+
+        string[] buvo = new string[3];
+        private async void metroButton4_Click(object sender, EventArgs e)
+        {
+            string[] collection = SpotifyHelper.GetSong();
+            if (buvo[0] != collection[0])
+            {
+                serial.Send("artist" + collection[1]);                
+                await Task.Delay(100);
+                serial.Send("title" + collection[0]);
+                buvo = collection;
+            }            
         }
     }
 }
