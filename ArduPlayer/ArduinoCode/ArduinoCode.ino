@@ -33,11 +33,12 @@ float temperature = 0;
 float humidity = 0;
 bool ShowTemp = false;
 bool ShowSong = true;
-long lcdTimeThreshold;
+unsigned long lcdTimeThreshold;
 unsigned int switchingTime = 5000;
 String songArtist="";
 String songTitle="";
 String songTitleHold = ""; // I dont need artist because its just for checking if it should update song
+bool justVolume = false;
 
 LiquidCrystal_I2C   lcd(0x27, 16, 2); // A4 - SDA          A5 - SCL
 Encoder myEnc(2, 3);  // D2, D3 pinai rotary encoderio
@@ -65,7 +66,6 @@ void setup() {
 }
 
 void loop() {
-
   String readString;
   while(Serial.available()) {
     delay(3);
@@ -75,14 +75,10 @@ void loop() {
       //  Serial.println(readString);
     }
     readString += c;
-
   }
-
-
 
   if(ColorOrganOn) // Jei color organas ijungtas, tai paleisti funkcija kuri kontroliuoja sviesas
   colors();
-
 
   if (!(digitalRead(ButtonPin))){  // Readina Rotary encoderio button paspaudima
     if(pressed == false) //Tikrina ar jau buvo isvietes funkcija, nes pausaudimas loope yra uzfiksuojmas kiekviena karta
@@ -101,7 +97,7 @@ void loop() {
     oldPosition = newPosition;
   }
 
-
+if(!menuOpened){
   if(lcdTimeThreshold + switchingTime < millis()){
     lcd.clear();
     if(ShowSong){
@@ -159,10 +155,11 @@ void loop() {
       lcd.print(round(humidity));
     }
   }
-
+}
 
   if(menuOpenedThreshold+10000 < millis()){
     menuClose();
+    justVolume=false;
   }
 
 }
@@ -218,6 +215,18 @@ void ParseSerialFunction(String text){
   //  lcd.clear();
       songArtist=text.substring(6,text.length());
   }
+  if(text.substring(0,6) == "volume"){
+    justVolume=true;
+      menuOpened=true;
+      menuOpenedThreshold = millis() - 7000;
+      lcd.clear();
+      lcd.setCursor (0,0);
+      lcd.print("Volume: ");
+      lcd.print(text.substring(6,text.length()));
+      lcd.print('%');
+      ShowSong = false; // kad iskarto rodytu daina o ne Temperatura
+      lcdTimeThreshold = millis() - switchingTime - 10;
+  }
 
 }
 
@@ -230,10 +239,10 @@ void colors(){
     spectrumValue[i]=analogRead(analogPin);
     spectrumValue[i]=constrain(spectrumValue[i], filter, 1023);
     spectrumValue[i]=map(spectrumValue[i], filter,1023,0,255);
-    Serial.print(spectrumValue[i]); Serial.print(" ");
+    //Serial.print(spectrumValue[i]); Serial.print(" ");
     digitalWrite(strobePin, HIGH);
   }
-  Serial.println();
+  //Serial.println();
   if(spectrumValue[1]*redBright < 255)
   analogWrite(ledred,spectrumValue[1]*redBright);
   else
@@ -480,16 +489,21 @@ void updateMenu(){
 
 
 void left() {
-  if(menuOpened){
+  if(menuOpened && !justVolume){
     MenuGoUp();
     // tone(8, 900, 50);
+  } else {
+      Serial.println("+");
+
   }
 }
 
 void right() {
-  if(menuOpened){
+  if(menuOpened && !justVolume){
     MenuGoDown();
     // tone(8, 800, 50);
+  } else {
+    Serial.println("-");
   }
 }
 

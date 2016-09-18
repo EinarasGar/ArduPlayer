@@ -112,6 +112,18 @@ namespace ArduPlayeris
                     getInfo();
                     return;
                 }
+                if (text.Contains("+")) {
+                    VolumeHelper.IncrementVolume("Spotify");
+                    
+                    Send("volume" + Math.Round((double)VolumeHelper.GetApplicationVolume("Spotify")).ToString());
+                    return;
+                }
+                if (text.Contains("-"))
+                {
+                    VolumeHelper.DecrementVolume("Spotify");
+                    Send("volume" + Math.Round((double)VolumeHelper.GetApplicationVolume("Spotify")).ToString());
+                    return;
+                }
                 SetTextCallback d = new SetTextCallback(SetText);
                 textBox.BeginInvoke(d, new object[] { text });              
             }

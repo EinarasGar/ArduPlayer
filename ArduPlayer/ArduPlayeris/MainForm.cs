@@ -49,7 +49,7 @@ namespace ArduPlayeris
 
         }
 
-        private void compareFiles()
+        private void compareFiles(bool dialog)
         {
             if (Properties.Settings.Default.SketchPath != "") {
                 FileStream stream = new FileStream(
@@ -60,11 +60,15 @@ namespace ArduPlayeris
                 MD5CryptoServiceProvider md5Provider = new MD5CryptoServiceProvider();
                 Byte[] hash = md5Provider.ComputeHash(stream);
                 string _hash = Convert.ToBase64String(hash);
-                if (_hash != Properties.Settings.Default.SketchMd5) {
-                    DialogResult dialogResult = MetroMessageBox.Show(this,"\nArduino code has been changed. Do you want to upload it?", "Arduino code.", MessageBoxButtons.YesNo,MessageBoxIcon.Question);                    
-                    if (dialogResult == DialogResult.Yes)
+                if (dialog)
+                {
+                    if (_hash != Properties.Settings.Default.SketchMd5)
                     {
-                        UploadCodeButton_Click(null, null);
+                        DialogResult dialogResult = MetroMessageBox.Show(this, "\nArduino code has been changed. Do you want to upload it?", "Arduino code.", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (dialogResult == DialogResult.Yes)
+                        {
+                            UploadCodeButton_Click(null, null);
+                        }
                     }
                 }
                 Properties.Settings.Default.SketchMd5 = _hash;
@@ -183,6 +187,7 @@ namespace ArduPlayeris
             serial.Start();
             await Task.Delay(2000);
             serial.getInfo();
+            compareFiles(false);
         }
 
         private void UploadArduinoCode() {
@@ -234,7 +239,7 @@ namespace ArduPlayeris
         
         private void MainForm_Shown(object sender, EventArgs e)
         {
-            compareFiles();
+            compareFiles(true);
         }
 
         string[] buvo = new string[3];
@@ -247,7 +252,13 @@ namespace ArduPlayeris
                 await Task.Delay(100);
                 serial.Send("title" + collection[0]);
                 buvo = collection;
+                NowPlayingLbl.Text = "Now playing: " + collection[0] + " by " + collection[1]; //+ ", " + collection[2];
             }            
+        }
+
+        private void vol(object sender, EventArgs e)
+        {
+            VolumeHelper.IncrementVolume("Spotify");
         }
     }
 }

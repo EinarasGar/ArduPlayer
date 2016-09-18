@@ -68,6 +68,7 @@
             this.GreenTrackBar = new MetroFramework.Controls.MetroTrackBar();
             this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
             this.ColorOranToggle = new MetroFramework.Controls.MetroToggle();
+            this.NowPlayingLbl = new MetroFramework.Controls.MetroLabel();
             this.Settings.SuspendLayout();
             this.SComTab.SuspendLayout();
             this.metroTabControl1.SuspendLayout();
@@ -258,7 +259,7 @@
             this.metroButton4.TabIndex = 6;
             this.metroButton4.Text = "Uzmirsau >:(";
             this.metroButton4.UseSelectable = true;
-            this.metroButton4.Click += new System.EventHandler(this.metroButton4_Click);
+            this.metroButton4.Click += new System.EventHandler(this.vol);
             // 
             // SendButton
             // 
@@ -561,11 +562,21 @@
             this.ColorOranToggle.UseSelectable = true;
             this.ColorOranToggle.CheckedChanged += new System.EventHandler(this.ColorOranToggleChanged);
             // 
+            // NowPlayingLbl
+            // 
+            this.NowPlayingLbl.AutoSize = true;
+            this.NowPlayingLbl.Location = new System.Drawing.Point(20, 372);
+            this.NowPlayingLbl.Name = "NowPlayingLbl";
+            this.NowPlayingLbl.Size = new System.Drawing.Size(85, 19);
+            this.NowPlayingLbl.TabIndex = 11;
+            this.NowPlayingLbl.Text = "Now playing:";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(675, 396);
+            this.Controls.Add(this.NowPlayingLbl);
             this.Controls.Add(this.metroTabControl1);
             this.Controls.Add(this.TempLbl);
             this.Controls.Add(this.HumidityLbl);
@@ -629,6 +640,7 @@
         private MetroFramework.Controls.MetroTrackBar RedTrackBar;
         private MetroFramework.Controls.MetroTrackBar BlueTrackBar;
         private MetroFramework.Controls.MetroTrackBar GreenTrackBar;
+        private MetroFramework.Controls.MetroLabel NowPlayingLbl;
     }
 }
 
