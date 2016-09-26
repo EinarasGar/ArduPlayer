@@ -21,8 +21,6 @@ namespace ArduPlayeris
     public partial class MainForm : MetroForm
     {
         SCom serial;
-        SpotifyHelper spotify;
-        System.Timers.Timer watchTimer;
         private System.Windows.Forms.Timer timer1;
         public void InitTimer()
         {
@@ -42,6 +40,7 @@ namespace ArduPlayeris
             InitializeComponent();
             InitThemeSettings();
             metroTabControl1.SelectedTab = SComTab;
+            metroTabControl1.SelectedIndexChanged += MetroTabControl1_SelectedIndexChanged;
             serial = new SCom(BaudRate,Port,StartButton,StopButton,SendButton,OutPutTextBox,InputTextBox);
             serial.UpdateRecieved += Serial_UpdateRecieved;
             serial.getInfo(); // move this somewhere else   
@@ -259,6 +258,6 @@ namespace ArduPlayeris
         private void vol(object sender, EventArgs e)
         {
             VolumeHelper.IncrementVolume("Spotify");
-        }
+        }     
     }
 }

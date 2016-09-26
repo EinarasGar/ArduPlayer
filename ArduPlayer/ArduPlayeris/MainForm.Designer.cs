@@ -68,11 +68,17 @@
             this.GreenTrackBar = new MetroFramework.Controls.MetroTrackBar();
             this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
             this.ColorOranToggle = new MetroFramework.Controls.MetroToggle();
+            this.metroTabPage1 = new MetroFramework.Controls.MetroTabPage();
+            this.TrackBarX = new MetroFramework.Controls.MetroTrackBar();
+            this.TrackBarY = new MetroFramework.Controls.MetroTrackBar();
+            this.CubePictureBox = new System.Windows.Forms.PictureBox();
             this.NowPlayingLbl = new MetroFramework.Controls.MetroLabel();
             this.Settings.SuspendLayout();
             this.SComTab.SuspendLayout();
             this.metroTabControl1.SuspendLayout();
             this.ColorOrganTab.SuspendLayout();
+            this.metroTabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CubePictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // Settings
@@ -439,10 +445,11 @@
             this.metroTabControl1.Controls.Add(this.SComTab);
             this.metroTabControl1.Controls.Add(this.ColorOrganTab);
             this.metroTabControl1.Controls.Add(this.Settings);
+            this.metroTabControl1.Controls.Add(this.metroTabPage1);
             this.metroTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.metroTabControl1.Location = new System.Drawing.Point(20, 60);
             this.metroTabControl1.Name = "metroTabControl1";
-            this.metroTabControl1.SelectedIndex = 0;
+            this.metroTabControl1.SelectedIndex = 3;
             this.metroTabControl1.Size = new System.Drawing.Size(635, 316);
             this.metroTabControl1.TabIndex = 0;
             this.metroTabControl1.UseSelectable = true;
@@ -562,6 +569,61 @@
             this.ColorOranToggle.UseSelectable = true;
             this.ColorOranToggle.CheckedChanged += new System.EventHandler(this.ColorOranToggleChanged);
             // 
+            // metroTabPage1
+            // 
+            this.metroTabPage1.Controls.Add(this.TrackBarX);
+            this.metroTabPage1.Controls.Add(this.TrackBarY);
+            this.metroTabPage1.Controls.Add(this.CubePictureBox);
+            this.metroTabPage1.HorizontalScrollbarBarColor = true;
+            this.metroTabPage1.HorizontalScrollbarHighlightOnWheel = false;
+            this.metroTabPage1.HorizontalScrollbarSize = 10;
+            this.metroTabPage1.Location = new System.Drawing.Point(4, 38);
+            this.metroTabPage1.Name = "metroTabPage1";
+            this.metroTabPage1.Size = new System.Drawing.Size(627, 274);
+            this.metroTabPage1.TabIndex = 3;
+            this.metroTabPage1.Text = "Led Cube";
+            this.metroTabPage1.VerticalScrollbarBarColor = true;
+            this.metroTabPage1.VerticalScrollbarHighlightOnWheel = false;
+            this.metroTabPage1.VerticalScrollbarSize = 10;
+            // 
+            // TrackBarX
+            // 
+            this.TrackBarX.BackColor = System.Drawing.Color.Transparent;
+            this.TrackBarX.Location = new System.Drawing.Point(0, 32);
+            this.TrackBarX.Maximum = 360;
+            this.TrackBarX.Minimum = -360;
+            this.TrackBarX.Name = "TrackBarX";
+            this.TrackBarX.Size = new System.Drawing.Size(343, 23);
+            this.TrackBarX.SmallChange = 0;
+            this.TrackBarX.TabIndex = 4;
+            this.TrackBarX.Text = "metroTrackBar1";
+            this.TrackBarX.Value = 0;
+            this.TrackBarX.Scroll += new System.Windows.Forms.ScrollEventHandler(this.TackBarScroll);
+            // 
+            // TrackBarY
+            // 
+            this.TrackBarY.BackColor = System.Drawing.Color.Transparent;
+            this.TrackBarY.Location = new System.Drawing.Point(-1, 3);
+            this.TrackBarY.Maximum = 360;
+            this.TrackBarY.Minimum = -360;
+            this.TrackBarY.Name = "TrackBarY";
+            this.TrackBarY.Size = new System.Drawing.Size(344, 23);
+            this.TrackBarY.SmallChange = 0;
+            this.TrackBarY.TabIndex = 3;
+            this.TrackBarY.Text = "metroTrackBar1";
+            this.TrackBarY.Value = 0;
+            this.TrackBarY.Scroll += new System.Windows.Forms.ScrollEventHandler(this.TackBarScroll);
+            // 
+            // CubePictureBox
+            // 
+            this.CubePictureBox.Location = new System.Drawing.Point(349, 0);
+            this.CubePictureBox.Name = "CubePictureBox";
+            this.CubePictureBox.Size = new System.Drawing.Size(278, 278);
+            this.CubePictureBox.TabIndex = 2;
+            this.CubePictureBox.TabStop = false;
+            this.CubePictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDown);
+            this.CubePictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
+            // 
             // NowPlayingLbl
             // 
             this.NowPlayingLbl.AutoSize = true;
@@ -593,6 +655,8 @@
             this.metroTabControl1.ResumeLayout(false);
             this.ColorOrganTab.ResumeLayout(false);
             this.ColorOrganTab.PerformLayout();
+            this.metroTabPage1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.CubePictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -641,6 +705,10 @@
         private MetroFramework.Controls.MetroTrackBar BlueTrackBar;
         private MetroFramework.Controls.MetroTrackBar GreenTrackBar;
         private MetroFramework.Controls.MetroLabel NowPlayingLbl;
+        private MetroFramework.Controls.MetroTabPage metroTabPage1;
+        private System.Windows.Forms.PictureBox CubePictureBox;
+        private MetroFramework.Controls.MetroTrackBar TrackBarY;
+        private MetroFramework.Controls.MetroTrackBar TrackBarX;
     }
 }
 

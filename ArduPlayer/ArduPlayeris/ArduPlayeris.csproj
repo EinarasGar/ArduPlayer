@@ -76,6 +76,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cube\Cube.cs" />
+    <Compile Include="Cube\CubeControls.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cube\Face.cs" />
+    <Compile Include="Cube\Maths3d.cs" />
+    <Compile Include="Cube\Point3D.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
