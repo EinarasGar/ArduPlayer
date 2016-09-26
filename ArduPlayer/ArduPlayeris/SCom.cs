@@ -170,7 +170,7 @@ namespace ArduPlayeris
                 StopButton.Enabled = true;
                 port.Open();
                 textBox.Clear();
-                textBox.AppendText("Connected to Arduino!\n");
+                textBox.AppendText("Connected to Port: " + Port.Text + " and Baud: " + BaudRate.Text + "\n" );
                    
             }
         }

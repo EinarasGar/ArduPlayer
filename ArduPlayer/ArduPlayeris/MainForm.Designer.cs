@@ -73,6 +73,8 @@
             this.TrackBarY = new MetroFramework.Controls.MetroTrackBar();
             this.CubePictureBox = new System.Windows.Forms.PictureBox();
             this.NowPlayingLbl = new MetroFramework.Controls.MetroLabel();
+            this.metroToggle1 = new MetroFramework.Controls.MetroToggle();
+            this.metroLabel3 = new MetroFramework.Controls.MetroLabel();
             this.Settings.SuspendLayout();
             this.SComTab.SuspendLayout();
             this.metroTabControl1.SuspendLayout();
@@ -83,6 +85,8 @@
             // 
             // Settings
             // 
+            this.Settings.Controls.Add(this.metroLabel3);
+            this.Settings.Controls.Add(this.metroToggle1);
             this.Settings.Controls.Add(this.metroToggle2);
             this.Settings.Controls.Add(this.metroLabel2);
             this.Settings.Controls.Add(this.BaudLbl);
@@ -109,7 +113,7 @@
             // metroToggle2
             // 
             this.metroToggle2.AutoSize = true;
-            this.metroToggle2.Location = new System.Drawing.Point(111, 91);
+            this.metroToggle2.Location = new System.Drawing.Point(122, 91);
             this.metroToggle2.Name = "metroToggle2";
             this.metroToggle2.Size = new System.Drawing.Size(80, 17);
             this.metroToggle2.TabIndex = 10;
@@ -449,7 +453,7 @@
             this.metroTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.metroTabControl1.Location = new System.Drawing.Point(20, 60);
             this.metroTabControl1.Name = "metroTabControl1";
-            this.metroTabControl1.SelectedIndex = 3;
+            this.metroTabControl1.SelectedIndex = 2;
             this.metroTabControl1.Size = new System.Drawing.Size(635, 316);
             this.metroTabControl1.TabIndex = 0;
             this.metroTabControl1.UseSelectable = true;
@@ -633,6 +637,26 @@
             this.NowPlayingLbl.TabIndex = 11;
             this.NowPlayingLbl.Text = "Now playing:";
             // 
+            // metroToggle1
+            // 
+            this.metroToggle1.AutoSize = true;
+            this.metroToggle1.Location = new System.Drawing.Point(122, 118);
+            this.metroToggle1.Name = "metroToggle1";
+            this.metroToggle1.Size = new System.Drawing.Size(80, 17);
+            this.metroToggle1.TabIndex = 11;
+            this.metroToggle1.Text = "Off";
+            this.metroToggle1.UseSelectable = true;
+            this.metroToggle1.CheckedChanged += new System.EventHandler(this.metroToggle1_CheckedChanged);
+            // 
+            // metroLabel3
+            // 
+            this.metroLabel3.AutoSize = true;
+            this.metroLabel3.Location = new System.Drawing.Point(7, 116);
+            this.metroLabel3.Name = "metroLabel3";
+            this.metroLabel3.Size = new System.Drawing.Size(109, 19);
+            this.metroLabel3.TabIndex = 12;
+            this.metroLabel3.Text = "Launch at startup";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -709,6 +733,8 @@
         private System.Windows.Forms.PictureBox CubePictureBox;
         private MetroFramework.Controls.MetroTrackBar TrackBarY;
         private MetroFramework.Controls.MetroTrackBar TrackBarX;
+        private MetroFramework.Controls.MetroLabel metroLabel3;
+        private MetroFramework.Controls.MetroToggle metroToggle1;
     }
 }
 

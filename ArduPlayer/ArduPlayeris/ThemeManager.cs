@@ -26,8 +26,16 @@ namespace ArduPlayeris
 
             ArduinoIdePathTextbox.Text = Properties.Settings.Default.ArduinoIdePath;
             SketchFilePathTextbox.Text = Properties.Settings.Default.SketchPath;
-              //  tglStartByDefault.Checked = Config.Default.StartProxyByDefault;
-              // lstServers.SelectedItem = Config.Default.DefaultServerName;
+
+            Microsoft.Win32.RegistryKey rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey
+                       ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+
+            if (rk.GetValue("ArduPlayer") != null) {
+                metroToggle1.Checked = true;
+            }
+            
+            //  tglStartByDefault.Checked = Config.Default.StartProxyByDefault;
+            // lstServers.SelectedItem = Config.Default.DefaultServerName;
 
         }
 

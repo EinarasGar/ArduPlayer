@@ -1,6 +1,7 @@
 ﻿using MetroFramework;
 using MetroFramework.Controls;
 using MetroFramework.Forms;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -257,7 +258,18 @@ namespace ArduPlayeris
 
         private void vol(object sender, EventArgs e)
         {
-            VolumeHelper.IncrementVolume("Spotify");
-        }     
+
+        }
+ 
+
+        private void metroToggle1_CheckedChanged(object sender, EventArgs e)
+        {
+            RegistryKey rk = Registry.CurrentUser.OpenSubKey
+                       ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            if (metroToggle1.Checked)
+                rk.SetValue("ArduPlayer", Application.ExecutablePath.ToString());
+            else
+                rk.DeleteValue("ArduPlayer", false);
+        }
     }
 }
