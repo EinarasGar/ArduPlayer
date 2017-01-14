@@ -1,13 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArduPlayeris", "ArduPlayeris\ArduPlayeris.csproj", "{4B8C97B4-D2BD-4074-9B90-A3B274F162E9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ArduinoCode", "ArduinoCode", "{EA3213CB-EC5C-4FFD-A944-8DA66318BDF7}"
 	ProjectSection(SolutionItems) = preProject
 		ArduinoCode\ArduinoCode.ino = ArduinoCode\ArduinoCode.ino
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ArduinoCodeV2", "ArduinoCodeV2", "{A97807B4-9AB8-40A2-854E-8EB703A04D2E}"
+	ProjectSection(SolutionItems) = preProject
+		ArduinoCodeV2\ArduinoCodeV2.ino = ArduinoCodeV2\ArduinoCodeV2.ino
 	EndProjectSection
 EndProject
 Global
