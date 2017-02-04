@@ -24,6 +24,7 @@ namespace ArduPlayeris
         private MetroComboBox BaudRate;
         private MetroComboBox Port;
         public event UpdateListener UpdateRecieved;
+        public event UpdateListener CommandRecieved;
         private bool canRead = true;
 
         public SCom(MetroComboBox BaudRate, MetroComboBox Port, MetroButton StartButton, MetroButton StopButton,MetroButton SendButton, MetroTextBox textBox, MetroTextBox input)
@@ -45,7 +46,7 @@ namespace ArduPlayeris
             BaudRate.Items.Add(38400);
             BaudRate.Items.Add(57600);
             BaudRate.Items.Add(115200);
-            Port.SelectedIndex = 0;
+            Port.SelectedIndex = 1;
             BaudRate.SelectedIndex = 2;
 
             port = new SerialPort();
@@ -58,7 +59,7 @@ namespace ArduPlayeris
             Port.SelectedIndexChanged += Port_SelectedIndexChanged;
             BaudRate.SelectedIndexChanged += BaudRate_SelectedIndexChanged;
 
-            if (Properties.Settings.Default.Try == true) {
+         /*   if (Properties.Settings.Default.Try == true) {
                 foreach (string ports in SerialPort.GetPortNames())
                 {
                     if (port.IsOpen) port.Close();
@@ -77,10 +78,13 @@ namespace ArduPlayeris
                 }
                 textBox.AppendText("\r\n");                
                 textBox.AppendText("Couldn't start communication with any available ports");
-            }
+            }*/
+
             port.PortName = Port.SelectedItem.ToString();
 
             port.DataReceived += Port_DataReceived;
+
+            Start();
         }
 
         private void BaudRate_SelectedIndexChanged(object sender, EventArgs e)
@@ -99,7 +103,6 @@ namespace ArduPlayeris
             if (e.KeyCode == Keys.Enter)
             {
                 SendButtonClicked(null, null);
-               
             }
         }
                 
@@ -107,23 +110,6 @@ namespace ArduPlayeris
         {
             if (this.textBox.InvokeRequired)
             {
-                if (text == "!\r\n")
-                {
-                    getInfo();
-                    return;
-                }
-                if (text.Contains("+")) {
-                    VolumeHelper.IncrementVolume("Spotify");
-                    
-                    Send("volume" + Math.Round((double)VolumeHelper.GetApplicationVolume("Spotify")).ToString());
-                    return;
-                }
-                if (text.Contains("-"))
-                {
-                    VolumeHelper.DecrementVolume("Spotify");
-                    Send("volume" + Math.Round((double)VolumeHelper.GetApplicationVolume("Spotify")).ToString());
-                    return;
-                }
                 SetTextCallback d = new SetTextCallback(SetText);
                 textBox.BeginInvoke(d, new object[] { text });              
             }
@@ -138,7 +124,17 @@ namespace ArduPlayeris
             if (!canRead) return;
             try
             {
-                SetText(port.ReadExisting());
+                string text = port.ReadLine().Replace("\r",string.Empty);
+                if (text[0] == '!')
+                {
+                    CommandRecieved?.Invoke(text);
+                    
+                }
+                else
+                {
+                    SetText(text + "\n");
+                }
+                
             }
             catch (Exception ex)
             {
@@ -175,7 +171,7 @@ namespace ArduPlayeris
             }
         }
         
-        public void getInfo()
+        public void getInfo() // TODO: REWORK THIS
         {
             try
             {
@@ -207,7 +203,7 @@ namespace ArduPlayeris
         private void StartButton_Click(object sender, EventArgs e)
         {
             Start();
-            getInfo();
+            //getInfo();
         }
 
         public void Send(string Text) {

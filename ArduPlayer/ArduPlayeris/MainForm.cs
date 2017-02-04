@@ -44,9 +44,45 @@ namespace ArduPlayeris
             metroTabControl1.SelectedIndexChanged += MetroTabControl1_SelectedIndexChanged;
             serial = new SCom(BaudRate,Port,StartButton,StopButton,SendButton,OutPutTextBox,InputTextBox);
             serial.UpdateRecieved += Serial_UpdateRecieved;
-            serial.getInfo(); // move this somewhere else   
+            serial.CommandRecieved += Serial_CommandRecieved;
+            //    serial.getInfo(); // move this somewhere else   
             InitTimer();
 
+        }
+
+        private void Serial_CommandRecieved(string text)
+        {
+            text = text.Substring(1);
+
+            switch (text)
+            {
+                case "+":
+                    SpotifyHelper.VolumeHelper.IncrementVolume("Spotify");
+                   // serial.Send("volume" + Math.Round((double)SpotifyHelper.VolumeHelper.GetApplicationVolume("Spotify")).ToString());
+                    break;
+                case "-":
+                    SpotifyHelper.VolumeHelper.DecrementVolume("Spotify");
+                    //serial.Send("volume" + Math.Round((double)SpotifyHelper.VolumeHelper.GetApplicationVolume("Spotify")).ToString());
+                    break;
+                case "cl1":
+                    metroButton4_Click(null, null);
+                    SpotifyHelper.Win32.SendMessage(SpotifyHelper.GetSpotify(), SpotifyHelper.Win32.Constants.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)SpotifyHelper.SpotifyAction.PlayPause));
+                    break;
+                case "cl2":
+                    metroButton4_Click(null, null);
+                    SpotifyHelper.Win32.SendMessage(SpotifyHelper.GetSpotify(), SpotifyHelper.Win32.Constants.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)SpotifyHelper.SpotifyAction.NextTrack));
+                    break;
+                case "cl3":
+                    metroButton4_Click(null, null);
+                    // Sending two because cl3 happens only after cl2 and cl2 plays next track so we have to go back twice for prev track.
+                    SpotifyHelper.Win32.SendMessage(SpotifyHelper.GetSpotify(), SpotifyHelper.Win32.Constants.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)SpotifyHelper.SpotifyAction.PreviousTrack));
+                    SpotifyHelper.Win32.SendMessage(SpotifyHelper.GetSpotify(), SpotifyHelper.Win32.Constants.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)SpotifyHelper.SpotifyAction.PreviousTrack));
+                    break;
+                case "!":
+                   // getInfo();
+                    break;
+
+            }
         }
 
         private void compareFiles(bool dialog)
@@ -59,6 +95,7 @@ namespace ArduPlayeris
                FileShare.ReadWrite);
                 MD5CryptoServiceProvider md5Provider = new MD5CryptoServiceProvider();
                 Byte[] hash = md5Provider.ComputeHash(stream);
+                stream.Close();
                 string _hash = Convert.ToBase64String(hash);
                 if (dialog)
                 {
@@ -186,7 +223,7 @@ namespace ArduPlayeris
             }
             serial.Start();
             await Task.Delay(2000);
-            serial.getInfo();
+          //  serial.getInfo();
             compareFiles(false);
         }
 
@@ -212,7 +249,7 @@ namespace ArduPlayeris
                 }
             }        
             p.OutputDataReceived += (s, args) => { try { if (!args.Data.Contains("Windows") && !args.Data.Contains(".ino") && !args.Data.Contains("cd")&& !args.Data.Contains("Microsoft") && args.Data!="") OutPutTextBox.Invoke(new MethodInvoker(delegate { try { OutPutTextBox.AppendText("\r\n\r\n" + args.Data); } catch{ } })); } catch { } };
-            p.ErrorDataReceived+= (s, args) => { try { if (args.Data.Contains("ArduinoCode:")) MetroMessageBox.Show(this, "\r\n" + args.Data,"Upload Error",MessageBoxButtons.OK,MessageBoxIcon.Error);  if (!args.Data.Contains("Windows") && !args.Data.Contains(".ino") && !args.Data.Contains("cd")&& !args.Data.Contains("Microsoft") && args.Data!="") OutPutTextBox.Invoke(new MethodInvoker(delegate { try { OutPutTextBox.AppendText("\r\n\r\n" + args.Data); } catch{ } })); } catch { } };            
+            p.ErrorDataReceived+= (s, args) => { try { if (args.Data.Contains("ArduinoCodeV2:")) MetroMessageBox.Show(this, "\r\n" + args.Data,"Upload Error",MessageBoxButtons.OK,MessageBoxIcon.Error);  if (!args.Data.Contains("Windows") && !args.Data.Contains(".ino") && !args.Data.Contains("cd")&& !args.Data.Contains("Microsoft") && args.Data!="") OutPutTextBox.Invoke(new MethodInvoker(delegate { try { OutPutTextBox.AppendText("\r\n\r\n" + args.Data); } catch{ } })); } catch { } };            
             p.BeginOutputReadLine();
             p.BeginErrorReadLine();
             p.WaitForExit();            

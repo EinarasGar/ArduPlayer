@@ -1,15 +1,40 @@
 #include <LiquidCrystal_I2C.h>										// Library for lcd i2c communication.
 #include <DHT.h>													// Library for tenperature and humidity sensor.
+#include "FastLED.h"												// Library for WS2812 led strip
+#include <Encoder.h>
 
 #define ArraySize(x)       (sizeof(x) / sizeof(x[0]))				// Returns size of array
+#define NUM_LEDS 70													// Number of leds in led strip
+#define DATA_PIN 8													// Data pin for led strip
+
+#define AnalogPinForColors 0
+#define StrobePinForColors 6
+#define ResetPinForColors 5
+
+#define RotaryEncoderButtonPin 4
+#define RotaryEncoderFirstPin 2
+#define RotaryEncoderSecondPin 3
 
 LiquidCrystal_I2C   lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);	// Initializes lcd object for i2c communication.
 DHT dht(7, DHT22);													// Initializes dht object for temperature checking.
+CRGB leds[NUM_LEDS];
+Encoder myEnc(RotaryEncoderFirstPin, RotaryEncoderSecondPin);		// D2, D3 pins for encoder
+
+long oldPosition = -999;											// position of rotary encoder
 
 void setup()
 {			
 	Serial.begin(9600);												// Starts serial communication at baud rate 9600.
 	lcd.begin(16, 2);												// Starts 16x2 lcd screen 	
+	FastLED.addLeds<WS2812, DATA_PIN, GRB>(leds, NUM_LEDS);
+	pinMode(AnalogPinForColors, INPUT);
+	pinMode(StrobePinForColors, OUTPUT);
+	pinMode(ResetPinForColors, OUTPUT);
+
+	digitalWrite(ResetPinForColors, LOW);
+	digitalWrite(StrobePinForColors, HIGH);
+
+	oldPosition = myEnc.read();
 }
 
 
@@ -22,6 +47,8 @@ void loop()
 {	
 	CheckSCom();													// Checks if any serial communication is present.
 	GetNewTemperatureReadings();									// Checks current temperature in the room.
+	CheckEncoder();
+	colors();
 	
 	if(_time + nextWait < millis())									// Timer that ticks every 'nextWait' miliseconds.
 	{		
@@ -49,6 +76,160 @@ void loop()
 	} 	
 	
 	IdkHowToNametThis(lcdMode);										// Update lcd with current mode.
+}
+
+long clickMillis=0;
+boolean pressed = false;											// Tikrina ar paspaudia rotrary encoder buttona ir jei taip padaro true
+int clickCounter = 0;
+void CheckEncoder()
+{
+	if (!(digitalRead(RotaryEncoderButtonPin))) {					// Readina Rotary encoderio button paspaudima
+		if (pressed == false){										//Tikrina ar jau buvo isvietes funkcija, nes pausaudimas loope yra uzfiksuojmas kiekviena karta			
+			if(clickMillis+350>millis())
+			{				
+				clickCounter++;				
+				Click(clickCounter+1);
+			}
+			else
+			{
+				clickCounter=0;
+				Click(1);			
+			}
+
+			clickMillis=millis();
+		}
+		pressed = true;
+		
+	}
+	else {
+		pressed = false;
+	}
+
+	long newPosition = myEnc.read();								// Tikrina rotary encoderio posicija
+	if (newPosition % 4 == 0 && newPosition != oldPosition) {       // Kadangi rotary encoderis per 1 palinkima padideja 4 kartus o man reikia tik 1,
+		if (newPosition > oldPosition)                              // Tai as ziuriu ar yra liekana dalyjant is 4, jei ne tai pasisuko 1 karta
+			left();
+		else
+			right();
+		oldPosition = newPosition;
+	}
+}
+
+void Click(int i)
+{
+	Serial.print("!cl"); // Play or pause music
+	Serial.print(i);
+	Serial.print("\n");
+}
+
+void left()
+{
+	Serial.println("!+");
+}
+
+void right()
+{
+	Serial.println("!-");
+}
+int spectrumValue[7];												// Array kuris isfiltruja daznius. Basai 0,1 mid 3,4 high 5,6,7
+int filter = 80;
+void colors() {
+	digitalWrite(ResetPinForColors, HIGH);
+	digitalWrite(ResetPinForColors, LOW);
+	for (int i = 0; i<7; i++) {
+		digitalWrite(StrobePinForColors, LOW);
+		delay(1);
+		CheckEncoder();
+		delay(1);
+		CheckEncoder();
+		delay(1);
+		CheckEncoder();
+		spectrumValue[i] = analogRead(AnalogPinForColors);
+		spectrumValue[i] = constrain(spectrumValue[i], filter, 1023);
+		spectrumValue[i] = map(spectrumValue[i], filter, 1023, 0, 255);
+	/*	if(spectrumValue[i] < 10){
+			Serial.print("  "); Serial.print(spectrumValue[i]); Serial.print(" ");
+		} else if(spectrumValue[i] < 100){
+			Serial.print(" "); Serial.print(spectrumValue[i]); Serial.print(" ");
+		} else{
+			Serial.print(spectrumValue[i]); Serial.print(" ");
+		}*/
+		digitalWrite(StrobePinForColors, HIGH);
+	}
+	// Serial.println();
+/*int i = 0;
+
+	leds[i+0].setHSV( 0, 255, spectrumValue[0]);
+	leds[i+1].setHSV( 98, 255, spectrumValue[1]);
+	leds[i+2].setHSV( 160, 255, spectrumValue[2]);
+	leds[i+3].setHSV( 32, 255, spectrumValue[3]);
+	leds[i+4].setHSV( 192, 255, spectrumValue[4]);
+	leds[i+5].setHSV( 128, 255, spectrumValue[5]);
+	leds[i+6].setHSV( 224, 255, spectrumValue[6]); */
+
+	for (int i = 0; i < 70; i++) {
+		leds[i].setHSV( 128, 255, 0);
+	}
+
+	for (int i = 0; i < 7; i++) {
+		for(int j = 0; j < 10; j++)
+		{
+			int color = 0;
+			if(i == 0) color = 98;
+			if(i == 1) color = 160;
+			if(i == 2) color = 32;
+			if(i == 3) color = 192;
+			if(i == 4) color = 128;
+			if(i == 5) color = 244;
+			if(i == 6) color = 98;
+
+			if(spectrumValue[i] > j*25)
+				leds[i*10+j].setHSV( color, 255, 255);
+		}
+	}
+
+	
+	
+
+	/*s//if(spectrumValue[3] < 25 && spectrumValue[3] > 5)
+		leds[0].setHSV( 128, 255, 255);
+	//if(spectrumValue[3] > 25 )
+		leds[1].setHSV( 128, 255, 255);
+	//if(spectrumValue[3] > 50 )
+		leds[2].setHSV( 128, 255, 255);
+	//if(spectrumValue[3] > 75 )
+		leds[3].setHSV( 128, 255, 255);
+	//if(spectrumValue[3] > 100 )
+		leds[4].setHSV( 128, 255, 255);
+	//if(spectrumValue[3] > 125 )
+		leds[5].setHSV( 128, 255, 255);
+	//if(spectrumValue[3] > 150 )
+		leds[6].setHSV( 128, 255, 255);
+	//if(spectrumValue[3] > 175 )
+		leds[7].setHSV( 128, 255, 255);
+	//if(spectrumValue[3] > 120 )
+		leds[8].setHSV( 128, 255, 255);*/
+
+
+	/*for (int i = 0; i < 10; i++) {
+		leds[i + 10].setHSV(98, 255, spectrumValue[1]);
+	}
+	for (int i = 0; i < 10; i++) {
+		leds[i + 20].setHSV(160, 255, spectrumValue[2]);
+	}
+	for (int i = 0; i < 10; i++) {
+		leds[i + 30].setHSV(32, 255, spectrumValue[3]);
+	}
+	for (int i = 0; i < 10; i++) {
+		leds[i + 40].setHSV(192, 255, spectrumValue[4]);
+	}
+	for (int i = 0; i < 10; i++) {
+		leds[i + 50].setHSV(128, 255, spectrumValue[5]);
+	}
+	for (int i = 0; i < 10; i++) {
+		leds[i + 60].setHSV(244, 255, spectrumValue[6]);
+	}*/
+	FastLED.show();
 }
 
 
