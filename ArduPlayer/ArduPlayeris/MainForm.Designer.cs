@@ -269,7 +269,7 @@
             this.metroButton4.TabIndex = 6;
             this.metroButton4.Text = "Uzmirsau >:(";
             this.metroButton4.UseSelectable = true;
-            this.metroButton4.Click += new System.EventHandler(this.vol);
+            this.metroButton4.Click += new System.EventHandler(this.TestButton);
             // 
             // SendButton
             // 
@@ -519,7 +519,6 @@
             this.RedTrackBar.TabIndex = 11;
             this.RedTrackBar.Text = "metroTrackBar1";
             this.RedTrackBar.Value = 20;
-            this.RedTrackBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.RedTrackBar_MouseUp);
             // 
             // BlueTrackBar
             // 
@@ -533,7 +532,6 @@
             this.BlueTrackBar.TabIndex = 11;
             this.BlueTrackBar.Text = "metroTrackBar1";
             this.BlueTrackBar.Value = 20;
-            this.BlueTrackBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.BlueTrackBar_MouseUp);
             // 
             // GreenTrackBar
             // 
@@ -547,7 +545,6 @@
             this.GreenTrackBar.TabIndex = 11;
             this.GreenTrackBar.Text = "metroTrackBar1";
             this.GreenTrackBar.Value = 20;
-            this.GreenTrackBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GreenTrackBar_MouseUp);
             // 
             // metroLabel1
             // 
@@ -571,7 +568,6 @@
             this.ColorOranToggle.TabIndex = 9;
             this.ColorOranToggle.Text = "On";
             this.ColorOranToggle.UseSelectable = true;
-            this.ColorOranToggle.CheckedChanged += new System.EventHandler(this.ColorOranToggleChanged);
             // 
             // metroTabPage1
             // 
@@ -646,7 +642,7 @@
             this.metroToggle1.TabIndex = 11;
             this.metroToggle1.Text = "Off";
             this.metroToggle1.UseSelectable = true;
-            this.metroToggle1.CheckedChanged += new System.EventHandler(this.metroToggle1_CheckedChanged);
+            this.metroToggle1.CheckedChanged += new System.EventHandler(this.AutoStartToggle);
             // 
             // metroLabel3
             // 
@@ -721,14 +717,14 @@
         private MetroFramework.Controls.MetroButton UploadCodeButton;
         private MetroFramework.Controls.MetroTabPage ColorOrganTab;
         private MetroFramework.Controls.MetroLabel metroLabel1;
-        private MetroFramework.Controls.MetroToggle ColorOranToggle;
+        public MetroFramework.Controls.MetroToggle ColorOranToggle;
         private MetroFramework.Controls.MetroLabel RedLbl;
         private MetroFramework.Controls.MetroLabel GreenLbl;
         private MetroFramework.Controls.MetroLabel BlueLbl;
         private MetroFramework.Controls.MetroTrackBar RedTrackBar;
         private MetroFramework.Controls.MetroTrackBar BlueTrackBar;
         private MetroFramework.Controls.MetroTrackBar GreenTrackBar;
-        private MetroFramework.Controls.MetroLabel NowPlayingLbl;
+        public MetroFramework.Controls.MetroLabel NowPlayingLbl;
         private MetroFramework.Controls.MetroTabPage metroTabPage1;
         private System.Windows.Forms.PictureBox CubePictureBox;
         private MetroFramework.Controls.MetroTrackBar TrackBarY;

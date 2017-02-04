@@ -76,6 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommunictaionManager.cs" />
     <Compile Include="Cube\Cube.cs" />
     <Compile Include="Cube\CubeControls.cs">
       <SubType>Form</SubType>

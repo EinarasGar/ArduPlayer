@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace ArduPlayeris
 {
-   
-
-    class SpotifyHelper
+    public delegate void SpotifySongListener(string artist,string title);
+    public class SpotifyHelper
     {
         internal class Win32
         {
@@ -498,9 +497,31 @@ namespace ArduPlayeris
             }
         }
 
+        public event SpotifySongListener SpotifySongChanged;
+        private System.Windows.Forms.Timer timer;
+
         public SpotifyHelper()
         {
+            timer = new System.Windows.Forms.Timer();
+            timer.Tick += new EventHandler(timer1_tick);
+            timer.Interval = 1000; // in miliseconds
+            timer.Start();
+        }
 
+        private void timer1_tick(object sender, EventArgs e)
+        {
+            CheckSpotiySong();
+        }
+
+        string[] buvo = new string[3];
+        private void CheckSpotiySong()
+        {
+            string[] collection = SpotifyHelper.GetSong();
+            if (buvo[0] != collection[0])
+            {
+               buvo = collection;
+               SpotifySongChanged?.Invoke(collection[0],collection[1]);
+            }
         }
 
         public enum SpotifyAction : long

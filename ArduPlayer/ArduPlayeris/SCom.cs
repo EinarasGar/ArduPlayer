@@ -12,7 +12,7 @@ using System.Threading;
 namespace ArduPlayeris
 {
     public delegate void UpdateListener(string text);
-    class SCom
+    public class SCom
     {
         delegate void SetTextCallback(string text);
 
@@ -46,7 +46,7 @@ namespace ArduPlayeris
             BaudRate.Items.Add(38400);
             BaudRate.Items.Add(57600);
             BaudRate.Items.Add(115200);
-            Port.SelectedIndex = 1;
+            Port.SelectedIndex = 0;
             BaudRate.SelectedIndex = 2;
 
             port = new SerialPort();

@@ -21,20 +21,8 @@ namespace ArduPlayeris
 {
     public partial class MainForm : MetroForm
     {
-        SCom serial;
-        private System.Windows.Forms.Timer timer1;
-        public void InitTimer()
-        {
-            timer1 = new System.Windows.Forms.Timer();
-            timer1.Tick += new EventHandler(timer1_Tick);
-            timer1.Interval = 1000; // in miliseconds
-            timer1.Start();
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            metroButton4_Click(null, null);
-        }
+        public SCom serial;
+        public SpotifyHelper spotfyH;
 
         public MainForm()
         {
@@ -43,78 +31,37 @@ namespace ArduPlayeris
             metroTabControl1.SelectedTab = SComTab;
             metroTabControl1.SelectedIndexChanged += MetroTabControl1_SelectedIndexChanged;
             serial = new SCom(BaudRate,Port,StartButton,StopButton,SendButton,OutPutTextBox,InputTextBox);
+            spotfyH = new SpotifyHelper();
+            new CommunictaionManager(this);
             serial.UpdateRecieved += Serial_UpdateRecieved;
-            serial.CommandRecieved += Serial_CommandRecieved;
+            
             //    serial.getInfo(); // move this somewhere else   
-            InitTimer();
+           
 
         }
 
-        private void Serial_CommandRecieved(string text)
-        {
-            text = text.Substring(1);
-
-            switch (text)
-            {
-                case "+":
-                    SpotifyHelper.VolumeHelper.IncrementVolume("Spotify");
-                   // serial.Send("volume" + Math.Round((double)SpotifyHelper.VolumeHelper.GetApplicationVolume("Spotify")).ToString());
-                    break;
-                case "-":
-                    SpotifyHelper.VolumeHelper.DecrementVolume("Spotify");
-                    //serial.Send("volume" + Math.Round((double)SpotifyHelper.VolumeHelper.GetApplicationVolume("Spotify")).ToString());
-                    break;
-                case "cl1":
-                    metroButton4_Click(null, null);
-                    SpotifyHelper.Win32.SendMessage(SpotifyHelper.GetSpotify(), SpotifyHelper.Win32.Constants.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)SpotifyHelper.SpotifyAction.PlayPause));
-                    break;
-                case "cl2":
-                    metroButton4_Click(null, null);
-                    SpotifyHelper.Win32.SendMessage(SpotifyHelper.GetSpotify(), SpotifyHelper.Win32.Constants.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)SpotifyHelper.SpotifyAction.NextTrack));
-                    break;
-                case "cl3":
-                    metroButton4_Click(null, null);
-                    // Sending two because cl3 happens only after cl2 and cl2 plays next track so we have to go back twice for prev track.
-                    SpotifyHelper.Win32.SendMessage(SpotifyHelper.GetSpotify(), SpotifyHelper.Win32.Constants.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)SpotifyHelper.SpotifyAction.PreviousTrack));
-                    SpotifyHelper.Win32.SendMessage(SpotifyHelper.GetSpotify(), SpotifyHelper.Win32.Constants.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)SpotifyHelper.SpotifyAction.PreviousTrack));
-                    break;
-                case "!":
-                   // getInfo();
-                    break;
-
-            }
-        }
-
-        private void compareFiles(bool dialog)
+        private void CompareFiles(bool ShowDialog)
         {
             if (Properties.Settings.Default.SketchPath != "") {
-                FileStream stream = new FileStream(
-               Properties.Settings.Default.SketchPath,
-               FileMode.Open,
-               FileAccess.Read,
-               FileShare.ReadWrite);
+                FileStream stream = new FileStream(Properties.Settings.Default.SketchPath,FileMode.Open,FileAccess.Read,FileShare.ReadWrite);
                 MD5CryptoServiceProvider md5Provider = new MD5CryptoServiceProvider();
-                Byte[] hash = md5Provider.ComputeHash(stream);
+                string hash = Convert.ToBase64String(md5Provider.ComputeHash(stream));
                 stream.Close();
-                string _hash = Convert.ToBase64String(hash);
-                if (dialog)
+                if (ShowDialog && hash != Properties.Settings.Default.SketchMd5)
                 {
-                    if (_hash != Properties.Settings.Default.SketchMd5)
+                    DialogResult dialogResult = MetroMessageBox.Show(this, "\nArduino code has been changed. Do you want to upload it?", "Arduino code.", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (dialogResult == DialogResult.Yes)
                     {
-                        DialogResult dialogResult = MetroMessageBox.Show(this, "\nArduino code has been changed. Do you want to upload it?", "Arduino code.", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                        if (dialogResult == DialogResult.Yes)
-                        {
-                            UploadCodeButton_Click(null, null);
-                        }
+                        UploadCodeButton_Click(null, null);
                     }
                 }
-                Properties.Settings.Default.SketchMd5 = _hash;
+                Properties.Settings.Default.SketchMd5 = hash;
                 Properties.Settings.Default.Save();
                 
             }
         }
 
-        private void Serial_UpdateRecieved(string text)
+        private void Serial_UpdateRecieved(string text) // USELESS ATM. REFACTOR.
         {
             string[] updates = text.Split('/');
 
@@ -179,13 +126,7 @@ namespace ArduPlayeris
             }
         }
 
-        private void ColorOranToggleChanged(object sender, EventArgs e)
-        {
-            if (ColorOranToggle.Checked)
-                serial.Send("colorson");
-            else
-                serial.Send("colorsoff");
-        }
+    
 
         private void ArduinoIdePathButton_Click(object sender, EventArgs e)
         {
@@ -224,7 +165,7 @@ namespace ArduPlayeris
             serial.Start();
             await Task.Delay(2000);
           //  serial.getInfo();
-            compareFiles(false);
+            CompareFiles(false);
         }
 
         private void UploadArduinoCode() {
@@ -255,51 +196,19 @@ namespace ArduPlayeris
             p.WaitForExit();            
             p.Close();
         }
-
-        private void RedTrackBar_MouseUp(object sender, MouseEventArgs e)
-        {
-            string value = ((float)RedTrackBar.Value / 20).ToString().Replace(',', '.');
-            serial.Send("red" + value);
-        }
-
-        private void GreenTrackBar_MouseUp(object sender, MouseEventArgs e)
-        {
-            string value = ((float)GreenTrackBar.Value / 20).ToString().Replace(',', '.');
-            serial.Send("grn" + value);
-        }
-
-        private void BlueTrackBar_MouseUp(object sender, MouseEventArgs e)
-        {
-            string value = ((float)BlueTrackBar.Value / 20).ToString().Replace(',', '.');
-            serial.Send("blu" + value);
-        }
         
         private void MainForm_Shown(object sender, EventArgs e)
         {
-            compareFiles(true);
+            CompareFiles(true);
         }
 
-        string[] buvo = new string[3];
-        private async void metroButton4_Click(object sender, EventArgs e)
-        {
-            string[] collection = SpotifyHelper.GetSong();
-            if (buvo[0] != collection[0])
-            {
-                serial.Send("artist" + collection[1]);                
-                await Task.Delay(100);
-                serial.Send("title" + collection[0]);
-                buvo = collection;
-                NowPlayingLbl.Text = "Now playing: " + collection[0] + " by " + collection[1]; //+ ", " + collection[2];
-            }            
-        }
-
-        private void vol(object sender, EventArgs e)
+        private void TestButton(object sender, EventArgs e)
         {
 
         }
  
 
-        private void metroToggle1_CheckedChanged(object sender, EventArgs e)
+        private void AutoStartToggle(object sender, EventArgs e)
         {
             RegistryKey rk = Registry.CurrentUser.OpenSubKey
                        ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
