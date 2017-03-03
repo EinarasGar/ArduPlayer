@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.Settings = new MetroFramework.Controls.MetroTabPage();
+            this.metroLabel3 = new MetroFramework.Controls.MetroLabel();
+            this.metroToggle1 = new MetroFramework.Controls.MetroToggle();
             this.metroToggle2 = new MetroFramework.Controls.MetroToggle();
             this.metroLabel2 = new MetroFramework.Controls.MetroLabel();
             this.BaudLbl = new MetroFramework.Controls.MetroLabel();
@@ -60,6 +62,8 @@
             this.TempLbl = new MetroFramework.Controls.MetroLabel();
             this.metroTabControl1 = new MetroFramework.Controls.MetroTabControl();
             this.ColorOrganTab = new MetroFramework.Controls.MetroTabPage();
+            this.metroLabel5 = new MetroFramework.Controls.MetroLabel();
+            this.metroComboBox1 = new MetroFramework.Controls.MetroComboBox();
             this.RedLbl = new MetroFramework.Controls.MetroLabel();
             this.GreenLbl = new MetroFramework.Controls.MetroLabel();
             this.BlueLbl = new MetroFramework.Controls.MetroLabel();
@@ -73,8 +77,6 @@
             this.TrackBarY = new MetroFramework.Controls.MetroTrackBar();
             this.CubePictureBox = new System.Windows.Forms.PictureBox();
             this.NowPlayingLbl = new MetroFramework.Controls.MetroLabel();
-            this.metroToggle1 = new MetroFramework.Controls.MetroToggle();
-            this.metroLabel3 = new MetroFramework.Controls.MetroLabel();
             this.Settings.SuspendLayout();
             this.SComTab.SuspendLayout();
             this.metroTabControl1.SuspendLayout();
@@ -109,6 +111,26 @@
             this.Settings.VerticalScrollbarBarColor = true;
             this.Settings.VerticalScrollbarHighlightOnWheel = false;
             this.Settings.VerticalScrollbarSize = 10;
+            // 
+            // metroLabel3
+            // 
+            this.metroLabel3.AutoSize = true;
+            this.metroLabel3.Location = new System.Drawing.Point(7, 116);
+            this.metroLabel3.Name = "metroLabel3";
+            this.metroLabel3.Size = new System.Drawing.Size(109, 19);
+            this.metroLabel3.TabIndex = 12;
+            this.metroLabel3.Text = "Launch at startup";
+            // 
+            // metroToggle1
+            // 
+            this.metroToggle1.AutoSize = true;
+            this.metroToggle1.Location = new System.Drawing.Point(122, 118);
+            this.metroToggle1.Name = "metroToggle1";
+            this.metroToggle1.Size = new System.Drawing.Size(80, 17);
+            this.metroToggle1.TabIndex = 11;
+            this.metroToggle1.Text = "Off";
+            this.metroToggle1.UseSelectable = true;
+            this.metroToggle1.CheckedChanged += new System.EventHandler(this.AutoStartToggle);
             // 
             // metroToggle2
             // 
@@ -453,13 +475,15 @@
             this.metroTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.metroTabControl1.Location = new System.Drawing.Point(20, 60);
             this.metroTabControl1.Name = "metroTabControl1";
-            this.metroTabControl1.SelectedIndex = 2;
+            this.metroTabControl1.SelectedIndex = 1;
             this.metroTabControl1.Size = new System.Drawing.Size(635, 316);
             this.metroTabControl1.TabIndex = 0;
             this.metroTabControl1.UseSelectable = true;
             // 
             // ColorOrganTab
             // 
+            this.ColorOrganTab.Controls.Add(this.metroLabel5);
+            this.ColorOrganTab.Controls.Add(this.metroComboBox1);
             this.ColorOrganTab.Controls.Add(this.RedLbl);
             this.ColorOrganTab.Controls.Add(this.GreenLbl);
             this.ColorOrganTab.Controls.Add(this.BlueLbl);
@@ -480,10 +504,32 @@
             this.ColorOrganTab.VerticalScrollbarHighlightOnWheel = false;
             this.ColorOrganTab.VerticalScrollbarSize = 10;
             // 
+            // metroLabel5
+            // 
+            this.metroLabel5.AutoSize = true;
+            this.metroLabel5.Location = new System.Drawing.Point(3, 16);
+            this.metroLabel5.Name = "metroLabel5";
+            this.metroLabel5.Size = new System.Drawing.Size(47, 19);
+            this.metroLabel5.TabIndex = 14;
+            this.metroLabel5.Text = "Mode:";
+            // 
+            // metroComboBox1
+            // 
+            this.metroComboBox1.FormattingEnabled = true;
+            this.metroComboBox1.ItemHeight = 23;
+            this.metroComboBox1.Items.AddRange(new object[] {
+            "Spectrum",
+            "Brightness"});
+            this.metroComboBox1.Location = new System.Drawing.Point(56, 14);
+            this.metroComboBox1.Name = "metroComboBox1";
+            this.metroComboBox1.Size = new System.Drawing.Size(121, 29);
+            this.metroComboBox1.TabIndex = 13;
+            this.metroComboBox1.UseSelectable = true;
+            // 
             // RedLbl
             // 
             this.RedLbl.AutoSize = true;
-            this.RedLbl.Location = new System.Drawing.Point(10, 14);
+            this.RedLbl.Location = new System.Drawing.Point(408, 179);
             this.RedLbl.Name = "RedLbl";
             this.RedLbl.Size = new System.Drawing.Size(35, 19);
             this.RedLbl.TabIndex = 12;
@@ -492,7 +538,7 @@
             // GreenLbl
             // 
             this.GreenLbl.AutoSize = true;
-            this.GreenLbl.Location = new System.Drawing.Point(10, 43);
+            this.GreenLbl.Location = new System.Drawing.Point(408, 208);
             this.GreenLbl.Name = "GreenLbl";
             this.GreenLbl.Size = new System.Drawing.Size(47, 19);
             this.GreenLbl.TabIndex = 12;
@@ -501,7 +547,7 @@
             // BlueLbl
             // 
             this.BlueLbl.AutoSize = true;
-            this.BlueLbl.Location = new System.Drawing.Point(10, 72);
+            this.BlueLbl.Location = new System.Drawing.Point(408, 237);
             this.BlueLbl.Name = "BlueLbl";
             this.BlueLbl.Size = new System.Drawing.Size(37, 19);
             this.BlueLbl.TabIndex = 12;
@@ -511,7 +557,7 @@
             // 
             this.RedTrackBar.BackColor = System.Drawing.Color.Transparent;
             this.RedTrackBar.LargeChange = 1;
-            this.RedTrackBar.Location = new System.Drawing.Point(61, 14);
+            this.RedTrackBar.Location = new System.Drawing.Point(459, 179);
             this.RedTrackBar.Maximum = 40;
             this.RedTrackBar.MouseWheelBarPartitions = 9000;
             this.RedTrackBar.Name = "RedTrackBar";
@@ -524,7 +570,7 @@
             // 
             this.BlueTrackBar.BackColor = System.Drawing.Color.Transparent;
             this.BlueTrackBar.LargeChange = 1;
-            this.BlueTrackBar.Location = new System.Drawing.Point(61, 72);
+            this.BlueTrackBar.Location = new System.Drawing.Point(459, 237);
             this.BlueTrackBar.Maximum = 40;
             this.BlueTrackBar.MouseWheelBarPartitions = 9000;
             this.BlueTrackBar.Name = "BlueTrackBar";
@@ -537,7 +583,7 @@
             // 
             this.GreenTrackBar.BackColor = System.Drawing.Color.Transparent;
             this.GreenTrackBar.LargeChange = 1;
-            this.GreenTrackBar.Location = new System.Drawing.Point(61, 43);
+            this.GreenTrackBar.Location = new System.Drawing.Point(459, 208);
             this.GreenTrackBar.Maximum = 40;
             this.GreenTrackBar.MouseWheelBarPartitions = 9000;
             this.GreenTrackBar.Name = "GreenTrackBar";
@@ -633,26 +679,6 @@
             this.NowPlayingLbl.TabIndex = 11;
             this.NowPlayingLbl.Text = "Now playing:";
             // 
-            // metroToggle1
-            // 
-            this.metroToggle1.AutoSize = true;
-            this.metroToggle1.Location = new System.Drawing.Point(122, 118);
-            this.metroToggle1.Name = "metroToggle1";
-            this.metroToggle1.Size = new System.Drawing.Size(80, 17);
-            this.metroToggle1.TabIndex = 11;
-            this.metroToggle1.Text = "Off";
-            this.metroToggle1.UseSelectable = true;
-            this.metroToggle1.CheckedChanged += new System.EventHandler(this.AutoStartToggle);
-            // 
-            // metroLabel3
-            // 
-            this.metroLabel3.AutoSize = true;
-            this.metroLabel3.Location = new System.Drawing.Point(7, 116);
-            this.metroLabel3.Name = "metroLabel3";
-            this.metroLabel3.Size = new System.Drawing.Size(109, 19);
-            this.metroLabel3.TabIndex = 12;
-            this.metroLabel3.Text = "Launch at startup";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -731,6 +757,8 @@
         private MetroFramework.Controls.MetroTrackBar TrackBarX;
         private MetroFramework.Controls.MetroLabel metroLabel3;
         private MetroFramework.Controls.MetroToggle metroToggle1;
+        private MetroFramework.Controls.MetroLabel metroLabel5;
+        public MetroFramework.Controls.MetroComboBox metroComboBox1;
     }
 }
 

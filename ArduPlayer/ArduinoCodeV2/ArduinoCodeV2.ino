@@ -15,6 +15,8 @@
 #define RotaryEncoderFirstPin 2
 #define RotaryEncoderSecondPin 3
 
+//#define DEBUG 1
+
 LiquidCrystal_I2C   lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);	// Initializes lcd object for i2c communication.
 DHT dht(7, DHT22);													// Initializes dht object for temperature checking.
 CRGB leds[NUM_LEDS];
@@ -131,9 +133,13 @@ void right()
 {
 	Serial.println("!-");
 }
+
+int colorMode = 0;
+bool colorsEnabled = true;
 int spectrumValue[7];												// Array kuris isfiltruja daznius. Basai 0,1 mid 3,4 high 5,6,7
 int filter = 80;
 void colors() {
+	if(!colorsEnabled) return;
 	digitalWrite(ResetPinForColors, HIGH);
 	digitalWrite(ResetPinForColors, LOW);
 	for (int i = 0; i<7; i++) {
@@ -147,16 +153,20 @@ void colors() {
 		spectrumValue[i] = analogRead(AnalogPinForColors);
 		spectrumValue[i] = constrain(spectrumValue[i], filter, 1023);
 		spectrumValue[i] = map(spectrumValue[i], filter, 1023, 0, 255);
-	/*	if(spectrumValue[i] < 10){
+		#ifdef DEBUG
+		if(spectrumValue[i] < 10){
 			Serial.print("  "); Serial.print(spectrumValue[i]); Serial.print(" ");
 		} else if(spectrumValue[i] < 100){
 			Serial.print(" "); Serial.print(spectrumValue[i]); Serial.print(" ");
 		} else{
 			Serial.print(spectrumValue[i]); Serial.print(" ");
-		}*/
+		}
+		#endif
 		digitalWrite(StrobePinForColors, HIGH);
 	}
-	// Serial.println();
+	#ifdef DEBUG 
+		Serial.println(); 
+	#endif 
 /*int i = 0;
 
 	leds[i+0].setHSV( 0, 255, spectrumValue[0]);
@@ -167,26 +177,50 @@ void colors() {
 	leds[i+5].setHSV( 128, 255, spectrumValue[5]);
 	leds[i+6].setHSV( 224, 255, spectrumValue[6]); */
 
-	for (int i = 0; i < 70; i++) {
-		leds[i].setHSV( 128, 255, 0);
-	}
+	if(colorMode==0)
+	{
+		for (int i = 0; i < 70; i++) {
+			leds[i].setHSV( 128, 255, 0);
+		}
 
-	for (int i = 0; i < 7; i++) {
-		for(int j = 0; j < 10; j++)
-		{
-			int color = 0;
-			if(i == 0) color = 98;
-			if(i == 1) color = 160;
-			if(i == 2) color = 32;
-			if(i == 3) color = 192;
-			if(i == 4) color = 128;
-			if(i == 5) color = 244;
-			if(i == 6) color = 98;
+		for (int i = 0; i < 7; i++) {
+			for(int j = 0; j < 10; j++)
+			{
+				int color = 0;
+				if(i == 0) color = 98;
+				if(i == 1) color = 160;
+				if(i == 2) color = 32;
+				if(i == 3) color = 192;
+				if(i == 4) color = 128;
+				if(i == 5) color = 244;
+				if(i == 6) color = 98;
 
-			if(spectrumValue[i] > j*25)
-				leds[i*10+j].setHSV( color, 255, 255);
+				if(spectrumValue[i] > j*25)
+					leds[i*10+j].setHSV( color, 255, 255);
+			}
+		}
+	} else if (colorMode==1)
+	{
+		for (int i = 0; i < 10; i++) {
+			leds[i + 10].setHSV(98, 255, spectrumValue[1]);
+		}
+		for (int i = 0; i < 10; i++) {
+			leds[i + 20].setHSV(160, 255, spectrumValue[2]);
+		}
+		for (int i = 0; i < 10; i++) {
+			leds[i + 30].setHSV(32, 255, spectrumValue[3]);
+		}
+		for (int i = 0; i < 10; i++) {
+			leds[i + 40].setHSV(192, 255, spectrumValue[4]);
+		}
+		for (int i = 0; i < 10; i++) {
+			leds[i + 50].setHSV(128, 255, spectrumValue[5]);
+		}
+		for (int i = 0; i < 10; i++) {
+			leds[i + 60].setHSV(244, 255, spectrumValue[6]);
 		}
 	}
+
 
 	
 	
@@ -211,24 +245,7 @@ void colors() {
 		leds[8].setHSV( 128, 255, 255);*/
 
 
-	/*for (int i = 0; i < 10; i++) {
-		leds[i + 10].setHSV(98, 255, spectrumValue[1]);
-	}
-	for (int i = 0; i < 10; i++) {
-		leds[i + 20].setHSV(160, 255, spectrumValue[2]);
-	}
-	for (int i = 0; i < 10; i++) {
-		leds[i + 30].setHSV(32, 255, spectrumValue[3]);
-	}
-	for (int i = 0; i < 10; i++) {
-		leds[i + 40].setHSV(192, 255, spectrumValue[4]);
-	}
-	for (int i = 0; i < 10; i++) {
-		leds[i + 50].setHSV(128, 255, spectrumValue[5]);
-	}
-	for (int i = 0; i < 10; i++) {
-		leds[i + 60].setHSV(244, 255, spectrumValue[6]);
-	}*/
+	
 	FastLED.show();
 }
 
@@ -342,4 +359,20 @@ void SComCommandRecieved(String text)								// Fired when Serial Communication 
 	if (text.substring(0, 6) == "artist") {							// If artist command is recieved
 		songArtist = text.substring(6, text.length());				// Then parse string so I get song artist.
 	}
+	if (text.substring(0, 9) == "colormode") {							
+		colorMode = text.substring(9, text.length()).toInt();			
+	}
+
+	if(text == "colorson")
+		colorsEnabled=true;
+	if(text == "colorsoff")
+	{
+		colorsEnabled=false;
+		for (int i = 0; i < 70; i++) {
+			leds[i].setHSV( 128, 255, 0);
+		}
+		FastLED.show();
+	}
+		
+	
 }

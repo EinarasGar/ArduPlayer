@@ -17,8 +17,14 @@ namespace ArduPlayeris
             spotifyHelper.SpotifySongChanged += SpotifyHelper_SpotifySongChanged;
 
             mainform.ColorOranToggle.CheckedChanged += new System.EventHandler(this.ColorOranToggleChanged);
+            mainform.metroComboBox1.SelectedIndexChanged += MetroComboBox1_SelectedIndexChanged;
         }
 
+        private void MetroComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            serial.Send("colormode"+mainform.metroComboBox1.SelectedIndex);
+        }
+        
         private void ColorOranToggleChanged(object sender, EventArgs e)
         {
             if (mainform.ColorOranToggle.Checked)
