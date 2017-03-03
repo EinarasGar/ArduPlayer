@@ -171,7 +171,7 @@ namespace ArduPlayeris.LedCube
                 Array.Sort(cubeFaces);
                 foreach (Face face in cubeFaces.Reverse())
                 {
-                   // if (face.name == "FrontFace" || face.name == "BackFace")
+                    // if (face.name == "FrontFace" || face.name == "BackFace")
                     if (true)
                     {
                         g.SmoothingMode = SmoothingMode.AntiAlias;
@@ -181,7 +181,7 @@ namespace ArduPlayeris.LedCube
                         float DiffY1 = (face.Corners2D[1].Y - face.Corners2D[2].Y) / 13;
                         float DiffX2 = (face.Corners2D[3].X - face.Corners2D[0].X) / 13;
                         float DiffY2 = (face.Corners2D[3].Y - face.Corners2D[0].Y) / 13;
-                        
+
                         PointF starting1 = face.Corners2D[1];
                         PointF starting2 = face.Corners2D[3];
                         for (int i = 0; i < 14; i++)
@@ -189,7 +189,7 @@ namespace ArduPlayeris.LedCube
                             points2[i] = starting1;
                             starting1.X -= DiffX1;
                             starting1.Y -= DiffY1;
-                            
+
                             points4[i] = starting2;
                             starting2.X -= DiffX2;
                             starting2.Y -= DiffY2;
@@ -210,7 +210,7 @@ namespace ArduPlayeris.LedCube
                             g.DrawLine(pn, face.Corners2D[3], face.Corners2D[0]);
                         }
                         faces.Add(face.ToString(), Grid);
-                        
+
                     }
                 }
 
@@ -223,9 +223,13 @@ namespace ArduPlayeris.LedCube
                         for (int p = 0; p < 14; p++)
                         {
                             array3Da[o, i, p] = points[p];
-                        }                   
+                        }
                     }
                 }
+
+
+
+
 
                 // Todo: Sort led cubes areas and then draw them from highest to lowest to prevent overlapping.
 
@@ -239,6 +243,59 @@ namespace ArduPlayeris.LedCube
                         }
                     }
                 }
+
+
+                Dictionary<int, float> plotai = new Dictionary<int, float>();
+                for (int i = 0; i < 125; i++)
+                {
+                    for (int o = 0; o < 6; o++)
+                    {
+                        PointF[] point = leds[i, o];
+                        float plotas = 0;
+                        for (int p = 0; p < 6; p++)
+                        {
+                            PointF[] _point = leds[i, p];
+                            int u, j; // http://stackoverflow.com/a/2432482/5257707
+                            float area = 0; // Not using this as a seperate function, 
+                            for (u = 0; u < _point.Length; u++) // because it returns the same value.
+                            {
+                                j = (u + 1) % _point.Length;
+
+                                area += _point[u].X * _point[j].Y;
+                                area -= _point[u].Y * _point[j].X;
+                            }
+
+                            area /= 2;
+                            float _plotas = area < 0 ? -area : area;
+                            plotas += _plotas;
+                        }
+                        plotai.Add(i, plotas);
+                        break;
+                    }
+                }
+
+                var plotai2 = from entry in plotai orderby entry.Value ascending select entry;
+
+                foreach (KeyValuePair<int, float> pair in plotai2)
+                {
+                    int led = pair.Key;
+                    for (int i = 0; i < 6; i++)
+                    {
+                        if (uzdegti.Contains(led))
+                        {
+
+                            g.FillPolygon(blue, leds[led, i]);
+                        }
+                        else
+                        {
+                            g.FillPolygon(gray, leds[led,i]);
+                        }
+
+                    }
+
+                }
+
+             
             }
             return finalBmp;
         }
@@ -262,10 +319,10 @@ namespace ArduPlayeris.LedCube
                 leds[counter, i] = point2D[i];
                 if (uzdegti.Contains(counter))
                 {
-                    g.FillPolygon(blue, point2D[i]);
+                  //  g.FillPolygon(blue, point2D[i]);
                 }
                 else {
-                    g.FillPolygon(gray, point2D[i]);
+                  //  g.FillPolygon(gray, point2D[i]);
                 }
             }
             counter++;

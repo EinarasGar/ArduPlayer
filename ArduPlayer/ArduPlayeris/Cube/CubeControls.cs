@@ -189,11 +189,15 @@ namespace ArduPlayeris
                 if (onoff)
                 {
                     if (!uzdegti.Contains(Ledas))
-                        uzdegti.Add(Ledas);
+                    {
+                       uzdegti.Add(Ledas);
+                       serial.Send("a"+Ledas.ToString());
+                    }
                 }
                 else
                 {
                     uzdegti.Remove(Ledas);
+                    serial.Send("r" +Ledas.ToString());
                 }
             }
             Render();

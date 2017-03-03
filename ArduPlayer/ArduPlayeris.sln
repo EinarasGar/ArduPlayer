@@ -15,6 +15,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ArduinoCodeV2", "ArduinoCod
 		ArduinoCodeV2\ArduinoCodeV2.ino = ArduinoCodeV2\ArduinoCodeV2.ino
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CubeCode", "CubeCode", "{D70FE13B-34F1-4B4B-866B-BA6A8C0CE38A}"
+	ProjectSection(SolutionItems) = preProject
+		CubeCode\CubeCode.ino = CubeCode\CubeCode.ino
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
