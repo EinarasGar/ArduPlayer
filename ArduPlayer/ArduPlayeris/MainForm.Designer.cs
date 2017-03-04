@@ -226,7 +226,7 @@
             // 
             this.Port.FormattingEnabled = true;
             this.Port.ItemHeight = 23;
-            this.Port.Location = new System.Drawing.Point(47, 16);
+            this.Port.Location = new System.Drawing.Point(47, 18);
             this.Port.Name = "Port";
             this.Port.Size = new System.Drawing.Size(144, 29);
             this.Port.TabIndex = 3;
@@ -475,7 +475,7 @@
             this.metroTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.metroTabControl1.Location = new System.Drawing.Point(20, 60);
             this.metroTabControl1.Name = "metroTabControl1";
-            this.metroTabControl1.SelectedIndex = 1;
+            this.metroTabControl1.SelectedIndex = 2;
             this.metroTabControl1.Size = new System.Drawing.Size(635, 316);
             this.metroTabControl1.TabIndex = 0;
             this.metroTabControl1.UseSelectable = true;
@@ -720,17 +720,10 @@
         private MetroFramework.Controls.MetroLabel ThemeLbl;
         private MetroFramework.Controls.MetroComboBox themeCombobox;
         private MetroFramework.Controls.MetroComboBox styleCombobox;
-        private MetroFramework.Controls.MetroComboBox Port;
-        private MetroFramework.Controls.MetroComboBox BaudRate;
         private MetroFramework.Controls.MetroTabPage SComTab;
         private MetroFramework.Controls.MetroButton metroButton4;
         private MetroFramework.Controls.MetroButton ClearLogsButton;
         private MetroFramework.Controls.MetroButton SaveLogsButton;
-        private MetroFramework.Controls.MetroButton SendButton;
-        private MetroFramework.Controls.MetroTextBox InputTextBox;
-        private MetroFramework.Controls.MetroButton StopButton;
-        private MetroFramework.Controls.MetroButton StartButton;
-        private MetroFramework.Controls.MetroTextBox OutPutTextBox;
         private MetroFramework.Controls.MetroTabControl metroTabControl1;
         private MetroFramework.Controls.MetroLabel HumidityLbl;
         private MetroFramework.Controls.MetroLabel TempLbl;
@@ -759,6 +752,13 @@
         private MetroFramework.Controls.MetroToggle metroToggle1;
         private MetroFramework.Controls.MetroLabel metroLabel5;
         public MetroFramework.Controls.MetroComboBox metroComboBox1;
+        public MetroFramework.Controls.MetroComboBox Port;
+        public MetroFramework.Controls.MetroComboBox BaudRate;
+        public MetroFramework.Controls.MetroButton SendButton;
+        public MetroFramework.Controls.MetroTextBox InputTextBox;
+        public MetroFramework.Controls.MetroButton StopButton;
+        public MetroFramework.Controls.MetroButton StartButton;
+        public MetroFramework.Controls.MetroTextBox OutPutTextBox;
     }
 }
 

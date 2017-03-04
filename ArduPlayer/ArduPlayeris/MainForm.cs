@@ -30,7 +30,8 @@ namespace ArduPlayeris
             InitThemeSettings();
             metroTabControl1.SelectedTab = SComTab;
             metroTabControl1.SelectedIndexChanged += MetroTabControl1_SelectedIndexChanged;
-            serial = new SCom(BaudRate,Port,StartButton,StopButton,SendButton,OutPutTextBox,InputTextBox);
+         //   serial = new SCom(BaudRate,Port,StartButton,StopButton,SendButton,OutPutTextBox,InputTextBox);
+            serial = new SCom(this);
             spotfyH = new SpotifyHelper();
             new CommunictaionManager(this);
             serial.UpdateRecieved += Serial_UpdateRecieved;
@@ -217,5 +218,7 @@ namespace ArduPlayeris
             else
                 rk.DeleteValue("ArduPlayer", false);
         }
+
+      
     }
 }
