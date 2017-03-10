@@ -49,11 +49,11 @@ namespace ArduPlayeris
             {
                 case "+":
                     SpotifyHelper.VolumeHelper.IncrementVolume("Spotify");
-                    // serial.Send("volume" + Math.Round((double)SpotifyHelper.VolumeHelper.GetApplicationVolume("Spotify")).ToString());
+                    serial.Send("v" + Math.Round((double)SpotifyHelper.VolumeHelper.GetApplicationVolume("Spotify")).ToString());
                     break;
                 case "-":
                     SpotifyHelper.VolumeHelper.DecrementVolume("Spotify");
-                    //serial.Send("volume" + Math.Round((double)SpotifyHelper.VolumeHelper.GetApplicationVolume("Spotify")).ToString());
+                    serial.Send("v" + Math.Round((double)SpotifyHelper.VolumeHelper.GetApplicationVolume("Spotify")).ToString());
                     break;
                 case "cl1":
                     //CheckSpotiySong(null, null);

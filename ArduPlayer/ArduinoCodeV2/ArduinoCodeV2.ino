@@ -2,6 +2,7 @@
 #include <DHT.h>													// Library for tenperature and humidity sensor.
 #include "FastLED.h"												// Library for WS2812 led strip
 #include <Encoder.h>
+#include <Wire.h>
 
 #define ArraySize(x)       (sizeof(x) / sizeof(x[0]))				// Returns size of array
 #define NUM_LEDS 70													// Number of leds in led strip
@@ -121,18 +122,22 @@ void Click(int i)
 {
 	Serial.print("!cl"); // Play or pause music
 	Serial.print(i);
-	Serial.print("\n");
-}
-
-void left()
-{
-	Serial.println("!+");
+	Serial.print("\n"); 
 }
 
 void right()
 {
+	Serial.println("!+");
+}
+
+void left()
+{
 	Serial.println("!-");
 }
+
+
+uint16_t gHue = 0;
+uint8_t  gHueDelta = 1;
 
 int colorMode = 0;
 bool colorsEnabled = true;
@@ -201,6 +206,9 @@ void colors() {
 		}
 	} else if (colorMode==1)
 	{
+  for (int i = 0; i < 10; i++) {
+      leds[i].setHSV(64, 255, spectrumValue[0]);
+    }
 		for (int i = 0; i < 10; i++) {
 			leds[i + 10].setHSV(98, 255, spectrumValue[1]);
 		}
@@ -219,7 +227,15 @@ void colors() {
 		for (int i = 0; i < 10; i++) {
 			leds[i + 60].setHSV(244, 255, spectrumValue[6]);
 		}
-	}
+	} else if (colorMode==2){
+    gHue += gHueDelta; // compute new hue
+
+       
+    for (int i = 0; i < 70; i++) {
+      leds[i].setHSV(gHue, 255, 150);
+    }
+	  
+ }
 
 
 	
@@ -250,11 +266,13 @@ void colors() {
 }
 
 
+long messageTime= 0;
 String songTitleHold = "";											// Chached song title used for comparison.
 float temperatureHold = 0;											// Cached temperature
 float humidityHold = 0;												// Cached humidity
 void IdkHowToNametThis(byte i)
 {	
+  if(messageTime > millis()) return;
 	switch (i) {
 		case 0:
 			ShowSongs();											// Checks if any song is playing and if it is, then it updates lcd			
@@ -269,6 +287,15 @@ void IdkHowToNametThis(byte i)
 
 		break;
 	}
+}
+
+void showMessage(String message, int ttime){
+  messageTime= ttime + millis();  
+   songTitleHold = "";                      // Chached song title used for comparison.
+ temperatureHold = 0;                      // Cached temperature
+ humidityHold = 0;
+  lcd.clear();
+  lcd.print(message);
 }
 
 float temperature = 0;												// Current temperature from sensor
@@ -358,6 +385,29 @@ void SComCommandRecieved(String text)								// Fired when Serial Communication 
 	}
 	if (text.substring(0, 6) == "artist") {							// If artist command is recieved
 		songArtist = text.substring(6, text.length());				// Then parse string so I get song artist.
+	} else {
+	   if (text.substring(0, 1) == "a" ) {             // If artist command is recieved
+    int xd = text.substring(1, text.length()).toInt();
+      Wire.begin(); // join i2c bus (address optional for master)
+      Wire.beginTransmission(8); // transmit to device #8
+      Wire.write("a");        // sends five bytes
+      Wire.write(xd);              // sends one byte
+      Wire.endTransmission();    // stop transmitting     
+    }
+    if (text.substring(0, 1) == "r") {              
+      int xd = text.substring(1, text.length()).toInt();
+        Wire.begin(); // join i2c bus (address optional for master)
+        Wire.beginTransmission(8); // transmit to device #8
+        Wire.write("r");        // sends five bytes
+        Wire.write(xd);              // sends one byte
+        Wire.endTransmission();    // stop transmitting   
+    }  
+
+      if (text.substring(0, 1) == "v" ) {             // If artist command is recieved
+      int xd = text.substring(1, text.length()).toInt();
+      showMessage("Volume: " +  String(xd) , 2000);  
+    }
+ 
 	}
 	if (text.substring(0, 9) == "colormode") {							
 		colorMode = text.substring(9, text.length()).toInt();			
@@ -373,6 +423,8 @@ void SComCommandRecieved(String text)								// Fired when Serial Communication 
 		}
 		FastLED.show();
 	}
+ 
+  
 		
 	
 }

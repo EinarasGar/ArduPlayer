@@ -1,3 +1,5 @@
+#include <Wire.h>
+
 int Data_pin = 11;
 int STCP_pin = 8;
 int SHCP_pin = 12;
@@ -16,6 +18,8 @@ void setup() {
   pinMode(STCP_pin,OUTPUT);
   pinMode(SHCP_pin,OUTPUT);
   writereg();  
+   Wire.begin(8);                // join i2c bus with address #8
+  Wire.onReceive(receiveEvent); 
   Serial.begin(9600);
 
 }
@@ -65,6 +69,25 @@ void SComCommandRecieved(String text)                // Fired when Serial Commun
    leds[xd] = LOW;   
   }
   
+}
+
+void receiveEvent(int howMany) {
+//while (1 < Wire.available()) { // loop through all but the last
+    char c = Wire.read(); // receive byte as a character
+   // Serial.print(c);         // print the character
+ // }
+  int x = Wire.read();    // receive byte as an integer
+ // Serial.println(x);         // print the integer
+
+ if (c == 'a') {             // If artist command is recieved
+   
+   leds[x] = HIGH;   
+  }
+  if (c == 'r') {              
+   
+   leds[x] = LOW;   
+  }
+
 }
 
 void SelectLed(byte number){
@@ -139,7 +162,7 @@ if (number ==20)  return 28;
 if (number ==19)  return 29;
 if (number ==18)  return 30;
 if (number ==17)  return 31;
-if (number ==16)  return 16;
+if (number ==16)  return 1;
 if (number ==15) return 17;
 if (number == 14) return 18;
 if (number == 13) return 19;
