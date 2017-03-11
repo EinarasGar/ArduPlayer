@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Security.Policy;
 using System.Windows.Forms;
 
 namespace ArduPlayeris.LedCube
@@ -13,51 +14,21 @@ namespace ArduPlayeris.LedCube
 
         public int width = 0, height = 0, depth = 0;
         int counter = 0;
-
         private Face[] cubeFaces;
         public Face FrontFace, BackFace, LeftFace, RightFace, TopFace, BottomFace;
         private enum rotationAxis { X, Y, Z }
         private float _xRotation = 0f, _yRotation = 0f, _zRotation = 0f;
-
-
         private Point3D cubeOrigin;
         public PointF[,][] leds = new PointF[125, 6][];
-
-        SolidBrush blue = new SolidBrush(Color.FromArgb(60, Color.Blue));
-        SolidBrush gray = new SolidBrush(Color.FromArgb(30, Color.Gray));
-
+        SolidBrush blue = new SolidBrush(Color.FromArgb(255, Color.Blue));
+        SolidBrush gray = new SolidBrush(Color.FromArgb(255, Color.Gray));
         public List<int> uzdegti = new List<int>();
 
+        public float RotateX { get { return _xRotation; } set { RotateCube(value - _xRotation, rotationAxis.X); _xRotation = value; } }
 
-        public float RotateX
-        {
-            get { return _xRotation; }
-            set
-            {
-                RotateCube(value - _xRotation, rotationAxis.X);
-                _xRotation = value;
-            }
-        }
+        public float RotateY { get { return _yRotation; } set { RotateCube(value - _yRotation, rotationAxis.Y); _yRotation = value; } }
 
-        public float RotateY
-        {
-            get { return _yRotation; }
-            set
-            {
-                RotateCube(value - _yRotation, rotationAxis.Y);
-                _yRotation = value;
-            }
-        }
-
-        public float RotateZ
-        {
-            get { return _zRotation; }
-            set
-            {
-                RotateCube(value - _zRotation, rotationAxis.Z);
-                _zRotation = value;
-            }
-        }
+        public float RotateZ { get { return _zRotation; } set { RotateCube(value - _zRotation, rotationAxis.Z); _zRotation = value; } }
 
         public Cube(int side)
         {
@@ -101,7 +72,6 @@ namespace ArduPlayeris.LedCube
             };
 
         }
-
 
         private void Update2DPoints(Point drawOrigin)
         {
@@ -158,9 +128,8 @@ namespace ArduPlayeris.LedCube
         }
 
         public Bitmap DrawCube(Point drawOrigin)
-        {            
+        {
             Update2DPoints(drawOrigin);
-
             Bitmap finalBmp = new Bitmap(278, 278);
 
             using (Graphics g = Graphics.FromImage(finalBmp))
@@ -171,48 +140,46 @@ namespace ArduPlayeris.LedCube
                 Array.Sort(cubeFaces);
                 foreach (Face face in cubeFaces.Reverse())
                 {
-                    // if (face.name == "FrontFace" || face.name == "BackFace")
-                    if (true)
+
+                    g.SmoothingMode = SmoothingMode.AntiAlias;
+                    PointF[] points2 = new PointF[14];
+                    PointF[] points4 = new PointF[14];
+                    float DiffX1 = (face.Corners2D[1].X - face.Corners2D[2].X) / 13;
+                    float DiffY1 = (face.Corners2D[1].Y - face.Corners2D[2].Y) / 13;
+                    float DiffX2 = (face.Corners2D[3].X - face.Corners2D[0].X) / 13;
+                    float DiffY2 = (face.Corners2D[3].Y - face.Corners2D[0].Y) / 13;
+
+                    PointF starting1 = face.Corners2D[1];
+                    PointF starting2 = face.Corners2D[3];
+                    for (int i = 0; i < 14; i++)
                     {
-                        g.SmoothingMode = SmoothingMode.AntiAlias;
-                        PointF[] points2 = new PointF[14];
-                        PointF[] points4 = new PointF[14];
-                        float DiffX1 = (face.Corners2D[1].X - face.Corners2D[2].X) / 13;
-                        float DiffY1 = (face.Corners2D[1].Y - face.Corners2D[2].Y) / 13;
-                        float DiffX2 = (face.Corners2D[3].X - face.Corners2D[0].X) / 13;
-                        float DiffY2 = (face.Corners2D[3].Y - face.Corners2D[0].Y) / 13;
+                        points2[i] = starting1;
+                        starting1.X -= DiffX1;
+                        starting1.Y -= DiffY1;
 
-                        PointF starting1 = face.Corners2D[1];
-                        PointF starting2 = face.Corners2D[3];
-                        for (int i = 0; i < 14; i++)
-                        {
-                            points2[i] = starting1;
-                            starting1.X -= DiffX1;
-                            starting1.Y -= DiffY1;
-
-                            points4[i] = starting2;
-                            starting2.X -= DiffX2;
-                            starting2.Y -= DiffY2;
-                        }
-
-                        PointF[][] Grid = new PointF[14][];
-
-                        for (int i = 0; i < 14; i++)
-                        {
-                            Grid[i] = CutLine(points2[i], points4[13 - i]);
-                        }
-
-                        using (Pen pn = new Pen(Color.Black, 1.8f))
-                        {
-                            g.DrawLine(pn, face.Corners2D[0], face.Corners2D[1]);
-                            g.DrawLine(pn, face.Corners2D[1], face.Corners2D[2]);
-                            g.DrawLine(pn, face.Corners2D[2], face.Corners2D[3]);
-                            g.DrawLine(pn, face.Corners2D[3], face.Corners2D[0]);
-                        }
-                        faces.Add(face.ToString(), Grid);
-
+                        points4[i] = starting2;
+                        starting2.X -= DiffX2;
+                        starting2.Y -= DiffY2;
                     }
+
+                    PointF[][] Grid = new PointF[14][];
+
+                    for (int i = 0; i < 14; i++)
+                    {
+                        Grid[i] = CutLine(points2[i], points4[13 - i]);
+                    }
+
+                    using (Pen pn = new Pen(Color.Black, 1.8f))
+                    {
+                        g.DrawLine(pn, face.Corners2D[0], face.Corners2D[1]);
+                        g.DrawLine(pn, face.Corners2D[1], face.Corners2D[2]);
+                        g.DrawLine(pn, face.Corners2D[2], face.Corners2D[3]);
+                        g.DrawLine(pn, face.Corners2D[3], face.Corners2D[0]);
+                    }
+                    faces.Add(face.ToString(), Grid);
+
                 }
+
 
                 PointF[,,] array3Da = new PointF[14, 14, 14];
                 for (int i = 0; i < 14; i++)
@@ -228,18 +195,13 @@ namespace ArduPlayeris.LedCube
                 }
 
 
-
-
-
-                // Todo: Sort led cubes areas and then draw them from highest to lowest to prevent overlapping.
-
                 for (int i = 12; i >= 0; i -= 3)
                 {
                     for (int o = 12; o >= 0; o -= 3)
                     {
                         for (int p = 12; p >= 0; p -= 3)
                         {
-                            drawLED(g, array3Da, i, o, p);
+                            addLED(g, array3Da, i, o, p);
                         }
                     }
                 }
@@ -248,62 +210,102 @@ namespace ArduPlayeris.LedCube
                 Dictionary<int, float> plotai = new Dictionary<int, float>();
                 for (int i = 0; i < 125; i++)
                 {
-                    for (int o = 0; o < 6; o++)
+                    float plotas = 0;
+                    for (int p = 0; p < 6; p++)
                     {
-                        PointF[] point = leds[i, o];
-                        float plotas = 0;
-                        for (int p = 0; p < 6; p++)
+                        PointF[] _point = leds[i, p];
+                        int u, j; // http://stackoverflow.com/a/2432482/5257707
+                        float area = 0; // Not using this as a seperate function, 
+                        for (u = 0; u < _point.Length; u++) // because it returns the same value.
                         {
-                            PointF[] _point = leds[i, p];
-                            int u, j; // http://stackoverflow.com/a/2432482/5257707
-                            float area = 0; // Not using this as a seperate function, 
-                            for (u = 0; u < _point.Length; u++) // because it returns the same value.
-                            {
-                                j = (u + 1) % _point.Length;
+                            j = (u + 1) % _point.Length;
 
-                                area += _point[u].X * _point[j].Y;
-                                area -= _point[u].Y * _point[j].X;
-                            }
-
-                            area /= 2;
-                            float _plotas = area < 0 ? -area : area;
-                            plotas += _plotas;
+                            area += _point[u].X * _point[j].Y;
+                            area -= _point[u].Y * _point[j].X;
                         }
-                        plotai.Add(i, plotas);
-                        break;
+
+                        area /= 2;
+                        float _plotas = area < 0 ? -area : area;
+                        plotas += _plotas;
                     }
+                    plotai.Add(i, plotas);
                 }
 
-                var plotai2 = from entry in plotai orderby entry.Value ascending select entry;
+                var ledsSorted = from entry in plotai orderby entry.Value ascending select entry;
 
-                foreach (KeyValuePair<int, float> pair in plotai2)
+                foreach (KeyValuePair<int, float> pair in ledsSorted)
                 {
                     int led = pair.Key;
+                    Dictionary<int, PointF[]> sidesOfLed = new Dictionary<int, PointF[]>();
+
+                    for (int i = 0; i < 6; i++)
+                        sidesOfLed.Add(i,leds[led,i]);
+
+               
+
+                    Dictionary<int, float> sienuPlotai = new Dictionary<int, float>();
+                    for (int o = 0; o < 6; o++)
+                    {
+                        PointF[] polygon = sidesOfLed[o];
+
+                        int i, j;
+                        double area = 0;
+
+                        for (i = 0; i < polygon.Length; i++)
+                        {
+                            j = (i + 1) % polygon.Length;
+
+                            area += polygon[i].X * polygon[j].Y;
+                            area -= polygon[i].Y * polygon[j].X;
+                        }
+
+                        area /= 2;
+                        sienuPlotai[o]  = (float)(area < 0 ? -area : area);
+                    }
+
+                    var plotaiNuoMaziausio = from entry in sienuPlotai orderby entry.Value ascending select entry;
+
+                    Dictionary<int, PointF[]> sortedSides = new Dictionary<int, PointF[]>();
+
+                    int c = 0;
+                        foreach (KeyValuePair<int, float> keyValuePair in plotaiNuoMaziausio)
+                        {
+                            sortedSides.Add(c, sidesOfLed[keyValuePair.Key]);
+                                c++;
+                        }
+                    
+
+
+
+                    Pen blackPen = new Pen(Color.FromArgb(86, 86, 86), 1);
+     
+
                     for (int i = 0; i < 6; i++)
                     {
                         if (uzdegti.Contains(led))
                         {
+                            g.FillPolygon(blue, sortedSides[i]);
+                            g.DrawPolygon(Pens.DarkBlue, sortedSides[i]);
 
-                            g.FillPolygon(blue, leds[led, i]);
                         }
                         else
                         {
-                            g.FillPolygon(gray, leds[led,i]);
+                            g.FillPolygon(gray, sortedSides[i]);
+                            g.DrawPolygon(blackPen, sortedSides[i]);
                         }
 
                     }
 
                 }
 
-             
             }
             return finalBmp;
         }
 
 
-     
 
-        void drawLED(Graphics g, PointF[,,] array3Da, int layer, int y, int x)
+
+        void addLED(Graphics g, PointF[,,] array3Da, int layer, int y, int x)
         {
             PointF[][] point2D = new PointF[][]{
                 new PointF[4] { array3Da[layer,      x, y], array3Da[layer,     x, y+1], array3Da[layer,   x+1, y+1], array3Da[layer,     x+1, y] }, //bottom
@@ -315,16 +317,8 @@ namespace ArduPlayeris.LedCube
             };
 
             for (int i = 0; i < 6; i++)
-            {
                 leds[counter, i] = point2D[i];
-                if (uzdegti.Contains(counter))
-                {
-                  //  g.FillPolygon(blue, point2D[i]);
-                }
-                else {
-                  //  g.FillPolygon(gray, point2D[i]);
-                }
-            }
+
             counter++;
         }
 
@@ -350,7 +344,7 @@ namespace ArduPlayeris.LedCube
 
             float zoom = Convert.ToSingle(Screen.PrimaryScreen.Bounds.Width) / 1.5f;
             Point3D tempCam = new Point3D(cubeOrigin.X, cubeOrigin.Y, (cubeOrigin.X * zoom) / cubeOrigin.X);
-     
+
             float zValue = -p3D.Z - tempCam.Z;
 
             returnPoint.X = (tempCam.X - p3D.X) / zValue * zoom;
