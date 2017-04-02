@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using ArduPlayeris.Cube.Animations;
 
 namespace ArduPlayeris
 {
@@ -16,8 +17,19 @@ namespace ArduPlayeris
             serial.CommandRecieved += Serial_CommandRecieved;
             spotifyHelper.SpotifySongChanged += SpotifyHelper_SpotifySongChanged;
 
+            
+
             mainform.ColorOranToggle.CheckedChanged += new System.EventHandler(this.ColorOranToggleChanged);
             mainform.metroComboBox1.SelectedIndexChanged += MetroComboBox1_SelectedIndexChanged;
+            mainform.metroToggle3.CheckedChanged += MetroToggle3_CheckedChanged;
+        }
+
+        private void MetroToggle3_CheckedChanged(object sender, EventArgs e)
+        {
+            if(mainform.metroToggle3.Checked)
+                serial.Send("debugon");
+            else
+                serial.Send("debugoff");
         }
 
         private void MetroComboBox1_SelectedIndexChanged(object sender, EventArgs e)

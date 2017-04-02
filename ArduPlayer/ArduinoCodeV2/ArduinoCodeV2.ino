@@ -16,7 +16,7 @@
 #define RotaryEncoderFirstPin 2
 #define RotaryEncoderSecondPin 3
 
-//#define DEBUG 1
+bool DEBUG = 0 ;
 
 LiquidCrystal_I2C   lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);	// Initializes lcd object for i2c communication.
 DHT dht(7, DHT22);													// Initializes dht object for temperature checking.
@@ -120,6 +120,8 @@ void CheckEncoder()
 
 void Click(int i)
 {
+
+
 	Serial.print("!cl"); // Play or pause music
 	Serial.print(i);
 	Serial.print("\n"); 
@@ -158,29 +160,21 @@ void colors() {
 		spectrumValue[i] = analogRead(AnalogPinForColors);
 		spectrumValue[i] = constrain(spectrumValue[i], filter, 1023);
 		spectrumValue[i] = map(spectrumValue[i], filter, 1023, 0, 255);
-		#ifdef DEBUG
-		if(spectrumValue[i] < 10){
-			Serial.print("  "); Serial.print(spectrumValue[i]); Serial.print(" ");
-		} else if(spectrumValue[i] < 100){
-			Serial.print(" "); Serial.print(spectrumValue[i]); Serial.print(" ");
-		} else{
-			Serial.print(spectrumValue[i]); Serial.print(" ");
+		if(DEBUG){
+			if(spectrumValue[i] < 10){
+				Serial.print("  "); Serial.print(spectrumValue[i]); Serial.print(" ");
+			} else if(spectrumValue[i] < 100){
+				Serial.print(" "); Serial.print(spectrumValue[i]); Serial.print(" ");
+			} else{
+				Serial.print(spectrumValue[i]); Serial.print(" ");
+			}
 		}
-		#endif
 		digitalWrite(StrobePinForColors, HIGH);
 	}
-	#ifdef DEBUG 
+	if(DEBUG){
 		Serial.println(); 
-	#endif 
-/*int i = 0;
+	}
 
-	leds[i+0].setHSV( 0, 255, spectrumValue[0]);
-	leds[i+1].setHSV( 98, 255, spectrumValue[1]);
-	leds[i+2].setHSV( 160, 255, spectrumValue[2]);
-	leds[i+3].setHSV( 32, 255, spectrumValue[3]);
-	leds[i+4].setHSV( 192, 255, spectrumValue[4]);
-	leds[i+5].setHSV( 128, 255, spectrumValue[5]);
-	leds[i+6].setHSV( 224, 255, spectrumValue[6]); */
 
 	if(colorMode==0)
 	{
@@ -423,6 +417,10 @@ void SComCommandRecieved(String text)								// Fired when Serial Communication 
 		}
 		FastLED.show();
 	}
+	if(text == "debugon")
+		DEBUG=true;
+	if(text == "debugoff")
+		DEBUG=false;
  
   
 		
