@@ -7,12 +7,13 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Linq;
+using ArduPlayeris.Cube.Animations;
 
 namespace ArduPlayeris
 {
     partial class MainForm
     {
-        private Cube mainCube;
+        private LedCube.Cube mainCube;
         private Point drawOrigin;
         List<int> uzdegti = new List<int>();
         Point centerPos = new Point();
@@ -21,13 +22,15 @@ namespace ArduPlayeris
         bool limit = false;
         int scroll = 5;
 
+        public Frame CurrentFrame;
+
         private void MetroTabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (metroTabControl1.SelectedIndex == 3)
             {                
                 this.KeyPreview = true;
                 
-                mainCube = new Cube(200);
+                mainCube = new LedCube.Cube(200);
 
                 drawOrigin = new Point(CubePictureBox.Width / 2, CubePictureBox.Height / 2);
                 centerPos.X = CubePictureBox.Width / 2;
@@ -41,11 +44,11 @@ namespace ArduPlayeris
         {
             if (e.Delta > 0)
             {
-                mainCube = new Cube(mainCube.height + scroll);
+                mainCube = new LedCube.Cube(mainCube.height + scroll);
             }
             else
             {
-                mainCube = new Cube(mainCube.height - scroll);
+                mainCube = new LedCube.Cube(mainCube.height - scroll);
 
             }
             Render();
@@ -55,7 +58,7 @@ namespace ArduPlayeris
         {
             if (mainCube == null)
                 return;
-            mainCube = new Cube(mainCube.height);
+            mainCube = new LedCube.Cube(mainCube.height);
             mainCube.RotateX = Convert.ToSingle(TrackBarX.Value);
             mainCube.RotateY = Convert.ToSingle(TrackBarY.Value);
             mainCube.RotateZ = Convert.ToSingle(0);
@@ -68,12 +71,7 @@ namespace ArduPlayeris
         {
             Render();
         }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-         
-        }
-
+        
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
             if (limit) { limit = false; return; } else { limit = true; }

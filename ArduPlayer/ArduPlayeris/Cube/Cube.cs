@@ -296,7 +296,28 @@ namespace ArduPlayeris.LedCube
 
                     }
 
+/*
+                    g.FillPolygon(gray, sortedSides[0]);
+                    g.FillPolygon(gray, sortedSides[5]);
+                    g.FillPolygon(gray, sortedSides[2]);
+                    g.FillPolygon(gray, sortedSides[3]);
+                    g.FillPolygon(gray, sortedSides[4]);
+
+                    g.FillPolygon(gray, sortedSides[1]);
+                    g.DrawPolygon(blackPen, sortedSides[1]);
+
+                    g.DrawPolygon(blackPen, sortedSides[2]);
+
+                    g.DrawPolygon(blackPen, sortedSides[3]);
+
+                    g.DrawPolygon(blackPen, sortedSides[0]);
+                    g.DrawPolygon(blackPen, sortedSides[4]);
+
+                    g.DrawPolygon(blackPen, sortedSides[5]);
+
+                    g.DrawPolygon(blackPen, sortedSides[2]);*/
                 }
+
 
             }
             return finalBmp;

@@ -10,11 +10,14 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ArduPlayeris.Cube.Animations;
 
 
 namespace ArduPlayeris
@@ -34,6 +37,7 @@ namespace ArduPlayeris
             serial = new SCom(this);
             spotfyH = new SpotifyHelper();
             new CommunictaionManager(this);
+            new AnimationManager(this);
             serial.UpdateRecieved += Serial_UpdateRecieved;
             
             //    serial.getInfo(); // move this somewhere else   
@@ -203,9 +207,13 @@ namespace ArduPlayeris
             CompareFiles(true);
         }
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool AllocConsole();
+
         private void TestButton(object sender, EventArgs e)
         {
-
+            AllocConsole();
         }
  
 
@@ -219,6 +227,52 @@ namespace ArduPlayeris
                 rk.DeleteValue("ArduPlayer", false);
         }
 
+        private void metroTrackBar1_Scroll(object sender, ScrollEventArgs e)
+        {
+            metroLabel6.ForeColor = ((Bitmap)pictureBox1.Image).GetPixel(metroTrackBar1.Value, 10);
+        }
+
+        private void metroButton2_Click(object sender, EventArgs e)
+        {
+          
+        }
+
       
+
+       /* private void metroButton3_Click(object sender, EventArgs e)
+        {
+            
+            foreach (Frame frame in frames)
+            {
+                if (frame.Location.X > -5 && frame.Location.X < 330)
+                {
+                    frame.UseCustomForeColor = true;
+                    frame.ForeColor = Color.Green;
+                }
+                else
+                {
+                    frame.UseCustomForeColor = false;
+                    frame.ResetForeColor();
+                }
+
+
+
+            }
+            
+        }
+        */
+ 
+     /*   private void metroButton5_Click(object sender, EventArgs e)
+        {
+            FramePanel.HorizontalScroll.Value = FramePanel.HorizontalScroll.Maximum;
+            FramePanel.ScrollControlIntoView(frames.ElementAt(15));
+            FramePanel.Refresh();
+        }
+        */
+        private async void metroButton6_Click(object sender, EventArgs e)
+        {
+            
+        }
+
     }
 }

@@ -78,6 +78,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommunictaionManager.cs" />
+    <Compile Include="Cube\Animations\Animation.cs" />
+    <Compile Include="Cube\Animations\AnimationManager.cs" />
+    <Compile Include="Cube\Animations\Frame.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Cube\Cube.cs" />
     <Compile Include="Cube\CubeControls.cs">
       <SubType>Form</SubType>
@@ -110,6 +115,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -127,6 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\spectrum.jpg" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
