@@ -17,6 +17,7 @@ using MetroFramework;
 namespace ArduPlayeris
 {
     public delegate void UpdateListener(string text);
+    public delegate void UsbListener();
     public class SCom
     {
         //http://stackoverflow.com/questions/271238/how-do-i-detect-when-a-removable-disk-is-inserted-using-c
@@ -99,6 +100,8 @@ namespace ArduPlayeris
         private MetroComboBox Port;
         public event UpdateListener UpdateRecieved;
         public event UpdateListener CommandRecieved;
+        public event UsbListener USBconnected;
+        public event UsbListener USBdisconnected;
         private bool canRead = true;
 
         private string[] portBuffer;
@@ -264,6 +267,7 @@ namespace ArduPlayeris
 
             }
             Console.WriteLine("A USB device inserted");
+            USBconnected?.Invoke();
 
         }
 
@@ -278,6 +282,7 @@ namespace ArduPlayeris
             {
                 Stop();
             }
+            USBdisconnected?.Invoke();
 
         }
 

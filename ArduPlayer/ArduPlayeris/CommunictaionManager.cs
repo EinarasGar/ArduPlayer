@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using ArduPlayeris.Cube.Animations;
 
 namespace ArduPlayeris
@@ -17,11 +18,22 @@ namespace ArduPlayeris
             serial.CommandRecieved += Serial_CommandRecieved;
             spotifyHelper.SpotifySongChanged += SpotifyHelper_SpotifySongChanged;
 
-            
+            serial.USBconnected += Serial_USBconnected;
 
             mainform.ColorOranToggle.CheckedChanged += new System.EventHandler(this.ColorOranToggleChanged);
             mainform.metroComboBox1.SelectedIndexChanged += MetroComboBox1_SelectedIndexChanged;
             mainform.metroToggle3.CheckedChanged += MetroToggle3_CheckedChanged;
+        }
+
+        private async void Serial_USBconnected()
+        {
+            if (currentTitle != null && currentArtist != null)
+            {
+                await Task.Delay(5000);
+                serial.Send("artist" + currentArtist);
+                await Task.Delay(100);
+                serial.Send("title" + currentTitle);
+            }
         }
 
         private void MetroToggle3_CheckedChanged(object sender, EventArgs e)
@@ -45,11 +57,15 @@ namespace ArduPlayeris
                 serial.Send("colorsoff");
         }
 
+        private string currentArtist = null;
+        private string currentTitle = null;
         private async void SpotifyHelper_SpotifySongChanged(string artist, string title)
         {
             serial.Send("artist" + artist);
             await Task.Delay(100);
             serial.Send("title" + title);
+            currentArtist = artist;
+            currentTitle = title;
             mainform.NowPlayingLbl.Text = "Now playing: " + title + " by " + artist; //+ ", " + collection[2];
         }
 
