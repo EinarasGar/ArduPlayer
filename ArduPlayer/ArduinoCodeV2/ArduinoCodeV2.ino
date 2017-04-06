@@ -27,7 +27,7 @@ long oldPosition = -999;											// position of rotary encoder
 
 void setup()
 {			
-	Serial.begin(9600);												// Starts serial communication at baud rate 9600.
+	Serial.begin(115200);												// Starts serial communication at baud rate 9600.
 	lcd.begin(16, 2);												// Starts 16x2 lcd screen 	
 	FastLED.addLeds<WS2812, DATA_PIN, GRB>(leds, NUM_LEDS);
 	pinMode(AnalogPinForColors, INPUT);

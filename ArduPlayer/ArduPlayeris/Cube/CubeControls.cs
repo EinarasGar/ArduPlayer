@@ -11,18 +11,29 @@ using ArduPlayeris.Cube.Animations;
 
 namespace ArduPlayeris
 {
+    public delegate void LedsListener(List<int> litLeds);
+    public delegate void LedListener(int led, bool isGlowing);
     partial class MainForm
     {
         private LedCube.Cube mainCube;
         private Point drawOrigin;
-        List<int> uzdegti = new List<int>();
+        public List<int> LitLeds = new List<int>();
         Point centerPos = new Point();
         int lastX = 0;
         int lastY = 0;
         bool limit = false;
         int scroll = 5;
 
-        public Frame CurrentFrame;
+        /// <summary>
+        /// List<int> 
+        /// </summary>
+        public event LedsListener LedsChanged;
+
+        /// <summary>
+        /// int litLed
+        /// bool on/off 
+        /// </summary>
+        public event LedListener LedStateChanged;
 
         private void MetroTabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -35,7 +46,7 @@ namespace ArduPlayeris
                 drawOrigin = new Point(CubePictureBox.Width / 2, CubePictureBox.Height / 2);
                 centerPos.X = CubePictureBox.Width / 2;
                 centerPos.Y = CubePictureBox.Height / 2;
-                Render();
+                RenderCube();
                 this.MouseWheel += MainForm_MouseWheel;
             }
         }
@@ -51,10 +62,10 @@ namespace ArduPlayeris
                 mainCube = new LedCube.Cube(mainCube.height - scroll);
 
             }
-            Render();
+            RenderCube();
         }
 
-        private void Render()
+        public void RenderCube()
         {
             if (mainCube == null)
                 return;
@@ -62,14 +73,14 @@ namespace ArduPlayeris
             mainCube.RotateX = Convert.ToSingle(TrackBarX.Value);
             mainCube.RotateY = Convert.ToSingle(TrackBarY.Value);
             mainCube.RotateZ = Convert.ToSingle(0);
-            mainCube.uzdegti = uzdegti;
+            mainCube.uzdegti = LitLeds;
             CubePictureBox.Image = mainCube.DrawCube(drawOrigin);
             CubePictureBox.Invalidate();
         }
 
         private void TackBarScroll(object sender, ScrollEventArgs e)
         {
-            Render();
+            RenderCube();
         }
         
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
@@ -83,7 +94,7 @@ namespace ArduPlayeris
                 TrackBarX.Value -= dy;
                 TrackBarY.Value -= dx;
 
-                Render();
+                RenderCube();
                 lastX = e.Location.X;
                 lastY = e.Location.Y;
                 return;
@@ -97,7 +108,7 @@ namespace ArduPlayeris
                 centerPos.Y += dy;
                 centerPos.X += dx;
                 drawOrigin = new Point(centerPos.X, centerPos.Y);
-                Render();
+                RenderCube();
             }
             if (e.Button == MouseButtons.Left)
             {
@@ -186,19 +197,23 @@ namespace ArduPlayeris
                 int Ledas = plotai.FirstOrDefault(x => x.Value == didziausiasPlotas).Key;
                 if (onoff)
                 {
-                    if (!uzdegti.Contains(Ledas))
+                    if (!LitLeds.Contains(Ledas))
                     {
-                       uzdegti.Add(Ledas);
+                       LitLeds.Add(Ledas);
+                       LedsChanged?.Invoke(LitLeds);
+                       LedStateChanged?.Invoke(Ledas,true);
                        serial.Send("a"+Ledas.ToString());
                     }
                 }
                 else
                 {
-                    uzdegti.Remove(Ledas);
+                    LitLeds.Remove(Ledas);
+                    LedsChanged?.Invoke(LitLeds);
+                    LedStateChanged?.Invoke(Ledas, false);
                     serial.Send("r" +Ledas.ToString());
                 }
             }
-            Render();
+            RenderCube();
         }
 
     }

@@ -3,8 +3,16 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using MetroFramework.Controls;
 
+
+/*
+ 
+    * Upon adding new frame - current frame doesnt change.
+    *  
+    
+*/
 namespace ArduPlayeris.Cube.Animations
 {
     public class AnimationManager
@@ -14,24 +22,53 @@ namespace ArduPlayeris.Cube.Animations
         private Animation currentAnimation;
         private MetroPanel FramePanel = new MetroPanel();
         private MetroScrollBar scrollBar = new MetroScrollBar();
-
         private List<Frame> currentFrames = new List<Frame>();
+        private Frame currentFrame = new Frame(0);
+
+        private List<int> latestLit = new List<int>();
 
         public AnimationManager(MainForm mainForm)
         {
             this.mainForm = mainForm;
             this.serial = mainForm.serial;
 
+            mainForm.LedsChanged += MainForm_LedsChanged;
+
             this.mainForm.metroButton6.Click += MetroButton6_Click;
             this.mainForm.metroButton2.Click += MetroButton2_Click;
             this.mainForm.metroButton3.Click += MetroToggle3_Click;
-            //FramePanel = mainForm.FramePanel;
             currentAnimation = new Animation();
-            loadAnimation();
-            scrollBar.Dispose();
             scrollBar = createScrollBar();
             mainForm.metroTabPage1.Controls.Add(this.scrollBar);
+            addFrame();
+            loadAnimation();
+          //  showFrames();
+           // setCurrents();
 
+
+
+        }
+
+        private void setCurrents()
+        {
+            currentFrames = currentAnimation.Frames;
+            currentFrame = currentFrames[0];
+        }
+
+        private void MainForm_LedsChanged(List<int> litLeds)
+        {
+            currentFrame.uzdegti = litLeds;
+            latestLit = litLeds;
+            saveFrame();
+        }
+
+        private void saveFrame()
+        {
+            foreach (Frame frame in currentFrames)
+            {
+                if (frame.Number == currentFrame.Number)
+                    frame.uzdegti = currentFrame.uzdegti;
+            }
         }
 
         private MetroPanel createPanel()
@@ -70,7 +107,6 @@ namespace ArduPlayeris.Cube.Animations
             metroScrollBar1.TabIndex = 12;
             metroScrollBar1.Theme = MetroFramework.MetroThemeStyle.Dark;
             metroScrollBar1.UseSelectable = true;
-
             metroScrollBar1.Scroll += MetroScrollBar1_Scroll;
             return metroScrollBar1;
         }
@@ -83,25 +119,23 @@ namespace ArduPlayeris.Cube.Animations
 
         private void MetroButton2_Click(object sender, System.EventArgs e)
         {
+            saveAnimation();
             addFrame();
-            
+            showFrames();
+        }
 
+        private void saveAnimation()
+        {
+            currentAnimation.Save(currentFrames);
         }
 
         private void addFrame()
         {
-            currentAnimation.NewFrame(mainForm.Style, mainForm.Theme);
-            currentFrames = currentAnimation.Frames;
-            FramePanel.Controls.Clear();
-            FramePanel.Controls.AddRange(currentFrames.ToArray());
-            FramePanel.Refresh();
-            updateScrolbar();
-          
+            currentAnimation.NewFrame();
         }
 
         private void updateScrolbar()
         {
-
             int frameNumber = currentFrames.Count;
             if (frameNumber > 15)
             {
@@ -116,7 +150,6 @@ namespace ArduPlayeris.Cube.Animations
                 scrollBar.Maximum = frameNumber - c + 3;
                 scrollBar.Value = scrollBar.Maximum;
             }
-
         }
 
         private void MetroToggle3_Click(object sender, System.EventArgs e)
@@ -126,25 +159,43 @@ namespace ArduPlayeris.Cube.Animations
 
         private void loadAnimation()
         {
-
             FramePanel.Dispose();
             FramePanel = createPanel();
             mainForm.metroTabPage1.Controls.Add(this.FramePanel);
 
-            currentAnimation = new Animation();
+           // currentAnimation = new Animation();
           
+            
+
+            showFrames();
+            FramePanel.HorizontalScroll.Value = FramePanel.HorizontalScroll.Maximum;
+        }
+
+        private void showFrames()
+        {
             currentFrames = currentAnimation.Frames;
+            foreach (Frame frame in currentFrames)
+            {
+                frame.Style = mainForm.Style;
+                frame.Theme = mainForm.Theme;
+                frame.Click += Frame_Click;
+            }
+
+            Frame frameToLoad = currentFrames.Last();
+            frameToLoad.uzdegti = latestLit.ToArray().ToList();
+            loadFrame(frameToLoad);
             FramePanel.Controls.Clear();
             FramePanel.Controls.AddRange(currentFrames.ToArray());
-            FramePanel.HorizontalScroll.Value = FramePanel.HorizontalScroll.Maximum;
             FramePanel.Refresh();
             updateScrolbar();
-            scrollBar.PerformLayout();
-            
 
         }
 
-
+        private void Frame_Click(object sender, EventArgs e)
+        {
+            Frame frame = sender as Frame;
+            loadFrame(frame);
+        }
 
         private async void MetroButton6_Click(object sender, System.EventArgs e)
         {
@@ -156,28 +207,52 @@ namespace ArduPlayeris.Cube.Animations
             for (var i = 0; i < frames.Count; i++)
             {
                 Frame frame = frames[i];
-                if (frame.Location.X > -5 && frame.Location.X < 330)
-                {
-                    frame.UseCustomForeColor = true;
-                    frame.ForeColor = Color.Green;
-                }
-                else
+                if (frame.Location.X < -5 || frame.Location.X > 330)
                 {
                     FramePanel.HorizontalScroll.Value = FramePanel.HorizontalScroll.Maximum;
                     FramePanel.ScrollControlIntoView(frames.ElementAt(i - 1));
                     scrollBar.Value = i;
-                    frame.UseCustomForeColor = true;
-                    frame.ForeColor = Color.Green;
                     FramePanel.PerformLayout();
                     FramePanel.Refresh();
                 }
-
+         
+                frame.UseCustomForeColor = true;
+                frame.ForeColor = Color.Green;
+                loadFrame(frame);
                 await Task.Delay(250);
                 frame.UseCustomForeColor = false;
                 frame.ResetForeColor();
                 FramePanel.PerformLayout();
                 FramePanel.Refresh();
+                
             }
+        }
+
+        private void loadFrame(Frame frame)
+        {
+            currentFrame = frame;
+            mainForm.LitLeds = currentFrame.uzdegti;
+
+
+            int bytes = 0;
+            for (int i = 0; i < 125; i++)
+            {
+                serial.Send("r" + i);
+                bytes++;
+                if (i < 10)
+                    bytes++;
+                if (i < 100 && i > 10)
+                    bytes += 2;
+                if (i > 100)
+                    bytes += 3;
+
+            }
+            //MessageBox.Show(bytes.ToString());
+            foreach (int i in currentFrame.uzdegti)
+            {
+                serial.Send("a" + i);
+            }
+            mainForm.RenderCube();
         }
     }
 }

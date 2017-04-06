@@ -371,7 +371,7 @@ namespace ArduPlayeris
                 port.RtsEnable = true;
                 port.Open();
                 textBox.Clear();
-                textBox.AppendText("Connected to Port: " + port.PortName + " and Baud: " + BaudRate.Text + "\n" );
+                textBox.AppendText("Connected to Port: " + port.PortName + " and Baud: " + port.BaudRate+ "\n" );
                    
             }
         }

@@ -85,8 +85,6 @@
             this.TrackBarY = new MetroFramework.Controls.MetroTrackBar();
             this.CubePictureBox = new System.Windows.Forms.PictureBox();
             this.NowPlayingLbl = new MetroFramework.Controls.MetroLabel();
-            this.FramePanel = new MetroFramework.Controls.MetroPanel();
-            this.metroScrollBar1 = new MetroFramework.Controls.MetroScrollBar();
             this.Settings.SuspendLayout();
             this.SComTab.SuspendLayout();
             this.metroTabControl1.SuspendLayout();
@@ -493,6 +491,7 @@
             this.StartButton.Text = "Start";
             this.StartButton.Theme = MetroFramework.MetroThemeStyle.Dark;
             this.StartButton.UseSelectable = true;
+            this.StartButton.Click += new System.EventHandler(this.StartButton_Click);
             // 
             // OutPutTextBox
             // 
@@ -547,7 +546,7 @@
             this.metroTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.metroTabControl1.Location = new System.Drawing.Point(20, 60);
             this.metroTabControl1.Name = "metroTabControl1";
-            this.metroTabControl1.SelectedIndex = 3;
+            this.metroTabControl1.SelectedIndex = 0;
             this.metroTabControl1.Size = new System.Drawing.Size(635, 316);
             this.metroTabControl1.Style = MetroFramework.MetroColorStyle.Lime;
             this.metroTabControl1.TabIndex = 0;
@@ -730,11 +729,9 @@
             // 
             // metroTabPage1
             // 
-            this.metroTabPage1.Controls.Add(this.metroScrollBar1);
             this.metroTabPage1.Controls.Add(this.metroButton6);
             this.metroTabPage1.Controls.Add(this.metroButton3);
             this.metroTabPage1.Controls.Add(this.metroButton2);
-            this.metroTabPage1.Controls.Add(this.FramePanel);
             this.metroTabPage1.Controls.Add(this.TrackBarX);
             this.metroTabPage1.Controls.Add(this.TrackBarY);
             this.metroTabPage1.Controls.Add(this.CubePictureBox);
@@ -838,40 +835,6 @@
             this.NowPlayingLbl.Text = "Now playing:";
             this.NowPlayingLbl.Theme = MetroFramework.MetroThemeStyle.Dark;
             // 
-            // FramePanel
-            // 
-            this.FramePanel.AutoScroll = true;
-            this.FramePanel.HorizontalScrollbar = true;
-            this.FramePanel.HorizontalScrollbarBarColor = true;
-            this.FramePanel.HorizontalScrollbarHighlightOnWheel = true;
-            this.FramePanel.HorizontalScrollbarSize = 7;
-            this.FramePanel.Location = new System.Drawing.Point(3, 145);
-            this.FramePanel.Name = "FramePanel";
-            this.FramePanel.Size = new System.Drawing.Size(340, 36);
-            this.FramePanel.Style = MetroFramework.MetroColorStyle.Lime;
-            this.FramePanel.TabIndex = 5;
-            this.FramePanel.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.FramePanel.VerticalScrollbar = true;
-            this.FramePanel.VerticalScrollbarBarColor = true;
-            this.FramePanel.VerticalScrollbarHighlightOnWheel = false;
-            this.FramePanel.VerticalScrollbarSize = 10;
-            // 
-            // metroScrollBar1
-            // 
-            this.metroScrollBar1.LargeChange = 10;
-            this.metroScrollBar1.Location = new System.Drawing.Point(3, 129);
-            this.metroScrollBar1.Maximum = 100;
-            this.metroScrollBar1.Minimum = 0;
-            this.metroScrollBar1.MouseWheelBarPartitions = 10;
-            this.metroScrollBar1.Name = "metroScrollBar1";
-            this.metroScrollBar1.Orientation = MetroFramework.Controls.MetroScrollOrientation.Horizontal;
-            this.metroScrollBar1.ScrollbarSize = 10;
-            this.metroScrollBar1.Size = new System.Drawing.Size(340, 10);
-            this.metroScrollBar1.Style = MetroFramework.MetroColorStyle.Lime;
-            this.metroScrollBar1.TabIndex = 12;
-            this.metroScrollBar1.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.metroScrollBar1.UseSelectable = true;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -963,8 +926,6 @@
         public MetroFramework.Controls.MetroButton metroButton2;
         public MetroFramework.Controls.MetroButton metroButton6;
         public MetroFramework.Controls.MetroButton metroButton3;
-        private MetroFramework.Controls.MetroScrollBar metroScrollBar1;
-        public MetroFramework.Controls.MetroPanel FramePanel;
     }
 }
 
