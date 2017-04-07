@@ -213,7 +213,8 @@ namespace ArduPlayeris
 
         private void TestButton(object sender, EventArgs e)
         {
-            AllocConsole();
+            //AllocConsole();
+            serial.Send(new byte[] {200,124,123,122,201});
         }
  
 

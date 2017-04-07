@@ -27,7 +27,7 @@ long oldPosition = -999;											// position of rotary encoder
 
 void setup()
 {			
-	Serial.begin(115200);												// Starts serial communication at baud rate 9600.
+	Serial.begin(9600);												// Starts serial communication at baud rate 9600.
 	lcd.begin(16, 2);												// Starts 16x2 lcd screen 	
 	FastLED.addLeds<WS2812, DATA_PIN, GRB>(leds, NUM_LEDS);
 	pinMode(AnalogPinForColors, INPUT);
@@ -334,18 +334,68 @@ void ShowTemperature()
 	}
 }
 
+
+//Gali komandos susimessinti nes nera new line.
+int readAnimation = false;
 String readString;													// Buffer string for serial communication.
+int buffer[125];
+int buffer_counter=0;
 void CheckSCom()
 {		
 	while (Serial.available()) {									// While serial text is available.	
-		char c = Serial.read();										// We read each char in serial buffer.
-		if (c == '\n') {											// And if char is new line, then that means its end of command.
-			SComCommandRecieved(readString);						// So we call that command			
-			readString = "";										// And reset string buffer
-		} 
-		else
-			readString += c;										// And if its not newline, then we add that char to buffer.
+		
+		byte readByte = Serial.read();
+		char c = (char)readByte;										// We read each char in serial buffer.		
+		if(readAnimation)
+		{
+			if(readByte!=200)
+				buffer[buffer_counter] = readByte;
+			buffer_counter++;
+		} else {
+			if (c == '\n') {											// And if char is new line, then that means its end of command.
+				SComCommandRecieved(readString);						// So we call that command			
+				readString = "";										// And reset string buffer
+			} 
+			else
+				readString += c;										// And if its not newline, then we add that char to buffer.
+		}
+
+		if(readByte==200)
+		{
+			readAnimation = true;
+		}
+		if(readByte==201)
+		{
+			readAnimation = false;
+			sendAnimation();
+			buffer_counter=0;
+			readString = "";	
+		}
+		
 	}
+}
+
+void sendAnimation()
+{	
+	Wire.begin(); // join i2c bus (address optional for master)
+	Wire.beginTransmission(8); // transmit to device #8
+	Wire.write(200);
+	Wire.endTransmission();    // stop transmitting     
+
+	for (int i = 0; i < buffer_counter-1; ++i)
+	{
+		Wire.begin(); // join i2c bus (address optional for master)
+		Wire.beginTransmission(8); // transmit to device #8
+		Wire.write(buffer[i]);
+		Wire.endTransmission();    // stop transmitting   
+	}
+
+	Wire.begin(); // join i2c bus (address optional for master)
+	Wire.beginTransmission(8); // transmit to device #8
+	Wire.write(201);
+	Wire.endTransmission();    // stop transmitting     
+
+
 }
 
 

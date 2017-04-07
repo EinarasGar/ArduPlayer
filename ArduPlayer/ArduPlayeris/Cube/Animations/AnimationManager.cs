@@ -233,26 +233,25 @@ namespace ArduPlayeris.Cube.Animations
             currentFrame = frame;
             mainForm.LitLeds = currentFrame.uzdegti;
 
+            lightFrame(currentFrame.uzdegti);
 
-            int bytes = 0;
-            for (int i = 0; i < 125; i++)
-            {
-                serial.Send("r" + i);
-                bytes++;
-                if (i < 10)
-                    bytes++;
-                if (i < 100 && i > 10)
-                    bytes += 2;
-                if (i > 100)
-                    bytes += 3;
-
-            }
-            //MessageBox.Show(bytes.ToString());
-            foreach (int i in currentFrame.uzdegti)
-            {
-                serial.Send("a" + i);
-            }
             mainForm.RenderCube();
+        }
+
+        private void lightFrame(List<int> uzdegti)
+        {
+            byte header = 200;
+            byte end = 201;
+            List<byte> litLeds = new List<byte>();
+            foreach (int i in uzdegti)
+            {
+                litLeds.Add((byte)i);
+            }
+
+            litLeds.Insert(0,header);
+            litLeds.Add(end);
+            byte[] bytesToSend = litLeds.ToArray();
+            serial.Send(bytesToSend);
         }
     }
 }

@@ -417,6 +417,13 @@ namespace ArduPlayeris
             port.Write(Text + "\n");
         }
 
+        public void Send(byte[] byteArray)
+        {
+            if (!port.IsOpen) return;
+            if (byteArray.Length == 0) return;
+            port.Write(byteArray,0,byteArray.Length);
+        }
+
         private void SendButtonClicked(object sender, EventArgs e)
         {
             Send(InputTextBox.Text);

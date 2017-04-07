@@ -71,8 +71,66 @@ void SComCommandRecieved(String text)                // Fired when Serial Commun
   
 }
 
+int buffer[125];
+int readAnimation = false;
+int buffer_counter = 0;
 void receiveEvent(int howMany) {
-//while (1 < Wire.available()) { // loop through all but the last
+
+
+	/*while (0 < Wire.available()) {
+		byte b = Wire.read();
+		leds[b] = HIGH;
+		if (b == 201)
+		{
+			for (int i = 0; i < 125; ++i)
+			{
+				leds[i] = LOW;
+			}
+			//  leds[0] = HIGH;
+			//	setLeds();
+			//   buffer_counter = 0;
+			//	return;
+		}
+		//	leds[b] = HIGH;
+		//	buffer[buffer_counter] = b;
+		//	buffer_counter++;*/
+		
+	while (0 < Wire.available()) {
+		byte b = Wire.read();
+
+		if (readAnimation)
+		{
+			if (b != 200)
+				buffer[buffer_counter] = b;
+			buffer_counter++;
+		}
+		if (b == 200)
+		{
+			readAnimation = true;
+		}
+		if (b == 201)
+		{
+			readAnimation = false;
+			setFrame();
+			buffer_counter = 0;
+			
+		}
+	}
+}
+
+void setFrame()
+{
+    for (int i = 0; i < 125; ++i)
+  {
+    leds[i] = LOW;
+  }
+	for (int i = 0; i < buffer_counter - 1; ++i)
+	{
+		leds[buffer[i]] = HIGH;
+	}
+}
+
+/*//while (1 < Wire.available()) { // loop through all but the last
     char c = Wire.read(); // receive byte as a character
    // Serial.print(c);         // print the character
  // }
@@ -80,15 +138,27 @@ void receiveEvent(int howMany) {
  // Serial.println(x);         // print the integer
 
  if (c == 'a') {             // If artist command is recieved
+	 leds[x] = HIGH;
    
-   leds[x] = HIGH;   
   }
   if (c == 'r') {              
    
    leds[x] = LOW;   
-  }
+  }*/
 
-}
+//}
+
+/*void setLeds()
+{
+    for (int i = 0; i < 125; ++i)
+  {
+    leds[i] = LOW;
+  }
+	for (int j = 0; j < buffer_counter; ++j)
+	{
+		leds[buffer[j]] = HIGH;
+	}
+}*/
 
 void SelectLed(byte number){
   leds[125] = HIGH;

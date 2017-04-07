@@ -202,7 +202,21 @@ namespace ArduPlayeris
                        LitLeds.Add(Ledas);
                        LedsChanged?.Invoke(LitLeds);
                        LedStateChanged?.Invoke(Ledas,true);
-                       serial.Send("a"+Ledas.ToString());
+
+                        byte header = 200;
+                        byte end = 201;
+                        List<byte> litLeds = new List<byte>();
+                        foreach (int i in LitLeds)
+                        {
+                            litLeds.Add((byte)i);
+                        }
+
+                        litLeds.Insert(0, header);
+                        litLeds.Add(end);
+                        byte[] bytesToSend = litLeds.ToArray();
+                        serial.Send(bytesToSend);
+
+                     //   serial.Send("a"+Ledas.ToString());
                     }
                 }
                 else
@@ -210,7 +224,21 @@ namespace ArduPlayeris
                     LitLeds.Remove(Ledas);
                     LedsChanged?.Invoke(LitLeds);
                     LedStateChanged?.Invoke(Ledas, false);
-                    serial.Send("r" +Ledas.ToString());
+
+                    byte header = 200;
+                    byte end = 201;
+                    List<byte> litLeds = new List<byte>();
+                    foreach (int i in LitLeds)
+                    {
+                        litLeds.Add((byte)i);
+                    }
+
+                    litLeds.Insert(0, header);
+                    litLeds.Add(end);
+                    byte[] bytesToSend = litLeds.ToArray();
+                    serial.Send(bytesToSend);
+
+                  //  serial.Send("r" +Ledas.ToString());
                 }
             }
             RenderCube();
