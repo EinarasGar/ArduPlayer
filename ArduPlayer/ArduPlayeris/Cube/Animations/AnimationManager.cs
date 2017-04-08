@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using MetroFramework.Controls;
 
 
@@ -26,6 +29,7 @@ namespace ArduPlayeris.Cube.Animations
         private Frame currentFrame = new Frame(0);
 
         private List<int> latestLit = new List<int>();
+        private bool cycleAnimation = false;
 
         public AnimationManager(MainForm mainForm)
         {
@@ -37,23 +41,14 @@ namespace ArduPlayeris.Cube.Animations
             this.mainForm.metroButton6.Click += MetroButton6_Click;
             this.mainForm.metroButton2.Click += MetroButton2_Click;
             this.mainForm.metroButton3.Click += MetroToggle3_Click;
+            this.mainForm.SaveAnimationbutton.Click += SaveAnimationbutton_Click;
             currentAnimation = new Animation();
             scrollBar = createScrollBar();
             mainForm.metroTabPage1.Controls.Add(this.scrollBar);
             addFrame();
             loadAnimation();
-          //  showFrames();
-           // setCurrents();
-
-
-
         }
 
-        private void setCurrents()
-        {
-            currentFrames = currentAnimation.Frames;
-            currentFrame = currentFrames[0];
-        }
 
         private void MainForm_LedsChanged(List<int> litLeds)
         {
@@ -119,12 +114,12 @@ namespace ArduPlayeris.Cube.Animations
 
         private void MetroButton2_Click(object sender, System.EventArgs e)
         {
-            saveAnimation();
+            saveFrames();
             addFrame();
             showFrames();
         }
 
-        private void saveAnimation()
+        private void saveFrames()
         {
             currentAnimation.Save(currentFrames);
         }
@@ -163,11 +158,16 @@ namespace ArduPlayeris.Cube.Animations
             FramePanel = createPanel();
             mainForm.metroTabPage1.Controls.Add(this.FramePanel);
 
-           // currentAnimation = new Animation();
-          
             
-
+            currentAnimation = new Animation();
+            addFrame();
+         //   mainForm.AnimationName.Text = "Animation: " + currentAnimation.AnimationName;
+            mainForm.AnimationSelector.Items.Add(currentAnimation);
+            mainForm.AnimationSelector.SelectedIndex =
+                mainForm.AnimationSelector.FindStringExact(currentAnimation.AnimationName);
+            
             showFrames();
+
             FramePanel.HorizontalScroll.Value = FramePanel.HorizontalScroll.Maximum;
         }
 
@@ -199,6 +199,57 @@ namespace ArduPlayeris.Cube.Animations
 
         private async void MetroButton6_Click(object sender, System.EventArgs e)
         {
+            if (!cycleAnimation)
+            {
+                cycleAnimation = true;
+                mainForm.metroButton6.Text = "Stop Cycling";
+                loopCycle();
+            }
+            else
+            {
+                mainForm.metroButton6.Text = "Cycle";
+                cycleAnimation = false;
+            }
+
+        }
+
+        private async void loopCycle()
+        {
+            while (cycleAnimation)
+            {
+                List<Frame> frames = currentFrames;
+                FramePanel.ScrollControlIntoView(frames.ElementAt(0));
+                scrollBar.Value = 1;
+                FramePanel.PerformLayout();
+                FramePanel.Refresh();
+                for (var i = 0; i < frames.Count; i++)
+                {
+                    Frame frame = frames[i];
+                    if (frame.Location.X < -5 || frame.Location.X > 330)
+                    {
+                        FramePanel.HorizontalScroll.Value = FramePanel.HorizontalScroll.Maximum;
+                        FramePanel.ScrollControlIntoView(frames.ElementAt(i - 1));
+                        scrollBar.Value = i;
+                        FramePanel.PerformLayout();
+                        FramePanel.Refresh();
+                    }
+
+                    frame.UseCustomForeColor = true;
+                    frame.ForeColor = Color.Green;
+                    loadFrame(frame);
+                    await Task.Delay(250);
+                    frame.UseCustomForeColor = false;
+                    frame.ResetForeColor();
+                    FramePanel.PerformLayout();
+                    FramePanel.Refresh();
+                    if(!cycleAnimation ) return;
+                    
+                }
+            }
+        }
+
+        private async void cycle()
+        {
             List<Frame> frames = currentFrames;
             FramePanel.ScrollControlIntoView(frames.ElementAt(0));
             scrollBar.Value = 1;
@@ -215,7 +266,7 @@ namespace ArduPlayeris.Cube.Animations
                     FramePanel.PerformLayout();
                     FramePanel.Refresh();
                 }
-         
+
                 frame.UseCustomForeColor = true;
                 frame.ForeColor = Color.Green;
                 loadFrame(frame);
@@ -224,7 +275,7 @@ namespace ArduPlayeris.Cube.Animations
                 frame.ResetForeColor();
                 FramePanel.PerformLayout();
                 FramePanel.Refresh();
-                
+
             }
         }
 
@@ -253,5 +304,61 @@ namespace ArduPlayeris.Cube.Animations
             byte[] bytesToSend = litLeds.ToArray();
             serial.Send(bytesToSend);
         }
+
+
+        private void SaveAnimationbutton_Click(object sender, EventArgs e)
+        {
+            saveAnimationToFile();
+        }
+
+        private void saveAnimationToFile()
+        {
+            if (!Directory.Exists("Animations"))
+                Directory.CreateDirectory("Animations");
+            saveFrames();
+
+          //  Serialization.WriteToXmlFile<Animation>("Animations/" + currentAnimation.AnimationName,currentAnimation);
+          test();
+
+        }
+
+        private void loadAnimationsFromFiles()
+        {
+            if (!Directory.Exists("Animations"))
+                Directory.CreateDirectory("Animations");
+
+
+        }
+
+        private void test()
+        {
+            List<XElement> frameElements = new List<XElement>();
+            foreach (Frame frame in currentAnimation.Frames)
+            {
+                List<XElement> litLeds = new List<XElement>();
+                foreach (int i in frame.uzdegti)
+                {
+                    XElement led = new XElement("led",i);
+                    litLeds.Add(led);
+                }
+
+                XElement element  = new XElement("Frame",
+                    new XAttribute("Number", frame.Number),
+                    new XElement("LitLeds", litLeds));
+                frameElements.Add(element);
+            }
+            
+
+            string result = 
+            new XElement("Animation",
+                new XElement("Name", currentAnimation),
+                new XElement("Frames",frameElements)
+                ).ToString();
+
+            File.WriteAllText(@"Animations\" + currentAnimation + ".animation", result);
+        }
+
+
+
     }
 }

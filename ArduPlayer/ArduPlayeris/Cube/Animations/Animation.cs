@@ -2,16 +2,20 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Xml.Serialization;
 using MetroFramework;
 using MetroFramework.Controls;
 
 namespace ArduPlayeris.Cube.Animations
 {
+    [Serializable]
     public class Animation
     {
         private List<Frame> frames = new List<Frame>();
-        
 
+        public string AnimationName = "Unnamed Animation";
+
+   
         public List<Frame> Frames {
             get
             {
@@ -50,6 +54,11 @@ namespace ArduPlayeris.Cube.Animations
         public void Save(List<Frame> frames)
         {
             this.frames = frames;
+        }
+
+        public override string ToString()
+        {
+            return AnimationName;
         }
     }
 }
