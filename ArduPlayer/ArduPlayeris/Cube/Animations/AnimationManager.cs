@@ -6,16 +6,17 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 using System.Xml.Linq;
 using MetroFramework.Controls;
 
-
 /*
  
-    * Upon adding new frame - current frame doesnt change.
-    *  
-    
+    * Adding new frame does not carry over lit leds
+     
 */
+
+
 namespace ArduPlayeris.Cube.Animations
 {
     public class AnimationManager
@@ -42,6 +43,7 @@ namespace ArduPlayeris.Cube.Animations
             this.mainForm.metroButton2.Click += MetroButton2_Click;
             this.mainForm.metroButton3.Click += MetroToggle3_Click;
             this.mainForm.SaveAnimationbutton.Click += SaveAnimationbutton_Click;
+            this.mainForm.LoadAnimationButton.Click += LoadAnimationButton_Click;
             currentAnimation = new Animation();
             scrollBar = createScrollBar();
             mainForm.metroTabPage1.Controls.Add(this.scrollBar);
@@ -49,6 +51,10 @@ namespace ArduPlayeris.Cube.Animations
             loadAnimation();
         }
 
+        private void LoadAnimationButton_Click(object sender, EventArgs e)
+        {
+            loadAnimationsFromFiles();
+        }
 
         private void MainForm_LedsChanged(List<int> litLeds)
         {
@@ -171,6 +177,25 @@ namespace ArduPlayeris.Cube.Animations
             FramePanel.HorizontalScroll.Value = FramePanel.HorizontalScroll.Maximum;
         }
 
+        private void loadAnimation(Animation animation)
+        {
+            FramePanel.Dispose();
+            FramePanel = createPanel();
+            mainForm.metroTabPage1.Controls.Add(this.FramePanel);
+
+
+            currentAnimation = animation;
+            
+            //   mainForm.AnimationName.Text = "Animation: " + currentAnimation.AnimationName;
+            mainForm.AnimationSelector.Items.Add(currentAnimation);
+            mainForm.AnimationSelector.SelectedIndex =
+                mainForm.AnimationSelector.FindStringExact(currentAnimation.AnimationName);
+            
+            showFrames();
+
+            FramePanel.HorizontalScroll.Value = FramePanel.HorizontalScroll.Maximum;
+        }
+
         private void showFrames()
         {
             currentFrames = currentAnimation.Frames;
@@ -182,7 +207,7 @@ namespace ArduPlayeris.Cube.Animations
             }
 
             Frame frameToLoad = currentFrames.Last();
-            frameToLoad.uzdegti = latestLit.ToArray().ToList();
+            //frameToLoad.uzdegti = latestLit.ToArray().ToList();
             loadFrame(frameToLoad);
             FramePanel.Controls.Clear();
             FramePanel.Controls.AddRange(currentFrames.ToArray());
@@ -327,7 +352,28 @@ namespace ArduPlayeris.Cube.Animations
             if (!Directory.Exists("Animations"))
                 Directory.CreateDirectory("Animations");
 
-
+            XmlDocument doc = new XmlDocument();
+            doc.Load("Animations\\Unnamed Animation.animation");
+            XmlNode FramesNode = doc.DocumentElement.SelectSingleNode("/Animation/Frames");
+            XmlNode NameNode = doc.DocumentElement.SelectSingleNode("/Animation/Name");
+            Animation loadedAnimation = new Animation();
+            List<Frame> loadedFrames = new List<Frame>();
+            foreach (XmlNode childNode in FramesNode.ChildNodes)
+            {
+                int number = int.Parse(childNode.Attributes["Number"].InnerText);
+                Frame loadedFrame = new Frame(number);
+                List<int> uzdegti = new List<int>();
+                XmlNode litLeds = childNode.FirstChild;
+                foreach (XmlNode ledsChildNode in litLeds.ChildNodes)
+                {
+                    uzdegti.Add(int.Parse(ledsChildNode.InnerText));
+                }
+                loadedFrame.uzdegti = uzdegti;
+                loadedFrames.Add(loadedFrame);
+            }
+            loadedAnimation.AnimationName = NameNode.InnerText;
+            loadedAnimation.Save(loadedFrames);
+            loadAnimation(loadedAnimation);
         }
 
         private void test()

@@ -8,9 +8,9 @@ using MetroFramework.Controls;
 
 namespace ArduPlayeris.Cube.Animations
 {
+
     public class Frame : MetroLabel
     {
-        public MetroLabel control;
         private int frameCount;
         private int spacing = 6;
         private int textSize = 7;
