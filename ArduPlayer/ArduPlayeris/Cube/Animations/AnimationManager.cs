@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
+using MetroFramework;
 using MetroFramework.Controls;
 
 /*
@@ -53,9 +54,9 @@ namespace ArduPlayeris.Cube.Animations
             mainForm.metroTabPage1.Controls.Add(_scrollBar);
             AddFrame();
             LoadAnimation();
-        }
 
-      
+            LoadAnimationsFromFiles();
+        }
 
         private void loadAnimationButton_Click(object sender, EventArgs e)
         {
@@ -174,6 +175,9 @@ namespace ArduPlayeris.Cube.Animations
             AddFrame();
             ShowFrames();
             _framePanel.HorizontalScroll.Value = _framePanel.HorizontalScroll.Maximum;
+
+            if (_mainForm.AnimationSelector.Items.Count >= 0)
+                _mainForm.AnimationSelector.SelectedItem = null;
         }
 
         private void LoadAnimation(Animation animation)
@@ -319,6 +323,12 @@ namespace ArduPlayeris.Cube.Animations
 
         private void SaveAnimationbutton_Click(object sender, EventArgs e)
         {
+            if (_currentAnimation.AnimationName == "Unnamed Animation")
+            {
+                MetroMessageBox.Show(_mainForm, "Change name first!");
+                RenameButton_Click(null,null);
+                return;
+            }
             SaveAnimationToFile();
         }
 
@@ -381,8 +391,7 @@ namespace ArduPlayeris.Cube.Animations
             _mainForm.AddFrameButton.Enabled = false;
 
         }
-
-
+        
         private void AnimationNameTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -406,7 +415,8 @@ namespace ArduPlayeris.Cube.Animations
 
         private void animationSelector_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadAnimation(_allAnimations[_mainForm.AnimationSelector.SelectedIndex]);
+            if (0 <= _mainForm.AnimationSelector.SelectedIndex)
+                LoadAnimation(_allAnimations[_mainForm.AnimationSelector.SelectedIndex]);
         }
 
         private void LoadAnimationFromFiles(string path)

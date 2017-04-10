@@ -78,10 +78,12 @@
             this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
             this.ColorOranToggle = new MetroFramework.Controls.MetroToggle();
             this.metroTabPage1 = new MetroFramework.Controls.MetroTabPage();
+            this.NewAnimationButton = new MetroFramework.Controls.MetroButton();
+            this.RenameButton = new MetroFramework.Controls.MetroButton();
+            this.AnimationNameTextBox = new MetroFramework.Controls.MetroTextBox();
             this.AnimationSelector = new MetroFramework.Controls.MetroComboBox();
             this.AnimationName = new MetroFramework.Controls.MetroLabel();
             this.CycleButton = new MetroFramework.Controls.MetroButton();
-            this.NewAnimationButton = new MetroFramework.Controls.MetroButton();
             this.LoadAnimationButton = new MetroFramework.Controls.MetroButton();
             this.SaveAnimationbutton = new MetroFramework.Controls.MetroButton();
             this.AddFrameButton = new MetroFramework.Controls.MetroButton();
@@ -89,8 +91,6 @@
             this.TrackBarY = new MetroFramework.Controls.MetroTrackBar();
             this.CubePictureBox = new System.Windows.Forms.PictureBox();
             this.NowPlayingLbl = new MetroFramework.Controls.MetroLabel();
-            this.RenameButton = new MetroFramework.Controls.MetroButton();
-            this.AnimationNameTextBox = new MetroFramework.Controls.MetroTextBox();
             this.Settings.SuspendLayout();
             this.SComTab.SuspendLayout();
             this.metroTabControl1.SuspendLayout();
@@ -739,6 +739,41 @@
             this.metroTabPage1.VerticalScrollbarHighlightOnWheel = false;
             this.metroTabPage1.VerticalScrollbarSize = 10;
             // 
+            // NewAnimationButton
+            // 
+            this.NewAnimationButton.Location = new System.Drawing.Point(100, 79);
+            this.NewAnimationButton.Name = "NewAnimationButton";
+            this.NewAnimationButton.Size = new System.Drawing.Size(98, 23);
+            this.NewAnimationButton.TabIndex = 6;
+            this.NewAnimationButton.Text = "New animation";
+            this.NewAnimationButton.UseSelectable = true;
+            this.NewAnimationButton.Click += new System.EventHandler(this.metroButton2_Click);
+            // 
+            // RenameButton
+            // 
+            this.RenameButton.Location = new System.Drawing.Point(3, 79);
+            this.RenameButton.Name = "RenameButton";
+            this.RenameButton.Size = new System.Drawing.Size(91, 23);
+            this.RenameButton.TabIndex = 14;
+            this.RenameButton.Text = "Rename";
+            this.RenameButton.UseSelectable = true;
+            // 
+            // AnimationNameTextBox
+            // 
+            this.AnimationNameTextBox.Lines = new string[] {
+        "Unnamed Animation"};
+            this.AnimationNameTextBox.Location = new System.Drawing.Point(3, 79);
+            this.AnimationNameTextBox.MaxLength = 32767;
+            this.AnimationNameTextBox.Name = "AnimationNameTextBox";
+            this.AnimationNameTextBox.PasswordChar = '\0';
+            this.AnimationNameTextBox.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.AnimationNameTextBox.SelectedText = "";
+            this.AnimationNameTextBox.Size = new System.Drawing.Size(195, 23);
+            this.AnimationNameTextBox.TabIndex = 15;
+            this.AnimationNameTextBox.Text = "Unnamed Animation";
+            this.AnimationNameTextBox.UseSelectable = true;
+            this.AnimationNameTextBox.Visible = false;
+            // 
             // AnimationSelector
             // 
             this.AnimationSelector.FormattingEnabled = true;
@@ -768,16 +803,6 @@
             this.CycleButton.Text = "Cycle";
             this.CycleButton.UseSelectable = true;
             this.CycleButton.Click += new System.EventHandler(this.metroButton6_Click);
-            // 
-            // NewAnimationButton
-            // 
-            this.NewAnimationButton.Location = new System.Drawing.Point(100, 79);
-            this.NewAnimationButton.Name = "NewAnimationButton";
-            this.NewAnimationButton.Size = new System.Drawing.Size(98, 23);
-            this.NewAnimationButton.TabIndex = 6;
-            this.NewAnimationButton.Text = "New animation";
-            this.NewAnimationButton.UseSelectable = true;
-            this.NewAnimationButton.Click += new System.EventHandler(this.metroButton2_Click);
             // 
             // LoadAnimationButton
             // 
@@ -861,31 +886,6 @@
             this.NowPlayingLbl.Style = MetroFramework.MetroColorStyle.Lime;
             this.NowPlayingLbl.TabIndex = 11;
             this.NowPlayingLbl.Text = "Now playing:";
-            // 
-            // RenameButton
-            // 
-            this.RenameButton.Location = new System.Drawing.Point(3, 79);
-            this.RenameButton.Name = "RenameButton";
-            this.RenameButton.Size = new System.Drawing.Size(91, 23);
-            this.RenameButton.TabIndex = 14;
-            this.RenameButton.Text = "Rename";
-            this.RenameButton.UseSelectable = true;
-            // 
-            // AnimationNameTextBox
-            // 
-            this.AnimationNameTextBox.Lines = new string[] {
-        "Unnamed Animation"};
-            this.AnimationNameTextBox.Location = new System.Drawing.Point(3, 79);
-            this.AnimationNameTextBox.MaxLength = 32767;
-            this.AnimationNameTextBox.Name = "AnimationNameTextBox";
-            this.AnimationNameTextBox.PasswordChar = '\0';
-            this.AnimationNameTextBox.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.AnimationNameTextBox.SelectedText = "";
-            this.AnimationNameTextBox.Size = new System.Drawing.Size(195, 23);
-            this.AnimationNameTextBox.TabIndex = 15;
-            this.AnimationNameTextBox.Text = "Unnamed Animation";
-            this.AnimationNameTextBox.UseSelectable = true;
-            this.AnimationNameTextBox.Visible = false;
             // 
             // MainForm
             // 
