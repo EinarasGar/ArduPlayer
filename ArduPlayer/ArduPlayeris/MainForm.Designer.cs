@@ -78,17 +78,19 @@
             this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
             this.ColorOranToggle = new MetroFramework.Controls.MetroToggle();
             this.metroTabPage1 = new MetroFramework.Controls.MetroTabPage();
+            this.AnimationSelector = new MetroFramework.Controls.MetroComboBox();
             this.AnimationName = new MetroFramework.Controls.MetroLabel();
-            this.metroButton6 = new MetroFramework.Controls.MetroButton();
-            this.metroButton3 = new MetroFramework.Controls.MetroButton();
-            this.metroButton2 = new MetroFramework.Controls.MetroButton();
+            this.CycleButton = new MetroFramework.Controls.MetroButton();
+            this.NewAnimationButton = new MetroFramework.Controls.MetroButton();
+            this.LoadAnimationButton = new MetroFramework.Controls.MetroButton();
+            this.SaveAnimationbutton = new MetroFramework.Controls.MetroButton();
+            this.AddFrameButton = new MetroFramework.Controls.MetroButton();
             this.TrackBarX = new MetroFramework.Controls.MetroTrackBar();
             this.TrackBarY = new MetroFramework.Controls.MetroTrackBar();
             this.CubePictureBox = new System.Windows.Forms.PictureBox();
             this.NowPlayingLbl = new MetroFramework.Controls.MetroLabel();
-            this.AnimationSelector = new MetroFramework.Controls.MetroComboBox();
-            this.SaveAnimationbutton = new MetroFramework.Controls.MetroButton();
-            this.LoadAnimationButton = new MetroFramework.Controls.MetroButton();
+            this.RenameButton = new MetroFramework.Controls.MetroButton();
+            this.AnimationNameTextBox = new MetroFramework.Controls.MetroTextBox();
             this.Settings.SuspendLayout();
             this.SComTab.SuspendLayout();
             this.metroTabControl1.SuspendLayout();
@@ -712,13 +714,15 @@
             // 
             // metroTabPage1
             // 
+            this.metroTabPage1.Controls.Add(this.NewAnimationButton);
+            this.metroTabPage1.Controls.Add(this.RenameButton);
+            this.metroTabPage1.Controls.Add(this.AnimationNameTextBox);
             this.metroTabPage1.Controls.Add(this.AnimationSelector);
             this.metroTabPage1.Controls.Add(this.AnimationName);
-            this.metroTabPage1.Controls.Add(this.metroButton6);
-            this.metroTabPage1.Controls.Add(this.metroButton3);
+            this.metroTabPage1.Controls.Add(this.CycleButton);
             this.metroTabPage1.Controls.Add(this.LoadAnimationButton);
             this.metroTabPage1.Controls.Add(this.SaveAnimationbutton);
-            this.metroTabPage1.Controls.Add(this.metroButton2);
+            this.metroTabPage1.Controls.Add(this.AddFrameButton);
             this.metroTabPage1.Controls.Add(this.TrackBarX);
             this.metroTabPage1.Controls.Add(this.TrackBarY);
             this.metroTabPage1.Controls.Add(this.CubePictureBox);
@@ -735,6 +739,16 @@
             this.metroTabPage1.VerticalScrollbarHighlightOnWheel = false;
             this.metroTabPage1.VerticalScrollbarSize = 10;
             // 
+            // AnimationSelector
+            // 
+            this.AnimationSelector.FormattingEnabled = true;
+            this.AnimationSelector.ItemHeight = 23;
+            this.AnimationSelector.Location = new System.Drawing.Point(100, 11);
+            this.AnimationSelector.Name = "AnimationSelector";
+            this.AnimationSelector.Size = new System.Drawing.Size(181, 29);
+            this.AnimationSelector.TabIndex = 13;
+            this.AnimationSelector.UseSelectable = true;
+            // 
             // AnimationName
             // 
             this.AnimationName.AutoSize = true;
@@ -745,35 +759,55 @@
             this.AnimationName.TabIndex = 12;
             this.AnimationName.Text = "Animation:";
             // 
-            // metroButton6
+            // CycleButton
             // 
-            this.metroButton6.Location = new System.Drawing.Point(3, 50);
-            this.metroButton6.Name = "metroButton6";
-            this.metroButton6.Size = new System.Drawing.Size(91, 23);
-            this.metroButton6.TabIndex = 11;
-            this.metroButton6.Text = "cycle";
-            this.metroButton6.UseSelectable = true;
-            this.metroButton6.Click += new System.EventHandler(this.metroButton6_Click);
+            this.CycleButton.Location = new System.Drawing.Point(3, 50);
+            this.CycleButton.Name = "CycleButton";
+            this.CycleButton.Size = new System.Drawing.Size(91, 23);
+            this.CycleButton.TabIndex = 11;
+            this.CycleButton.Text = "Cycle";
+            this.CycleButton.UseSelectable = true;
+            this.CycleButton.Click += new System.EventHandler(this.metroButton6_Click);
             // 
-            // metroButton3
+            // NewAnimationButton
             // 
-            this.metroButton3.Location = new System.Drawing.Point(100, 79);
-            this.metroButton3.Name = "metroButton3";
-            this.metroButton3.Size = new System.Drawing.Size(98, 23);
-            this.metroButton3.TabIndex = 6;
-            this.metroButton3.Text = "New animation";
-            this.metroButton3.UseSelectable = true;
-            this.metroButton3.Click += new System.EventHandler(this.metroButton2_Click);
+            this.NewAnimationButton.Location = new System.Drawing.Point(100, 79);
+            this.NewAnimationButton.Name = "NewAnimationButton";
+            this.NewAnimationButton.Size = new System.Drawing.Size(98, 23);
+            this.NewAnimationButton.TabIndex = 6;
+            this.NewAnimationButton.Text = "New animation";
+            this.NewAnimationButton.UseSelectable = true;
+            this.NewAnimationButton.Click += new System.EventHandler(this.metroButton2_Click);
             // 
-            // metroButton2
+            // LoadAnimationButton
             // 
-            this.metroButton2.Location = new System.Drawing.Point(100, 50);
-            this.metroButton2.Name = "metroButton2";
-            this.metroButton2.Size = new System.Drawing.Size(98, 23);
-            this.metroButton2.TabIndex = 6;
-            this.metroButton2.Text = "Add frame";
-            this.metroButton2.UseSelectable = true;
-            this.metroButton2.Click += new System.EventHandler(this.metroButton2_Click);
+            this.LoadAnimationButton.Location = new System.Drawing.Point(204, 79);
+            this.LoadAnimationButton.Name = "LoadAnimationButton";
+            this.LoadAnimationButton.Size = new System.Drawing.Size(98, 23);
+            this.LoadAnimationButton.TabIndex = 6;
+            this.LoadAnimationButton.Text = "Load";
+            this.LoadAnimationButton.UseSelectable = true;
+            this.LoadAnimationButton.Click += new System.EventHandler(this.metroButton2_Click);
+            // 
+            // SaveAnimationbutton
+            // 
+            this.SaveAnimationbutton.Location = new System.Drawing.Point(204, 50);
+            this.SaveAnimationbutton.Name = "SaveAnimationbutton";
+            this.SaveAnimationbutton.Size = new System.Drawing.Size(98, 23);
+            this.SaveAnimationbutton.TabIndex = 6;
+            this.SaveAnimationbutton.Text = "Save";
+            this.SaveAnimationbutton.UseSelectable = true;
+            this.SaveAnimationbutton.Click += new System.EventHandler(this.metroButton2_Click);
+            // 
+            // AddFrameButton
+            // 
+            this.AddFrameButton.Location = new System.Drawing.Point(100, 50);
+            this.AddFrameButton.Name = "AddFrameButton";
+            this.AddFrameButton.Size = new System.Drawing.Size(98, 23);
+            this.AddFrameButton.TabIndex = 6;
+            this.AddFrameButton.Text = "Add frame";
+            this.AddFrameButton.UseSelectable = true;
+            this.AddFrameButton.Click += new System.EventHandler(this.metroButton2_Click);
             // 
             // TrackBarX
             // 
@@ -828,35 +862,30 @@
             this.NowPlayingLbl.TabIndex = 11;
             this.NowPlayingLbl.Text = "Now playing:";
             // 
-            // AnimationSelector
+            // RenameButton
             // 
-            this.AnimationSelector.FormattingEnabled = true;
-            this.AnimationSelector.ItemHeight = 23;
-            this.AnimationSelector.Location = new System.Drawing.Point(100, 11);
-            this.AnimationSelector.Name = "AnimationSelector";
-            this.AnimationSelector.Size = new System.Drawing.Size(181, 29);
-            this.AnimationSelector.TabIndex = 13;
-            this.AnimationSelector.UseSelectable = true;
+            this.RenameButton.Location = new System.Drawing.Point(3, 79);
+            this.RenameButton.Name = "RenameButton";
+            this.RenameButton.Size = new System.Drawing.Size(91, 23);
+            this.RenameButton.TabIndex = 14;
+            this.RenameButton.Text = "Rename";
+            this.RenameButton.UseSelectable = true;
             // 
-            // SaveAnimationbutton
+            // AnimationNameTextBox
             // 
-            this.SaveAnimationbutton.Location = new System.Drawing.Point(204, 50);
-            this.SaveAnimationbutton.Name = "SaveAnimationbutton";
-            this.SaveAnimationbutton.Size = new System.Drawing.Size(98, 23);
-            this.SaveAnimationbutton.TabIndex = 6;
-            this.SaveAnimationbutton.Text = "Save";
-            this.SaveAnimationbutton.UseSelectable = true;
-            this.SaveAnimationbutton.Click += new System.EventHandler(this.metroButton2_Click);
-            // 
-            // LoadAnimationButton
-            // 
-            this.LoadAnimationButton.Location = new System.Drawing.Point(204, 79);
-            this.LoadAnimationButton.Name = "LoadAnimationButton";
-            this.LoadAnimationButton.Size = new System.Drawing.Size(98, 23);
-            this.LoadAnimationButton.TabIndex = 6;
-            this.LoadAnimationButton.Text = "Load";
-            this.LoadAnimationButton.UseSelectable = true;
-            this.LoadAnimationButton.Click += new System.EventHandler(this.metroButton2_Click);
+            this.AnimationNameTextBox.Lines = new string[] {
+        "Unnamed Animation"};
+            this.AnimationNameTextBox.Location = new System.Drawing.Point(3, 79);
+            this.AnimationNameTextBox.MaxLength = 32767;
+            this.AnimationNameTextBox.Name = "AnimationNameTextBox";
+            this.AnimationNameTextBox.PasswordChar = '\0';
+            this.AnimationNameTextBox.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.AnimationNameTextBox.SelectedText = "";
+            this.AnimationNameTextBox.Size = new System.Drawing.Size(195, 23);
+            this.AnimationNameTextBox.TabIndex = 15;
+            this.AnimationNameTextBox.Text = "Unnamed Animation";
+            this.AnimationNameTextBox.UseSelectable = true;
+            this.AnimationNameTextBox.Visible = false;
             // 
             // MainForm
             // 
@@ -947,13 +976,15 @@
         private MetroFramework.Controls.MetroLabel metroLabel6;
         private MetroFramework.Controls.MetroLabel metroLabel7;
         public MetroFramework.Controls.MetroToggle metroToggle3;
-        public MetroFramework.Controls.MetroButton metroButton2;
-        public MetroFramework.Controls.MetroButton metroButton6;
-        public MetroFramework.Controls.MetroButton metroButton3;
+        public MetroFramework.Controls.MetroButton AddFrameButton;
+        public MetroFramework.Controls.MetroButton CycleButton;
+        public MetroFramework.Controls.MetroButton NewAnimationButton;
         public MetroFramework.Controls.MetroLabel AnimationName;
         public MetroFramework.Controls.MetroComboBox AnimationSelector;
         public MetroFramework.Controls.MetroButton LoadAnimationButton;
         public MetroFramework.Controls.MetroButton SaveAnimationbutton;
+        public MetroFramework.Controls.MetroTextBox AnimationNameTextBox;
+        public MetroFramework.Controls.MetroButton RenameButton;
     }
 }
 

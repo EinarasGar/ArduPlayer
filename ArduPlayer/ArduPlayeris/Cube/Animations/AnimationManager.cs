@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
@@ -16,63 +15,70 @@ using MetroFramework.Controls;
      
 */
 
-
 namespace ArduPlayeris.Cube.Animations
 {
     public class AnimationManager
     {
-        private MainForm mainForm;
-        private SCom serial;
-        private Animation currentAnimation;
-        private MetroPanel FramePanel = new MetroPanel();
-        private MetroScrollBar scrollBar = new MetroScrollBar();
-        private List<Frame> currentFrames = new List<Frame>();
-        private Frame currentFrame = new Frame(0);
+        private MainForm _mainForm;
+        private SCom _serial;
+        private Animation _currentAnimation;
+        private MetroPanel _framePanel = new MetroPanel();
+        private MetroScrollBar _scrollBar;
+        private List<Frame> _currentFrames = new List<Frame>();
+        private Frame _currentFrame = new Frame(0);
 
-        private List<int> latestLit = new List<int>();
-        private bool cycleAnimation = false;
+        private List<int> _latestLit = new List<int>();
+        private bool _cycleAnimation;
+
+        private List<Animation> _allAnimations = new List<Animation>();
 
         public AnimationManager(MainForm mainForm)
         {
-            this.mainForm = mainForm;
-            this.serial = mainForm.serial;
+            _mainForm = mainForm;
+            _serial = mainForm.serial;
 
-            mainForm.LedsChanged += MainForm_LedsChanged;
+            mainForm.LedsChanged += mainForm_LedsChanged;
 
-            this.mainForm.metroButton6.Click += MetroButton6_Click;
-            this.mainForm.metroButton2.Click += MetroButton2_Click;
-            this.mainForm.metroButton3.Click += MetroToggle3_Click;
-            this.mainForm.SaveAnimationbutton.Click += SaveAnimationbutton_Click;
-            this.mainForm.LoadAnimationButton.Click += LoadAnimationButton_Click;
-            currentAnimation = new Animation();
-            scrollBar = createScrollBar();
-            mainForm.metroTabPage1.Controls.Add(this.scrollBar);
-            addFrame();
-            loadAnimation();
+            _mainForm.CycleButton.Click += metroButton6_Click;
+            _mainForm.AddFrameButton.Click += metroButton2_Click;
+            _mainForm.NewAnimationButton.Click += metroToggle3_Click;
+            _mainForm.SaveAnimationbutton.Click += SaveAnimationbutton_Click;
+            _mainForm.LoadAnimationButton.Click += loadAnimationButton_Click;
+            _mainForm.RenameButton.Click += RenameButton_Click;
+            _mainForm.AnimationSelector.SelectedIndexChanged += animationSelector_SelectedIndexChanged;
+            _mainForm.AnimationNameTextBox.TextChanged += AnimationNameTextBox_TextChanged;
+            _mainForm.AnimationNameTextBox.KeyDown += AnimationNameTextBox_KeyDown;
+            _currentAnimation = new Animation();
+            _scrollBar = CreateScrollBar();
+            mainForm.metroTabPage1.Controls.Add(_scrollBar);
+            AddFrame();
+            LoadAnimation();
         }
 
-        private void LoadAnimationButton_Click(object sender, EventArgs e)
+      
+
+        private void loadAnimationButton_Click(object sender, EventArgs e)
         {
-            loadAnimationsFromFiles();
+            LoadAnimationsFromFiles();
         }
 
-        private void MainForm_LedsChanged(List<int> litLeds)
+        private void mainForm_LedsChanged(List<int> litLeds)
         {
-            currentFrame.uzdegti = litLeds;
-            latestLit = litLeds;
-            saveFrame();
+            _currentFrame.uzdegti = litLeds;
+            _latestLit = litLeds;
+            SaveFrame();
         }
 
-        private void saveFrame()
+        private void SaveFrame()
         {
-            foreach (Frame frame in currentFrames)
+            foreach (Frame frame in _currentFrames)
             {
-                if (frame.Number == currentFrame.Number)
-                    frame.uzdegti = currentFrame.uzdegti;
+                if (frame.Number == _currentFrame.Number)
+                    frame.uzdegti = _currentFrame.uzdegti;
             }
         }
 
-        private MetroPanel createPanel()
+        private MetroPanel CreatePanel()
         {
             MetroPanel panel = new MetroPanel();
             panel.AutoScroll = true;
@@ -80,8 +86,8 @@ namespace ArduPlayeris.Cube.Animations
             panel.HorizontalScrollbarBarColor = true;
             panel.HorizontalScrollbarHighlightOnWheel = true;
             panel.HorizontalScrollbarSize = 0;
-            panel.Location = new System.Drawing.Point(3, 235);
-            panel.Size = new System.Drawing.Size(340, 36);
+            panel.Location = new Point(3, 235);
+            panel.Size = new Size(340, 36);
             panel.Style = MetroFramework.MetroColorStyle.Lime;
             panel.TabIndex = 5;
             panel.Theme = MetroFramework.MetroThemeStyle.Dark;
@@ -90,321 +96,366 @@ namespace ArduPlayeris.Cube.Animations
             panel.VerticalScrollbarHighlightOnWheel = false;
             panel.VerticalScrollbarSize = 10;
             return panel;
-
         }
 
-        private MetroScrollBar createScrollBar()
+        private MetroScrollBar CreateScrollBar()
         {
             MetroScrollBar metroScrollBar1 = new MetroScrollBar();
             metroScrollBar1.LargeChange = 10;
-            metroScrollBar1.Location = new System.Drawing.Point(3, 219);
+            metroScrollBar1.Location = new Point(3, 219);
             metroScrollBar1.Maximum = 100;
             metroScrollBar1.Minimum = 1;
             metroScrollBar1.MouseWheelBarPartitions = 10;
-            metroScrollBar1.Orientation = MetroFramework.Controls.MetroScrollOrientation.Horizontal;
+            metroScrollBar1.Orientation = MetroScrollOrientation.Horizontal;
             metroScrollBar1.ScrollbarSize = 10;
-            metroScrollBar1.Size = new System.Drawing.Size(340, 10);
+            metroScrollBar1.Size = new Size(340, 10);
             metroScrollBar1.Style = MetroFramework.MetroColorStyle.Lime;
             metroScrollBar1.TabIndex = 12;
             metroScrollBar1.Theme = MetroFramework.MetroThemeStyle.Dark;
             metroScrollBar1.UseSelectable = true;
-            metroScrollBar1.Scroll += MetroScrollBar1_Scroll;
+            metroScrollBar1.Scroll += metroScrollBar1_Scroll;
             return metroScrollBar1;
         }
 
-        private void MetroScrollBar1_Scroll(object sender, System.Windows.Forms.ScrollEventArgs e)
+        private void metroScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
-            FramePanel.HorizontalScroll.Value = FramePanel.HorizontalScroll.Maximum;
-            FramePanel.ScrollControlIntoView(currentFrames.ElementAt(scrollBar.Value - 1));
+            _framePanel.HorizontalScroll.Value = _framePanel.HorizontalScroll.Maximum;
+            _framePanel.ScrollControlIntoView(_currentFrames.ElementAt(_scrollBar.Value - 1));
         }
 
-        private void MetroButton2_Click(object sender, System.EventArgs e)
+        private void metroButton2_Click(object sender, EventArgs e)
         {
-            saveFrames();
-            addFrame();
-            showFrames();
+            SaveFrames();
+            AddFrame();
+            ShowFrames();
         }
 
-        private void saveFrames()
+        private void SaveFrames()
         {
-            currentAnimation.Save(currentFrames);
+            _currentAnimation.Save(_currentFrames);
         }
 
-        private void addFrame()
+        private void AddFrame()
         {
-            currentAnimation.NewFrame();
+            _currentAnimation.NewFrame();
         }
 
-        private void updateScrolbar()
+        private void UpdateScrolbar()
         {
-            int frameNumber = currentFrames.Count;
+            int frameNumber = _currentFrames.Count;
             if (frameNumber > 15)
             {
                 int c = 0;
-                foreach (Frame frame in currentFrames)
+                foreach (Frame frame in _currentFrames)
                 {
                     if (frame.Location.X > -5 && frame.Location.X < 330)
                     {
                         c++;
                     }
                 }
-                scrollBar.Maximum = frameNumber - c + 3;
-                scrollBar.Value = scrollBar.Maximum;
+                _scrollBar.Maximum = frameNumber - c + 3;
+                _scrollBar.Value = _scrollBar.Maximum;
             }
         }
 
-        private void MetroToggle3_Click(object sender, System.EventArgs e)
+        private void metroToggle3_Click(object sender, EventArgs e)
         {
-            loadAnimation();
+            LoadAnimation();
         }
 
-        private void loadAnimation()
+        private void LoadAnimation()
         {
-            FramePanel.Dispose();
-            FramePanel = createPanel();
-            mainForm.metroTabPage1.Controls.Add(this.FramePanel);
-
+            _framePanel.Dispose();
+            _framePanel = CreatePanel();
+            _mainForm.metroTabPage1.Controls.Add(_framePanel);
             
-            currentAnimation = new Animation();
-            addFrame();
-         //   mainForm.AnimationName.Text = "Animation: " + currentAnimation.AnimationName;
-            mainForm.AnimationSelector.Items.Add(currentAnimation);
-            mainForm.AnimationSelector.SelectedIndex =
-                mainForm.AnimationSelector.FindStringExact(currentAnimation.AnimationName);
+            _currentAnimation = new Animation();
             
-            showFrames();
-
-            FramePanel.HorizontalScroll.Value = FramePanel.HorizontalScroll.Maximum;
+            AddFrame();
+            ShowFrames();
+            _framePanel.HorizontalScroll.Value = _framePanel.HorizontalScroll.Maximum;
         }
 
-        private void loadAnimation(Animation animation)
+        private void LoadAnimation(Animation animation)
         {
-            FramePanel.Dispose();
-            FramePanel = createPanel();
-            mainForm.metroTabPage1.Controls.Add(this.FramePanel);
+            _framePanel.Dispose();
+            _framePanel = CreatePanel();
+            _mainForm.metroTabPage1.Controls.Add(_framePanel);
 
-
-            currentAnimation = animation;
-            
-            //   mainForm.AnimationName.Text = "Animation: " + currentAnimation.AnimationName;
-            mainForm.AnimationSelector.Items.Add(currentAnimation);
-            mainForm.AnimationSelector.SelectedIndex =
-                mainForm.AnimationSelector.FindStringExact(currentAnimation.AnimationName);
-            
-            showFrames();
-
-            FramePanel.HorizontalScroll.Value = FramePanel.HorizontalScroll.Maximum;
+            _currentAnimation = animation;
+            ShowFrames();
+            _framePanel.HorizontalScroll.Value = _framePanel.HorizontalScroll.Maximum;
         }
 
-        private void showFrames()
+        private void ShowFrames()
         {
-            currentFrames = currentAnimation.Frames;
-            foreach (Frame frame in currentFrames)
+            _currentFrames = _currentAnimation.Frames;
+            foreach (Frame frame in _currentFrames)
             {
-                frame.Style = mainForm.Style;
-                frame.Theme = mainForm.Theme;
-                frame.Click += Frame_Click;
+                frame.Style = _mainForm.Style;
+                frame.Theme = _mainForm.Theme;
+                frame.Click += frame_Click;
             }
 
-            Frame frameToLoad = currentFrames.Last();
+            Frame frameToLoad = _currentFrames.Last();
             //frameToLoad.uzdegti = latestLit.ToArray().ToList();
-            loadFrame(frameToLoad);
-            FramePanel.Controls.Clear();
-            FramePanel.Controls.AddRange(currentFrames.ToArray());
-            FramePanel.Refresh();
-            updateScrolbar();
-
+            LoadFrame(frameToLoad);
+            _framePanel.Controls.Clear();
+            _framePanel.Controls.AddRange(_currentFrames.ToArray());
+            _framePanel.Refresh();
+            UpdateScrolbar();
         }
 
-        private void Frame_Click(object sender, EventArgs e)
+        private void frame_Click(object sender, EventArgs e)
         {
             Frame frame = sender as Frame;
-            loadFrame(frame);
+            LoadFrame(frame);
         }
 
-        private async void MetroButton6_Click(object sender, System.EventArgs e)
+        private void metroButton6_Click(object sender, EventArgs e)
         {
-            if (!cycleAnimation)
+            if (!_cycleAnimation)
             {
-                cycleAnimation = true;
-                mainForm.metroButton6.Text = "Stop Cycling";
-                loopCycle();
+                _cycleAnimation = true;
+                _mainForm.CycleButton.Text = "Stop Cycling";
+                LoopCycle();
             }
             else
             {
-                mainForm.metroButton6.Text = "Cycle";
-                cycleAnimation = false;
+                _mainForm.CycleButton.Text = "Cycle";
+                _cycleAnimation = false;
             }
-
         }
 
-        private async void loopCycle()
+        private async void LoopCycle()
         {
-            while (cycleAnimation)
+            while (_cycleAnimation)
             {
-                List<Frame> frames = currentFrames;
-                FramePanel.ScrollControlIntoView(frames.ElementAt(0));
-                scrollBar.Value = 1;
-                FramePanel.PerformLayout();
-                FramePanel.Refresh();
+                List<Frame> frames = _currentFrames;
+                _framePanel.ScrollControlIntoView(frames.ElementAt(0));
+                _scrollBar.Value = 1;
+                _framePanel.PerformLayout();
+                _framePanel.Refresh();
                 for (var i = 0; i < frames.Count; i++)
                 {
                     Frame frame = frames[i];
                     if (frame.Location.X < -5 || frame.Location.X > 330)
                     {
-                        FramePanel.HorizontalScroll.Value = FramePanel.HorizontalScroll.Maximum;
-                        FramePanel.ScrollControlIntoView(frames.ElementAt(i - 1));
-                        scrollBar.Value = i;
-                        FramePanel.PerformLayout();
-                        FramePanel.Refresh();
+                        _framePanel.HorizontalScroll.Value = _framePanel.HorizontalScroll.Maximum;
+                        _framePanel.ScrollControlIntoView(frames.ElementAt(i - 1));
+                        _scrollBar.Value = i;
+                        _framePanel.PerformLayout();
+                        _framePanel.Refresh();
                     }
 
                     frame.UseCustomForeColor = true;
                     frame.ForeColor = Color.Green;
-                    loadFrame(frame);
+                    LoadFrame(frame);
                     await Task.Delay(250);
                     frame.UseCustomForeColor = false;
                     frame.ResetForeColor();
-                    FramePanel.PerformLayout();
-                    FramePanel.Refresh();
-                    if(!cycleAnimation ) return;
-                    
+                    _framePanel.PerformLayout();
+                    _framePanel.Refresh();
+                    if (!_cycleAnimation) return;
                 }
             }
         }
 
-        private async void cycle()
+        private async void Cycle()
         {
-            List<Frame> frames = currentFrames;
-            FramePanel.ScrollControlIntoView(frames.ElementAt(0));
-            scrollBar.Value = 1;
-            FramePanel.PerformLayout();
-            FramePanel.Refresh();
+            List<Frame> frames = _currentFrames;
+            _framePanel.ScrollControlIntoView(frames.ElementAt(0));
+            _scrollBar.Value = 1;
+            _framePanel.PerformLayout();
+            _framePanel.Refresh();
             for (var i = 0; i < frames.Count; i++)
             {
                 Frame frame = frames[i];
                 if (frame.Location.X < -5 || frame.Location.X > 330)
                 {
-                    FramePanel.HorizontalScroll.Value = FramePanel.HorizontalScroll.Maximum;
-                    FramePanel.ScrollControlIntoView(frames.ElementAt(i - 1));
-                    scrollBar.Value = i;
-                    FramePanel.PerformLayout();
-                    FramePanel.Refresh();
+                    _framePanel.HorizontalScroll.Value = _framePanel.HorizontalScroll.Maximum;
+                    _framePanel.ScrollControlIntoView(frames.ElementAt(i - 1));
+                    _scrollBar.Value = i;
+                    _framePanel.PerformLayout();
+                    _framePanel.Refresh();
                 }
 
                 frame.UseCustomForeColor = true;
                 frame.ForeColor = Color.Green;
-                loadFrame(frame);
+                LoadFrame(frame);
                 await Task.Delay(250);
                 frame.UseCustomForeColor = false;
                 frame.ResetForeColor();
-                FramePanel.PerformLayout();
-                FramePanel.Refresh();
-
+                _framePanel.PerformLayout();
+                _framePanel.Refresh();
             }
         }
 
-        private void loadFrame(Frame frame)
+        private void LoadFrame(Frame frame)
         {
-            currentFrame = frame;
-            mainForm.LitLeds = currentFrame.uzdegti;
+            _currentFrame = frame;
+            _mainForm.LitLeds = _currentFrame.uzdegti;
 
-            lightFrame(currentFrame.uzdegti);
+            LightFrame(_currentFrame.uzdegti);
 
-            mainForm.RenderCube();
+            _mainForm.RenderCube();
         }
 
-        private void lightFrame(List<int> uzdegti)
+        private void LightFrame(List<int> uzdegti)
         {
             byte header = 200;
             byte end = 201;
             List<byte> litLeds = new List<byte>();
             foreach (int i in uzdegti)
             {
-                litLeds.Add((byte)i);
+                litLeds.Add((byte) i);
             }
 
-            litLeds.Insert(0,header);
+            litLeds.Insert(0, header);
             litLeds.Add(end);
             byte[] bytesToSend = litLeds.ToArray();
-            serial.Send(bytesToSend);
+            _serial.Send(bytesToSend);
         }
-
 
         private void SaveAnimationbutton_Click(object sender, EventArgs e)
         {
-            saveAnimationToFile();
+            SaveAnimationToFile();
         }
 
-        private void saveAnimationToFile()
+        private void SaveAnimationToFile()
         {
             if (!Directory.Exists("Animations"))
                 Directory.CreateDirectory("Animations");
-            saveFrames();
+            SaveFrames();
 
-          //  Serialization.WriteToXmlFile<Animation>("Animations/" + currentAnimation.AnimationName,currentAnimation);
-          test();
+            List<XElement> frameElements = new List<XElement>();
+            foreach (Frame frame in _currentAnimation.Frames)
+            {
+                List<XElement> litLeds = new List<XElement>();
+                foreach (int i in frame.uzdegti)
+                {
+                    XElement led = new XElement("led", i);
+                    litLeds.Add(led);
+                }
+
+                XElement element = new XElement("Frame",
+                    new XAttribute("Number", frame.Number),
+                    new XElement("LitLeds", litLeds));
+                frameElements.Add(element);
+            }
+
+
+            string result =
+                new XElement("Animation",
+                    new XElement("Name", _currentAnimation),
+                    new XElement("Frames", frameElements)
+                ).ToString();
+
+            File.WriteAllText(@"Animations\" + _currentAnimation + ".animation", result);
+        }
+
+        private void LoadAnimationsFromFiles()
+        {
+            string[] files = Directory.GetFiles("Animations", "*.animation");
+            _allAnimations.Clear();
+            foreach (string file in files)
+            {
+                LoadAnimationFromFiles(file);
+            }
+            _mainForm.AnimationSelector.Items.Clear();
+            _mainForm.AnimationSelector.Items.AddRange(_allAnimations.ToArray());
+            //  mainForm.AnimationSelector.SelectedIndex =
+            //      mainForm.AnimationSelector.FindStringExact(currentAnimation.AnimationName); */
+        }
+
+        private void RenameButton_Click(object sender, EventArgs e)
+        {
+            _mainForm.AnimationNameTextBox.Visible = true;
+            _mainForm.RenameButton.Visible = false;
+            _mainForm.NewAnimationButton.Visible = false;
+
+            _mainForm.CycleButton.Enabled = false;
+            _mainForm.NewAnimationButton.Enabled = false;
+            _mainForm.SaveAnimationbutton.Enabled = false;
+            _mainForm.LoadAnimationButton.Enabled = false;
+            _mainForm.AddFrameButton.Enabled = false;
 
         }
 
-        private void loadAnimationsFromFiles()
+
+        private void AnimationNameTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                _mainForm.AnimationNameTextBox.Visible = false;
+                _mainForm.RenameButton.Visible = true;
+                _mainForm.NewAnimationButton.Visible = true;
+
+                _mainForm.CycleButton.Enabled = true;
+                _mainForm.NewAnimationButton.Enabled = true;
+                _mainForm.SaveAnimationbutton.Enabled = true;
+                _mainForm.LoadAnimationButton.Enabled = true;
+                _mainForm.AddFrameButton.Enabled = true;
+            }
+        }
+
+        private void AnimationNameTextBox_TextChanged(object sender, EventArgs e)
+        {
+            _currentAnimation.AnimationName = _mainForm.AnimationNameTextBox.Text;
+        }
+
+        private void animationSelector_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LoadAnimation(_allAnimations[_mainForm.AnimationSelector.SelectedIndex]);
+        }
+
+        private void LoadAnimationFromFiles(string path)
         {
             if (!Directory.Exists("Animations"))
                 Directory.CreateDirectory("Animations");
 
             XmlDocument doc = new XmlDocument();
-            doc.Load("Animations\\Unnamed Animation.animation");
-            XmlNode FramesNode = doc.DocumentElement.SelectSingleNode("/Animation/Frames");
-            XmlNode NameNode = doc.DocumentElement.SelectSingleNode("/Animation/Name");
-            Animation loadedAnimation = new Animation();
-            List<Frame> loadedFrames = new List<Frame>();
-            foreach (XmlNode childNode in FramesNode.ChildNodes)
+            doc.Load(path);
+            if (doc.DocumentElement != null)
             {
-                int number = int.Parse(childNode.Attributes["Number"].InnerText);
-                Frame loadedFrame = new Frame(number);
-                List<int> uzdegti = new List<int>();
-                XmlNode litLeds = childNode.FirstChild;
-                foreach (XmlNode ledsChildNode in litLeds.ChildNodes)
-                {
-                    uzdegti.Add(int.Parse(ledsChildNode.InnerText));
-                }
-                loadedFrame.uzdegti = uzdegti;
-                loadedFrames.Add(loadedFrame);
-            }
-            loadedAnimation.AnimationName = NameNode.InnerText;
-            loadedAnimation.Save(loadedFrames);
-            loadAnimation(loadedAnimation);
-        }
+                XmlNode framesNode = doc.DocumentElement.SelectSingleNode("/Animation/Frames");
+                XmlNode nameNode = doc.DocumentElement.SelectSingleNode("/Animation/Name");
+                Animation loadedAnimation = new Animation();
+                List<Frame> loadedFrames = new List<Frame>();
+                if (framesNode != null)
+                    foreach (XmlNode childNode in framesNode.ChildNodes)
+                    {
+                        if (childNode.Attributes != null)
+                        {
+                            int number = int.Parse(childNode.Attributes["Number"].InnerText);
+                            Frame loadedFrame = new Frame(number);
+                            List<int> uzdegti = new List<int>();
+                            XmlNode litLeds = childNode.FirstChild;
+                            foreach (XmlNode ledsChildNode in litLeds.ChildNodes)
+                            {
+                                uzdegti.Add(int.Parse(ledsChildNode.InnerText));
+                            }
+                            loadedFrame.uzdegti = uzdegti;
+                            loadedFrames.Add(loadedFrame);
+                        }
+                        else
+                            MessageBox.Show("Error loading " + path);
+                    }
+                else
+                    MessageBox.Show("Error loading " + path);
 
-        private void test()
-        {
-            List<XElement> frameElements = new List<XElement>();
-            foreach (Frame frame in currentAnimation.Frames)
-            {
-                List<XElement> litLeds = new List<XElement>();
-                foreach (int i in frame.uzdegti)
-                {
-                    XElement led = new XElement("led",i);
-                    litLeds.Add(led);
-                }
 
-                XElement element  = new XElement("Frame",
-                    new XAttribute("Number", frame.Number),
-                    new XElement("LitLeds", litLeds));
-                frameElements.Add(element);
+                if (nameNode != null) loadedAnimation.AnimationName = nameNode.InnerText;
+                else MessageBox.Show("Error loading " + path);
+
+                loadedAnimation.Save(loadedFrames);
+
+                _allAnimations.Add(loadedAnimation);
             }
+            else
+                MessageBox.Show("Error loading " + path);
             
-
-            string result = 
-            new XElement("Animation",
-                new XElement("Name", currentAnimation),
-                new XElement("Frames",frameElements)
-                ).ToString();
-
-            File.WriteAllText(@"Animations\" + currentAnimation + ".animation", result);
+            //loadAnimation(loadedAnimation);
         }
-
-
-
     }
 }
