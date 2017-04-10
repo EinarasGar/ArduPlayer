@@ -10,12 +10,6 @@ using System.Xml.Linq;
 using MetroFramework;
 using MetroFramework.Controls;
 
-/*
- 
-    * Adding new frame does not carry over lit leds
-     
-*/
-
 namespace ArduPlayeris.Cube.Animations
 {
     public class AnimationManager
@@ -126,9 +120,15 @@ namespace ArduPlayeris.Cube.Animations
 
         private void metroButton2_Click(object sender, EventArgs e)
         {
+
             SaveFrames();
             AddFrame();
+            
             ShowFrames();
+            Frame frameToLoad = _currentFrames.Last();
+            frameToLoad.uzdegti = _latestLit.ToArray().ToList();
+            LoadFrame(frameToLoad);
+
         }
 
         private void SaveFrames()
@@ -202,8 +202,8 @@ namespace ArduPlayeris.Cube.Animations
             }
 
             Frame frameToLoad = _currentFrames.Last();
-            //frameToLoad.uzdegti = latestLit.ToArray().ToList();
             LoadFrame(frameToLoad);
+
             _framePanel.Controls.Clear();
             _framePanel.Controls.AddRange(_currentFrames.ToArray());
             _framePanel.Refresh();
@@ -374,8 +374,6 @@ namespace ArduPlayeris.Cube.Animations
             }
             _mainForm.AnimationSelector.Items.Clear();
             _mainForm.AnimationSelector.Items.AddRange(_allAnimations.ToArray());
-            //  mainForm.AnimationSelector.SelectedIndex =
-            //      mainForm.AnimationSelector.FindStringExact(currentAnimation.AnimationName); */
         }
 
         private void RenameButton_Click(object sender, EventArgs e)
