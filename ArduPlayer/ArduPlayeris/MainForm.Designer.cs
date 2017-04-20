@@ -532,7 +532,7 @@
             this.metroTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.metroTabControl1.Location = new System.Drawing.Point(20, 60);
             this.metroTabControl1.Name = "metroTabControl1";
-            this.metroTabControl1.SelectedIndex = 3;
+            this.metroTabControl1.SelectedIndex = 0;
             this.metroTabControl1.Size = new System.Drawing.Size(635, 316);
             this.metroTabControl1.Style = MetroFramework.MetroColorStyle.Lime;
             this.metroTabControl1.TabIndex = 0;
@@ -937,8 +937,6 @@
         private MetroFramework.Controls.MetroButton ClearLogsButton;
         private MetroFramework.Controls.MetroButton SaveLogsButton;
         private MetroFramework.Controls.MetroTabControl metroTabControl1;
-        private MetroFramework.Controls.MetroLabel HumidityLbl;
-        private MetroFramework.Controls.MetroLabel TempLbl;
         private MetroFramework.Controls.MetroButton SketchFilePathButton;
         private MetroFramework.Controls.MetroButton ArduinoIdePathButton;
         private MetroFramework.Controls.MetroLabel metroLabel4;
@@ -985,6 +983,8 @@
         public MetroFramework.Controls.MetroButton SaveAnimationbutton;
         public MetroFramework.Controls.MetroTextBox AnimationNameTextBox;
         public MetroFramework.Controls.MetroButton RenameButton;
+        public MetroFramework.Controls.MetroLabel HumidityLbl;
+        public MetroFramework.Controls.MetroLabel TempLbl;
     }
 }
 

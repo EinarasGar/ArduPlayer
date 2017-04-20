@@ -5,7 +5,7 @@
 #include <Wire.h>
 
 #define ArraySize(x)       (sizeof(x) / sizeof(x[0]))				// Returns size of array
-#define NUM_LEDS 70													// Number of leds in led strip
+#define NUM_LEDS 78													// Number of leds in led strip
 #define DATA_PIN 8													// Data pin for led strip
 
 #define AnalogPinForColors 0
@@ -140,7 +140,7 @@ void left()
 
 uint16_t gHue = 0;
 uint8_t  gHueDelta = 1;
-
+int limiter = 0;
 int colorMode = 0;
 bool colorsEnabled = true;
 int spectrumValue[7];												// Array kuris isfiltruja daznius. Basai 0,1 mid 3,4 high 5,6,7
@@ -222,10 +222,16 @@ void colors() {
 			leds[i + 60].setHSV(244, 255, spectrumValue[6]);
 		}
 	} else if (colorMode==2){
+
+  if(limiter == 0){    
     gHue += gHueDelta; // compute new hue
+    limiter++;
+  } else if (limiter == 3){
+    limiter=0;
+  } else limiter++;
 
        
-    for (int i = 0; i < 70; i++) {
+    for (int i = 0; i < 78; i++) {
       leds[i].setHSV(gHue, 255, 150);
     }
 	  
@@ -308,6 +314,10 @@ void GetNewTemperatureReadings()									// Void used to refresh temeprature num
 		}
 		temperature = round(t);										// But if they are valid, then round them up and set
 		humidity = round(h);										// Floats to them.
+		Serial.print("!th");
+		Serial.print(t);
+		Serial.print("/");
+		Serial.println(h);
 		showTemperature = true;										// And allow temeprature to be shown.
 	}
 }
@@ -471,7 +481,7 @@ void SComCommandRecieved(String text)								// Fired when Serial Communication 
 		DEBUG=true;
 	if(text == "debugoff")
 		DEBUG=false;
- 
+
   
 		
 	

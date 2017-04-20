@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ArduPlayeris.Cube.Animations;
+using MetroFramework.Controls;
 
 namespace ArduPlayeris
 {
@@ -78,30 +79,53 @@ namespace ArduPlayeris
                 case "+":
                     SpotifyHelper.VolumeHelper.IncrementVolume("Spotify");
                     serial.Send("v" + Math.Round((double)SpotifyHelper.VolumeHelper.GetApplicationVolume("Spotify")).ToString());
-                    break;
+                    return;
                 case "-":
                     SpotifyHelper.VolumeHelper.DecrementVolume("Spotify");
                     serial.Send("v" + Math.Round((double)SpotifyHelper.VolumeHelper.GetApplicationVolume("Spotify")).ToString());
-                    break;
+                    return;
                 case "cl1":
                     //CheckSpotiySong(null, null);
                     SpotifyHelper.Win32.SendMessage(SpotifyHelper.GetSpotify(), SpotifyHelper.Win32.Constants.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)SpotifyHelper.SpotifyAction.PlayPause));
-                    break;
+                    return;
                 case "cl2":
                     //CheckSpotiySong(null, null);
                     SpotifyHelper.Win32.SendMessage(SpotifyHelper.GetSpotify(), SpotifyHelper.Win32.Constants.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)SpotifyHelper.SpotifyAction.NextTrack));
-                    break;
+                    return;
                 case "cl3":
                     //CheckSpotiySong(null, null);
                     // Sending two because cl3 happens only after cl2 and cl2 plays next track so we have to go back twice for prev track.
                     SpotifyHelper.Win32.SendMessage(SpotifyHelper.GetSpotify(), SpotifyHelper.Win32.Constants.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)SpotifyHelper.SpotifyAction.PreviousTrack));
                     SpotifyHelper.Win32.SendMessage(SpotifyHelper.GetSpotify(), SpotifyHelper.Win32.Constants.WM_APPCOMMAND, IntPtr.Zero, new IntPtr((long)SpotifyHelper.SpotifyAction.PreviousTrack));
-                    break;
+                    return;
                 case "!":
                     // getInfo();
-                    break;
+                    return;
 
             }
+
+            if (text.Substring(0, 2) == "th")
+            {
+                text = text.Substring(2);
+                string[] textSplitStrings = text.Split('/');
+
+
+                MetroLabel TempLbl = mainform.TempLbl;
+                MetroLabel HumidityLbl = mainform.HumidityLbl;
+
+                if (TempLbl.InvokeRequired)
+                    TempLbl.Invoke(new MethodInvoker(delegate { TempLbl.Text = "Temperature: " + textSplitStrings[0] + " °C"; }));
+                else
+                    TempLbl.Text = "Temperature: " + textSplitStrings[0] + " °C";
+
+                if (HumidityLbl.InvokeRequired)
+                    HumidityLbl.Invoke(new MethodInvoker(delegate { HumidityLbl.Text = "Humidity: " + textSplitStrings[1] + " %"; }));
+                else
+                    HumidityLbl.Text = "Humidity: " + textSplitStrings[1] + " %";
+
+                return;
+            }
+            
         }
     }
 }
