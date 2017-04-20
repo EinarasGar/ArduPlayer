@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Management;
+using System.Runtime.CompilerServices;
 using MetroFramework;
 
 namespace ArduPlayeris
@@ -105,73 +106,6 @@ namespace ArduPlayeris
         private bool canRead = true;
 
         private string[] portBuffer;
-        
-
-        public SCom(MetroComboBox BaudRate, MetroComboBox Port, MetroButton StartButton, MetroButton StopButton,MetroButton SendButton, MetroTextBox textBox, MetroTextBox input)
-        {
-
-            AddInsertUSBHandler();
-            AddRemoveUSBHandler();
-            this.StartButton = StartButton;
-            this.StopButton = StopButton;
-            this.textBox = textBox;
-            this.InputTextBox = input;
-            this.BaudRate = BaudRate;
-            this.Port = Port;
-            string[] serialPorts = SerialPort.GetPortNames();
-            portBuffer = serialPorts;
-            Port.Items.AddRange(serialPorts);
-            BaudRate.Items.Add(2400);
-            BaudRate.Items.Add(4800);
-            BaudRate.Items.Add(9600);
-            BaudRate.Items.Add(14400);
-            BaudRate.Items.Add(19200);
-            BaudRate.Items.Add(28800);
-            BaudRate.Items.Add(38400);
-            BaudRate.Items.Add(57600);
-            BaudRate.Items.Add(115200);
-            Port.SelectedIndex = 0;
-            BaudRate.SelectedIndex = 2;
-
-            port = new SerialPort();
-            port.BaudRate = Convert.ToInt32(BaudRate.SelectedItem.ToString());
-            
-            
-            StartButton.Click += StartButton_Click;
-            StopButton.Click += StopButton_Click;
-            SendButton.Click += SendButtonClicked;
-            InputTextBox.KeyDown += InputTextBox_KeyDown;
-            Port.SelectedIndexChanged += Port_SelectedIndexChanged;
-            BaudRate.SelectedIndexChanged += BaudRate_SelectedIndexChanged;
-            
-
-         /*   if (Properties.Settings.Default.Try == true) {
-                foreach (string ports in SerialPort.GetPortNames())
-                {
-                    if (port.IsOpen) port.Close();
-                    port.PortName = ports;
-                    port.Open();
-                    port.Write( "hey!\n");
-                    Thread.Sleep(150);                    
-                    if (port.ReadExisting().Contains("Hello!")) {
-                        port.Close();
-                        Port.Text = ports;
-                        Start();
-                        port.DataReceived += Port_DataReceived;
-                        return;
-                    }
-                        port.Close();
-                }
-                textBox.AppendText("\r\n");                
-                textBox.AppendText("Couldn't start communication with any available ports");
-            }*/
-
-            port.PortName = Port.SelectedItem.ToString();
-
-            port.DataReceived += Port_DataReceived;
-
-           // Start();
-        }
 
         public SCom(MainForm mainForm)
         {
@@ -210,34 +144,55 @@ namespace ArduPlayeris
             InputTextBox.KeyDown += InputTextBox_KeyDown;
             Port.SelectedIndexChanged += Port_SelectedIndexChanged;
             BaudRate.SelectedIndexChanged += BaudRate_SelectedIndexChanged;
+            
+            if (Properties.Settings.Default.Try == true)
+            {
+                tryToConnect();
+            }
+            else
+            {
 
-
-            /*   if (Properties.Settings.Default.Try == true) {
-                   foreach (string ports in SerialPort.GetPortNames())
-                   {
-                       if (port.IsOpen) port.Close();
-                       port.PortName = ports;
-                       port.Open();
-                       port.Write( "hey!\n");
-                       Thread.Sleep(150);                    
-                       if (port.ReadExisting().Contains("Hello!")) {
-                           port.Close();
-                           Port.Text = ports;
-                           Start();
-                           port.DataReceived += Port_DataReceived;
-                           return;
-                       }
-                           port.Close();
-                   }
-                   textBox.AppendText("\r\n");                
-                   textBox.AppendText("Couldn't start communication with any available ports");
-               }*/
-
-            port.PortName = Port.SelectedItem.ToString();
-
-            port.DataReceived += Port_DataReceived;
-
+                port.PortName = Port.SelectedItem.ToString();
+                port.DataReceived += Port_DataReceived;
+            }
             // Start();
+        }
+
+        private async void tryToConnect()
+        {
+           // lookingForPort = true;
+                foreach (string ports in SerialPort.GetPortNames())
+                {
+                    if (port.IsOpen) port.Close();
+                    textBox.AppendText("\r\nChecking port " + ports);
+                    port.PortName = ports;
+                    try
+                    {
+                        port.DtrEnable = true;
+                        port.RtsEnable = true;
+                        port.Open();
+                        await Task.Delay(1750);
+                        string text = port.ReadExisting();//.Replace("\r",string.Empty);
+                        if (text.Contains("!HELLO"))
+                        {
+                            port.Close();
+                            Port.Text = ports;
+                            Start();
+                            port.DataReceived += Port_DataReceived;
+                            return;
+                        }
+                        port.Close();
+                    }
+                    catch (UnauthorizedAccessException e)
+                    {
+                        textBox.AppendText("\r\n");
+                        textBox.AppendText("Access to port" + ports + " is denied");
+
+                    }
+                }
+                textBox.AppendText("\r\n");
+                textBox.AppendText("Couldn't start communication with any available ports.");
+            
         }
 
         void USBInserted(object sender, EventArgs e)

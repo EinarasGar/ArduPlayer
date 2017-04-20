@@ -36,7 +36,7 @@ void setup()
 
 	digitalWrite(ResetPinForColors, LOW);
 	digitalWrite(StrobePinForColors, HIGH);
-
+	Serial.println("!HELLO");
 	oldPosition = myEnc.read();
 }
 
