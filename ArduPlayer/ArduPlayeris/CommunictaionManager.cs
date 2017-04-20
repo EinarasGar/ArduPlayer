@@ -67,7 +67,7 @@ namespace ArduPlayeris
             serial.Send("title" + title);
             currentArtist = artist;
             currentTitle = title;
-            mainform.NowPlayingLbl.Text = "Now playing: " + title + " by " + artist; //+ ", " + collection[2];
+            mainform.NowPlayingLbl.Text = "Now playing: " + artist + " by " + title; //+ ", " + collection[2];
         }
 
         private void Serial_CommandRecieved(string text)
