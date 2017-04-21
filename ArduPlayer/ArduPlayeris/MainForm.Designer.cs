@@ -91,6 +91,9 @@
             this.TrackBarY = new MetroFramework.Controls.MetroTrackBar();
             this.CubePictureBox = new System.Windows.Forms.PictureBox();
             this.NowPlayingLbl = new MetroFramework.Controls.MetroLabel();
+            this.CycleAmmountTextBox = new MetroFramework.Controls.MetroTextBox();
+            this.metroLabel8 = new MetroFramework.Controls.MetroLabel();
+            this.CycleAllAnimationsButton = new MetroFramework.Controls.MetroButton();
             this.Settings.SuspendLayout();
             this.SComTab.SuspendLayout();
             this.metroTabControl1.SuspendLayout();
@@ -532,9 +535,8 @@
             this.metroTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.metroTabControl1.Location = new System.Drawing.Point(20, 60);
             this.metroTabControl1.Name = "metroTabControl1";
-            this.metroTabControl1.SelectedIndex = 0;
+            this.metroTabControl1.SelectedIndex = 3;
             this.metroTabControl1.Size = new System.Drawing.Size(635, 316);
-            this.metroTabControl1.Style = MetroFramework.MetroColorStyle.Lime;
             this.metroTabControl1.TabIndex = 0;
             this.metroTabControl1.UseSelectable = true;
             // 
@@ -714,11 +716,14 @@
             // 
             // metroTabPage1
             // 
+            this.metroTabPage1.Controls.Add(this.metroLabel8);
+            this.metroTabPage1.Controls.Add(this.CycleAmmountTextBox);
             this.metroTabPage1.Controls.Add(this.NewAnimationButton);
             this.metroTabPage1.Controls.Add(this.RenameButton);
             this.metroTabPage1.Controls.Add(this.AnimationNameTextBox);
             this.metroTabPage1.Controls.Add(this.AnimationSelector);
             this.metroTabPage1.Controls.Add(this.AnimationName);
+            this.metroTabPage1.Controls.Add(this.CycleAllAnimationsButton);
             this.metroTabPage1.Controls.Add(this.CycleButton);
             this.metroTabPage1.Controls.Add(this.LoadAnimationButton);
             this.metroTabPage1.Controls.Add(this.SaveAnimationbutton);
@@ -887,6 +892,40 @@
             this.NowPlayingLbl.TabIndex = 11;
             this.NowPlayingLbl.Text = "Now playing:";
             // 
+            // CycleAmmountTextBox
+            // 
+            this.CycleAmmountTextBox.Lines = new string[] {
+        "1"};
+            this.CycleAmmountTextBox.Location = new System.Drawing.Point(113, 114);
+            this.CycleAmmountTextBox.MaxLength = 32767;
+            this.CycleAmmountTextBox.Name = "CycleAmmountTextBox";
+            this.CycleAmmountTextBox.PasswordChar = '\0';
+            this.CycleAmmountTextBox.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.CycleAmmountTextBox.SelectedText = "";
+            this.CycleAmmountTextBox.Size = new System.Drawing.Size(44, 23);
+            this.CycleAmmountTextBox.TabIndex = 16;
+            this.CycleAmmountTextBox.Text = "1";
+            this.CycleAmmountTextBox.UseSelectable = true;
+            // 
+            // metroLabel8
+            // 
+            this.metroLabel8.AutoSize = true;
+            this.metroLabel8.Location = new System.Drawing.Point(3, 114);
+            this.metroLabel8.Name = "metroLabel8";
+            this.metroLabel8.Size = new System.Drawing.Size(104, 19);
+            this.metroLabel8.TabIndex = 17;
+            this.metroLabel8.Text = "Cycle ammount:";
+            // 
+            // CycleAllAnimationsButton
+            // 
+            this.CycleAllAnimationsButton.Location = new System.Drawing.Point(163, 114);
+            this.CycleAllAnimationsButton.Name = "CycleAllAnimationsButton";
+            this.CycleAllAnimationsButton.Size = new System.Drawing.Size(139, 23);
+            this.CycleAllAnimationsButton.TabIndex = 11;
+            this.CycleAllAnimationsButton.Text = "Cycle All Animations";
+            this.CycleAllAnimationsButton.UseSelectable = true;
+            this.CycleAllAnimationsButton.Click += new System.EventHandler(this.metroButton6_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -985,6 +1024,9 @@
         public MetroFramework.Controls.MetroButton RenameButton;
         public MetroFramework.Controls.MetroLabel HumidityLbl;
         public MetroFramework.Controls.MetroLabel TempLbl;
+        private MetroFramework.Controls.MetroLabel metroLabel8;
+        public MetroFramework.Controls.MetroTextBox CycleAmmountTextBox;
+        public MetroFramework.Controls.MetroButton CycleAllAnimationsButton;
     }
 }
 

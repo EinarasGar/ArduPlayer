@@ -15,6 +15,7 @@ namespace ArduPlayeris.Cube.Animations
 
         public string AnimationName = "Unnamed Animation";
 
+        public int CycleAmmount = 1;
    
         public List<Frame> Frames {
             get

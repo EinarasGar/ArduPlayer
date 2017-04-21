@@ -35,6 +35,7 @@ namespace ArduPlayeris.Cube.Animations
             mainForm.LedsChanged += mainForm_LedsChanged;
 
             _mainForm.CycleButton.Click += metroButton6_Click;
+            _mainForm.CycleAllAnimationsButton.Click += CycleAllAnimationsButton_Click;
             _mainForm.AddFrameButton.Click += metroButton2_Click;
             _mainForm.NewAnimationButton.Click += metroToggle3_Click;
             _mainForm.SaveAnimationbutton.Click += SaveAnimationbutton_Click;
@@ -43,6 +44,7 @@ namespace ArduPlayeris.Cube.Animations
             _mainForm.AnimationSelector.SelectedIndexChanged += animationSelector_SelectedIndexChanged;
             _mainForm.AnimationNameTextBox.TextChanged += AnimationNameTextBox_TextChanged;
             _mainForm.AnimationNameTextBox.KeyDown += AnimationNameTextBox_KeyDown;
+            _mainForm.CycleAmmountTextBox.TextChanged += CycleAmmountTextBox_TextChanged;
             _currentAnimation = new Animation();
             _scrollBar = CreateScrollBar();
             mainForm.metroTabPage1.Controls.Add(_scrollBar);
@@ -50,6 +52,13 @@ namespace ArduPlayeris.Cube.Animations
             LoadAnimation();
 
             LoadAnimationsFromFiles();
+        }
+
+       
+
+        private void CycleAmmountTextBox_TextChanged(object sender, EventArgs e)
+        {
+            _currentAnimation.CycleAmmount = int.Parse(_mainForm.CycleAmmountTextBox.Text);
         }
 
         private void loadAnimationButton_Click(object sender, EventArgs e)
@@ -187,6 +196,8 @@ namespace ArduPlayeris.Cube.Animations
             _mainForm.metroTabPage1.Controls.Add(_framePanel);
 
             _currentAnimation = animation;
+            _mainForm.AnimationNameTextBox.Text = _currentAnimation.AnimationName;
+            _mainForm.CycleAmmountTextBox.Text = _currentAnimation.CycleAmmount.ToString();
             ShowFrames();
             _framePanel.HorizontalScroll.Value = _framePanel.HorizontalScroll.Maximum;
         }
@@ -228,6 +239,43 @@ namespace ArduPlayeris.Cube.Animations
             {
                 _mainForm.CycleButton.Text = "Cycle";
                 _cycleAnimation = false;
+            }
+        }
+
+        private async void CycleAllAnimationsButton_Click(object sender, EventArgs e)
+        {
+            foreach (Animation animation in _allAnimations)
+            {
+                LoadAnimation(animation);
+                for (int i = 0; i < animation.CycleAmmount; i++)
+                {
+                    List<Frame> frames = _currentFrames;
+                    _framePanel.ScrollControlIntoView(frames.ElementAt(0));
+                    _scrollBar.Value = 1;
+                    _framePanel.PerformLayout();
+                    _framePanel.Refresh();
+                    for (var j = 0; j < frames.Count; j++)
+                    {
+                        Frame frame = frames[j];
+                        if (frame.Location.X < -5 || frame.Location.X > 330)
+                        {
+                            _framePanel.HorizontalScroll.Value = _framePanel.HorizontalScroll.Maximum;
+                            _framePanel.ScrollControlIntoView(frames.ElementAt(j - 1));
+                            _scrollBar.Value = j;
+                            _framePanel.PerformLayout();
+                            _framePanel.Refresh();
+                        }
+
+                        frame.UseCustomForeColor = true;
+                        frame.ForeColor = Color.Green;
+                        LoadFrame(frame);
+                        await Task.Delay(250);
+                        frame.UseCustomForeColor = false;
+                        frame.ResetForeColor();
+                        _framePanel.PerformLayout();
+                        _framePanel.Refresh();
+                    }
+                }
             }
         }
 
@@ -358,6 +406,7 @@ namespace ArduPlayeris.Cube.Animations
             string result =
                 new XElement("Animation",
                     new XElement("Name", _currentAnimation),
+                    new XElement("CycleAmmount", _currentAnimation.CycleAmmount),
                     new XElement("Frames", frameElements)
                 ).ToString();
 
@@ -428,6 +477,8 @@ namespace ArduPlayeris.Cube.Animations
             {
                 XmlNode framesNode = doc.DocumentElement.SelectSingleNode("/Animation/Frames");
                 XmlNode nameNode = doc.DocumentElement.SelectSingleNode("/Animation/Name");
+                XmlNode cycleNode = doc.DocumentElement.SelectSingleNode("/Animation/CycleAmmount");
+
                 Animation loadedAnimation = new Animation();
                 List<Frame> loadedFrames = new List<Frame>();
                 if (framesNode != null)
@@ -455,6 +506,8 @@ namespace ArduPlayeris.Cube.Animations
 
                 if (nameNode != null) loadedAnimation.AnimationName = nameNode.InnerText;
                 else MessageBox.Show("Error loading " + path);
+
+                if (cycleNode != null) loadedAnimation.CycleAmmount = int.Parse(cycleNode.InnerText);
 
                 loadedAnimation.Save(loadedFrames);
 
