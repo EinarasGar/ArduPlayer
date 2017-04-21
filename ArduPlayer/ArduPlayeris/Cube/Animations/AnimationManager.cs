@@ -24,6 +24,7 @@ namespace ArduPlayeris.Cube.Animations
 
         private List<int> _latestLit = new List<int>();
         private bool _cycleAnimation;
+        private bool _cycleAnimationAll;
 
         private List<Animation> _allAnimations = new List<Animation>();
 
@@ -54,7 +55,7 @@ namespace ArduPlayeris.Cube.Animations
             LoadAnimationsFromFiles();
         }
 
-       
+
 
         private void CycleAmmountTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -132,7 +133,7 @@ namespace ArduPlayeris.Cube.Animations
 
             SaveFrames();
             AddFrame();
-            
+
             ShowFrames();
             Frame frameToLoad = _currentFrames.Last();
             frameToLoad.uzdegti = _latestLit.ToArray().ToList();
@@ -178,9 +179,9 @@ namespace ArduPlayeris.Cube.Animations
             _framePanel.Dispose();
             _framePanel = CreatePanel();
             _mainForm.metroTabPage1.Controls.Add(_framePanel);
-            
+
             _currentAnimation = new Animation();
-            
+
             AddFrame();
             ShowFrames();
             _framePanel.HorizontalScroll.Value = _framePanel.HorizontalScroll.Maximum;
@@ -242,41 +243,60 @@ namespace ArduPlayeris.Cube.Animations
             }
         }
 
-        private async void CycleAllAnimationsButton_Click(object sender, EventArgs e)
-        {
-            foreach (Animation animation in _allAnimations)
-            {
-                LoadAnimation(animation);
-                for (int i = 0; i < animation.CycleAmmount; i++)
-                {
-                    List<Frame> frames = _currentFrames;
-                    _framePanel.ScrollControlIntoView(frames.ElementAt(0));
-                    _scrollBar.Value = 1;
-                    _framePanel.PerformLayout();
-                    _framePanel.Refresh();
-                    for (var j = 0; j < frames.Count; j++)
-                    {
-                        Frame frame = frames[j];
-                        if (frame.Location.X < -5 || frame.Location.X > 330)
-                        {
-                            _framePanel.HorizontalScroll.Value = _framePanel.HorizontalScroll.Maximum;
-                            _framePanel.ScrollControlIntoView(frames.ElementAt(j - 1));
-                            _scrollBar.Value = j;
-                            _framePanel.PerformLayout();
-                            _framePanel.Refresh();
-                        }
 
-                        frame.UseCustomForeColor = true;
-                        frame.ForeColor = Color.Green;
-                        LoadFrame(frame);
-                        await Task.Delay(250);
-                        frame.UseCustomForeColor = false;
-                        frame.ResetForeColor();
+
+        private void CycleAllAnimationsButton_Click(object sender, EventArgs e)
+        {
+            if (!_cycleAnimationAll)
+            {
+                _cycleAnimationAll = true;
+                _mainForm.CycleAllAnimationsButton.Text = "Stop Cycling All";
+                LoopCycleAll();
+            }
+            else
+            {
+                _mainForm.CycleAllAnimationsButton.Text = "Cycle All Animations";
+                _cycleAnimationAll = false;
+            }
+        }
+
+        private async void LoopCycleAll()
+        {
+            while (_cycleAnimationAll)
+                foreach (Animation animation in _allAnimations)
+                {
+                    LoadAnimation(animation);
+                    for (int i = 0; i < animation.CycleAmmount; i++)
+                    {
+                        List<Frame> frames = _currentFrames;
+                        _framePanel.ScrollControlIntoView(frames.ElementAt(0));
+                        _scrollBar.Value = 1;
                         _framePanel.PerformLayout();
                         _framePanel.Refresh();
+                        for (var j = 0; j < frames.Count; j++)
+                        {
+                            Frame frame = frames[j];
+                            if (frame.Location.X < -5 || frame.Location.X > 330)
+                            {
+                                _framePanel.HorizontalScroll.Value = _framePanel.HorizontalScroll.Maximum;
+                                _framePanel.ScrollControlIntoView(frames.ElementAt(j - 1));
+                                _scrollBar.Value = j;
+                                _framePanel.PerformLayout();
+                                _framePanel.Refresh();
+                            }
+
+                            frame.UseCustomForeColor = true;
+                            frame.ForeColor = Color.Green;
+                            LoadFrame(frame);
+                            await Task.Delay(250);
+                            frame.UseCustomForeColor = false;
+                            frame.ResetForeColor();
+                            _framePanel.PerformLayout();
+                            _framePanel.Refresh();
+                            if (!_cycleAnimationAll) return;
+                        }
                     }
                 }
-            }
         }
 
         private async void LoopCycle()
@@ -360,7 +380,7 @@ namespace ArduPlayeris.Cube.Animations
             List<byte> litLeds = new List<byte>();
             foreach (int i in uzdegti)
             {
-                litLeds.Add((byte) i);
+                litLeds.Add((byte)i);
             }
 
             litLeds.Insert(0, header);
@@ -374,7 +394,7 @@ namespace ArduPlayeris.Cube.Animations
             if (_currentAnimation.AnimationName == "Unnamed Animation")
             {
                 MetroMessageBox.Show(_mainForm, "Change name first!");
-                RenameButton_Click(null,null);
+                RenameButton_Click(null, null);
                 return;
             }
             SaveAnimationToFile();
@@ -438,7 +458,7 @@ namespace ArduPlayeris.Cube.Animations
             _mainForm.AddFrameButton.Enabled = false;
 
         }
-        
+
         private void AnimationNameTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -515,7 +535,7 @@ namespace ArduPlayeris.Cube.Animations
             }
             else
                 MessageBox.Show("Error loading " + path);
-            
+
             //loadAnimation(loadedAnimation);
         }
     }
